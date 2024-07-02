@@ -1,21 +1,19 @@
 {
-  "name": "@ajaxjs/dataservice-ui",
+  "name": "@ajaxjs/admin-ui",
   "version": "1.0.0",
-  "description": "Data Service UI",
+  "description": "Admin UI",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/lightweight-component/data-service-ui.git"
+    "url": "git+https://github.com/lightweight-component/aj-admin-ui.git"
   },
   "bugs": {
-    "url": "https://github.com/lightweight-component/data-service-ui/issues"
+    "url": "https://github.com/lightweight-component/aj-admin-ui/issues"
   },
-  "main": "dist/index.js",
   "types": "dist/libs/common.d.ts",
   "scripts": {
     "dev": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "release": "tsc && xcopy src\\libs dist\\libs /s /y /d && xcopy src\\widget dist\\widget /s /y /d && xcopy src\\components dist\\components /s /y /d && copy src\\*.d.ts dist\\ && npm publish --registry=https://packages.aliyun.com/6213a37673741507cb7dec1f/npm/npm-registry/",
-    "release:dev": "tsc && xcopy src\\widget dist\\widget /s /y /d && xcopy src\\components dist\\components /s /y /d && copy src\\*.d.ts dist\\ && npm publish --registry=https://repo.bingosoft.net/repository/npm-snapshot/"
+    "release": "tsc && xcopy src\\libs dist\\libs /s /y /d && xcopy src\\widget dist\\widget /s /y /d && xcopy src\\components dist\\components /s /y /d && copy src\\*.d.ts dist\\ && npm publish --registry=https://packages.aliyun.com/6213a37673741507cb7dec1f/npm/npm-registry/"
   },
   "author": "sp42",
   "license": "Apache License 2.0",
