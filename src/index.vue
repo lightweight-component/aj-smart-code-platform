@@ -20,7 +20,7 @@
             </li>
 
             <li>
-                <a  class="portal-link" href="javascript:void(0);" @click="showMenuArea('base', $event)">
+                <a class="portal-link" href="javascript:void(0);" @click="showMenuArea('base', $event)">
                     <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
                         aria-hidden="true" role="img" class="icon iconify iconify--gitee" width="1em" height="1em"
                         preserveAspectRatio="xMidYMid meet" viewBox="0 0 16 16">
@@ -51,7 +51,7 @@
             </li> -->
 
             <li>
-                <a target="topFrame" class="model-link" href="http://localhost:8081/?m=model">
+                <a class="model-link" href="javascript:void(0);" @click="showMenuArea('model', $event)">
                     <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
                         aria-hidden="true" role="img" class="icon iconify iconify--gitee" width="1em" height="1em"
                         preserveAspectRatio="xMidYMid meet" viewBox="0 0 16 16">
@@ -200,23 +200,26 @@
     </div>
     <iframe :src="iframeSrc" name="topFrame" frameborder="no" height="100%" v-if="isShowIframe"></iframe>
     <div class="menu-area" v-if="!isShowIframe">
-        <Base />
+        <Base v-if="load == 'base'" />
+        <Model v-if="load == 'model'" />
     </div>
   </div>
 </template>
 
 <script>
 import Base from "./menu/base.vue";
+import Model from "./menu/model.vue";
 
 export default {
     components:{
-        Base
+        Base, Model
     },
   data() {
     return {
         isShowIframe: true,
         iframeSrc: 'workbeanch.html',
         loginUrl: '',
+        load:null,
         jwtToken: null
     };
   },
@@ -224,6 +227,7 @@ export default {
   methods: {
     showMenuArea(type, e) {
         this.isShowIframe = false;
+        this.load = type;
         this._onSelect(e);
     },
     showIframe(url, e) {

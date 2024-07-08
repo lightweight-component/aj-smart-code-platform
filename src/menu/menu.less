@@ -1,11 +1,23 @@
-.left-panel {
-    width: 18% !important;
+.area {
     height: 100%;
-}
+    display: flex;
 
-.right-panel {
-    width: 82%;
-    height: 100%;
+    .left-panel {
+        // width: 18% !important;
+        flex: 0 0 230px;
+        height: 100%;
+    }
+
+    .right-panel {
+        height: 100%;
+        flex: 1;
+
+        iframe {
+            border: none;
+            width: 100%;
+            height: 100%;
+        }
+    }
 }
 
 h3 {

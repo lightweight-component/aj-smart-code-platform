@@ -1,5 +1,5 @@
 <template>
-    <div style="height:100%;">
+    <div class="area">
        <Menu class="left-panel" :open-names="['portal-1', 'portal-2']">
             <h3>Base</h3>
             <Submenu name="portal-1" >
