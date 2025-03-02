@@ -1,0 +1,46 @@
+{
+  "name": "@ajaxjs/configurable-widget-vue2",
+  "version": "1.0.8",
+  "private": false,
+  "main": "lib/cfw-vue2.umd.min.js",
+  "author": "sp42",
+  "license": "Apache License 2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lightweight-component/cfw/tree/main/cfw-vue2"
+  },
+  "scripts": {
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build",
+    "lint": "vue-cli-service lint",
+    "lib": "vue-cli-service build --target lib --name cfw-vue2 --dest dist src/index.js",
+    "deploy": "npm run lib && npm version patch && npm publish"
+  },
+  "files": [
+    "dist/"
+  ],
+  "dependencies": {
+    "@ajaxjs/util": "1.1.3"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "devDependencies": {
+    "@ajaxjs/ui": "1.3.12",
+    "@typescript-eslint/eslint-plugin": "^5.4.0",
+    "@typescript-eslint/parser": "^5.4.0",
+    "@vue/cli-plugin-babel": "~5.0.0",
+    "@vue/cli-plugin-eslint": "~5.0.0",
+    "@vue/cli-plugin-typescript": "~5.0.0",
+    "@vue/cli-service": "~5.0.0",
+    "@vue/eslint-config-typescript": "^9.1.0",
+    "eslint": "^7.32.0",
+    "eslint-plugin-vue": "^8.0.3",
+    "less": "^4.0.0",
+    "vue": "^2.6.14",
+    "view-design": "^4.7.0",
+    "less-loader": "^8.0.0",
+    "typescript": "~4.5.5",
+    "vue-template-compiler": "^2.6.14"
+  }
+}
