@@ -3,7 +3,6 @@ package org.foo.service;
 import com.ajaxjs.dataservice.core.DataService;
 import com.ajaxjs.dataservice.crud.CrudService;
 import com.ajaxjs.dataservice.jdbchelper.DataAccessObject;
-import com.ajaxjs.framework.spring.database.DataBaseConnection;
 import org.foo.controller.CommonApiController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
