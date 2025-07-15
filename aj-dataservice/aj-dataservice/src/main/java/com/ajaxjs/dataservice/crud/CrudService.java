@@ -1,32 +1,27 @@
 package com.ajaxjs.dataservice.crud;
 
-import com.ajaxjs.dataservice.core.DataServiceUtils;
-import com.ajaxjs.dataservice.jdbchelper.DataAccessObject;
-import com.ajaxjs.dataservice.jdbchelper.JdbcReader;
-import com.ajaxjs.dataservice.jdbchelper.JdbcWriter;
-import com.ajaxjs.dataservice.jdbchelper.PageEnhancer;
+import com.ajaxjs.dataservice.core.DataAccessObject;
 import com.ajaxjs.sqlman.DataAccessException;
 import com.ajaxjs.sqlman.SmallMyBatis;
 import com.ajaxjs.sqlman.Sql;
 import com.ajaxjs.sqlman.annotation.Id;
 import com.ajaxjs.sqlman.annotation.Table;
+import com.ajaxjs.sqlman.crud.Entity;
+import com.ajaxjs.sqlman.crud.model.TableModel;
 import com.ajaxjs.sqlman.model.PageResult;
 import com.ajaxjs.util.CollUtils;
 import com.ajaxjs.util.reflect.Methods;
 import lombok.Data;
+import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import java.io.Serializable;
-import java.sql.Connection;
 import java.util.List;
 import java.util.Map;
 
 @Data
+@Component
 public class CrudService implements DataAccessObject {
-    private JdbcReader reader;
-
-    private JdbcWriter writer;
-
     private SmallMyBatis smallMyBatis;
 
     @Override
@@ -86,32 +81,25 @@ public class CrudService implements DataAccessObject {
     public <T> PageResult<T> page(Class<T> beanClz, String sql, Map<String, Object> paramsMap) {
         sql = SmallMyBatis.handleSql(sql, paramsMap);
 
-        PageEnhancer p = new PageEnhancer();
-        p.setJdbcReader(reader);
-        p.initSql(sql, DataServiceUtils.getRequest());
-
-        return p.page(beanClz);
+        return Sql.instance().input(sql).page(beanClz);
     }
 
     @Override
     public <T> PageResult<T> pageBySqlId(Class<T> beanClz, String sqlId, Map<String, Object> mapParams) {
         String sql = smallMyBatis.handleSql(mapParams, sqlId);
 
-        PageEnhancer p = new PageEnhancer();
-        p.setJdbcReader(reader);
-        p.initSql(sql, DataServiceUtils.getRequest());
-
-        return p.page(beanClz);
+        return Sql.instance().input(sql).page(beanClz);
     }
 
     @Override
     public Long create(String talebName, Object entity, String idField) {
-        writer.setTableName(talebName);
+        TableModel model = new TableModel();
+        model.setTableName(talebName);
 
         if (StringUtils.hasText(idField))
-            writer.setIdField(idField); // 如果ID字段名不为空，则设置 ID 字段名
+            model.setIdField(idField); // 如果ID字段名不为空，则设置 ID 字段名
 
-        return (Long) writer.create(entity);
+        return Entity.instance().setTableModel(model).input(entity).create(Long.class).getNewlyId();
     }
 
     @Override
@@ -131,13 +119,15 @@ public class CrudService implements DataAccessObject {
 
     @Override
     public boolean update(String talebName, Object entity, String idField) {
-        writer.setTableName(talebName);
+        TableModel model = new TableModel();
+        model.setTableName(talebName);
 
         if (StringUtils.hasText(idField))
-            writer.setIdField(idField);
-        else throw new DataAccessException("未指定 id，这将会是批量全体更新！");
+            model.setIdField(idField);
+        else
+            throw new DataAccessException("未指定 id，这将会是批量全体更新！");
 
-        return writer.update(entity) > 0;
+        return Entity.instance().setTableModel(model).input(entity).update().isOk();
     }
 
     @Override
@@ -164,10 +154,7 @@ public class CrudService implements DataAccessObject {
     public boolean updateWithWhere(Object entity, String where) {
         String talebName = getTableName(entity);
 
-        writer.setTableName(talebName);
-        writer.setWhere(where);
-
-        return writer.updateWhere(entity, where) > 0;
+        return Entity.instance().setTableName(talebName).input(entity).update(where).isOk();
     }
 
     @Override
@@ -176,10 +163,9 @@ public class CrudService implements DataAccessObject {
     }
 
     @Override
-    public boolean delete(String talebName, Serializable id) {
-        writer.setTableName(talebName);
-
-        return writer.delete(id);
+    public boolean delete(String tableName, Serializable id) {
+        // TODO: no id field
+        return Sql.instance().input("DELETE FROM " + tableName + " WHERE " + id + " = ?", id).delete().isOk();
     }
 
     @Override
@@ -222,19 +208,5 @@ public class CrudService implements DataAccessObject {
             throw new DataAccessException("没设置 IdField 注解，不知哪个主键字段");
 
         return annotation.value();
-    }
-
-    public static CrudService factory(Connection conn) {
-        JdbcWriter writer = new JdbcWriter();
-        writer.setConn(conn);
-
-        JdbcReader reader = new JdbcReader();
-        reader.setConn(conn);
-
-        CrudService crud = new CrudService();
-        crud.setReader(reader);
-        crud.setWriter(writer);
-
-        return crud;
     }
 }

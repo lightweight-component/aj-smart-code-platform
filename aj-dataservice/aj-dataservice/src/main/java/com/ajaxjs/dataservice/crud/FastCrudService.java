@@ -1,6 +1,8 @@
 package com.ajaxjs.dataservice.crud;
 
 
+import com.ajaxjs.dataservice.AutoConfiguration;
+import com.ajaxjs.dataservice.core.DataAccessObject;
 import com.ajaxjs.dataservice.core.DataServiceUtils;
 import com.ajaxjs.sqlman.model.PageResult;
 
@@ -15,12 +17,14 @@ public class FastCrudService implements FastCrudController {
 
     public boolean isInit;
 
-    public void init() {
+    public void set(String namespace, FastCrud<Map<String, Object>, Long> item) {
+        if (item.getDao() == null)
+            item.setDao(AutoConfiguration.getBean(DataAccessObject.class));
+
+        namespaces.put(namespace, item);
     }
 
     private FastCrud<Map<String, Object>, Long> getCRUD(String namespace) {
-        init();
-
         if (!namespaces.containsKey(namespace))
             throw new IllegalStateException("命名空间 " + namespace + " 没有配置 BaseCRUD");
 

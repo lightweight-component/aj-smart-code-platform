@@ -1,11 +1,9 @@
 package com.ajaxjs.dataservice.core;
 
-import com.ajaxjs.dataservice.crud.CrudService;
 import com.ajaxjs.dataservice.crud.FastCrud;
 import com.ajaxjs.dataservice.crud.FastCrudService;
-import com.ajaxjs.dataservice.jdbchelper.DataAccessObject;
-import com.ajaxjs.dataservice.jdbchelper.JdbcWriter;
 import com.ajaxjs.sqlman.SmallMyBatis;
+import com.ajaxjs.sqlman.Sql;
 import com.ajaxjs.sqlman.crud.model.TableModel;
 import com.ajaxjs.sqlman.model.PageResult;
 import lombok.Data;
@@ -168,9 +166,8 @@ public abstract class DataService implements DataServiceController {
 
         if (StringUtils.hasText(config.getCreateSql())) {
             String sql = SmallMyBatis.handleSql(config.getCreateSql(), params);
-            JdbcWriter jdbcWriter = ((CrudService) dao).getWriter();
 
-            return (Long) jdbcWriter.insert(sql);
+            return Sql.instance().input(sql).create( true, Long.class).getNewlyId();
         } else {// 无 SQL
             FastCrud<Map<String, Object>, Long> crud = initFastCRUD(config);
 
@@ -203,9 +200,8 @@ public abstract class DataService implements DataServiceController {
 
         if (StringUtils.hasText(config.getUpdateSql())) {
             String sql = SmallMyBatis.handleSql(config.getUpdateSql(), params);
-            JdbcWriter jdbcWriter = ((CrudService) dao).getWriter();
 
-            return jdbcWriter.write(sql) > 0;
+            return Sql.instance().input(sql).update().isOk();
         } else {// 无 SQL
             FastCrud<Map<String, Object>, Long> crud = initFastCRUD(config);
 
@@ -240,9 +236,8 @@ public abstract class DataService implements DataServiceController {
                 sql = beforeDelete.apply(config.getTableModel().isHasIsDeleted(), sql);
 
             sql = SmallMyBatis.handleSql(sql, null);
-            JdbcWriter jdbcWriter = ((CrudService) dao).getWriter();
 
-            return jdbcWriter.write(sql, id) > 0;
+            return Sql.instance().input(sql, id).update().isOk();
         } else {// 无 SQL
             FastCrud<Map<String, Object>, Long> crud = initFastCRUD(config);
 

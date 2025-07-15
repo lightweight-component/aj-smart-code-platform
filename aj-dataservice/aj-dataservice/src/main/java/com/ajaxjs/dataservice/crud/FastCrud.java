@@ -2,9 +2,9 @@ package com.ajaxjs.dataservice.crud;
 
 import com.ajaxjs.dataservice.core.DataServiceUtils;
 import com.ajaxjs.dataservice.core.TenantService;
-import com.ajaxjs.dataservice.jdbchelper.DataAccessObject;
-import com.ajaxjs.dataservice.jdbchelper.JdbcWriter;
+import com.ajaxjs.dataservice.core.DataAccessObject;
 import com.ajaxjs.sqlman.SmallMyBatis;
+import com.ajaxjs.sqlman.Sql;
 import com.ajaxjs.sqlman.model.PageResult;
 import com.ajaxjs.sqlman.util.SnowflakeId;
 import com.ajaxjs.util.JsonUtil;
@@ -35,8 +35,6 @@ public class FastCrud<T, K extends Serializable> extends FastCrudConfig {
     private Class<T> clz;
 
     private DataAccessObject dao;
-
-    private JdbcWriter jdbcWriter;
 
     /**
      * 1=自增；2=雪花；3=UUID
@@ -204,12 +202,7 @@ public class FastCrud<T, K extends Serializable> extends FastCrudConfig {
         if (beforeDelete != null)
             sql = beforeDelete.apply(getTableModel().isHasIsDeleted(), sql);
 
-        if (jdbcWriter == null && getDao() != null)
-            jdbcWriter = ((CrudService) getDao()).getWriter();
-
-        jdbcWriter.write(sql, id);// 执行 SQL 语句
-
-        return true;
+        return Sql.instance().input(sql, id).update().isOk();
     }
 
     /**

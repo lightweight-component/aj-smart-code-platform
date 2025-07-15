@@ -1,7 +1,8 @@
 package com.ajaxjs.dataservice.core;
 
-import com.ajaxjs.dataservice.dbmetadata.DataSourceInfo;
-import com.ajaxjs.dataservice.jdbchelper.JdbcConn;
+
+import com.ajaxjs.dataservice.metadata.model.DataSourceInfo;
+import com.ajaxjs.sqlman.JdbcConnection;
 import com.ajaxjs.sqlman.util.Utils;
 import com.ajaxjs.util.ConvertBasicValue;
 import org.springframework.util.ObjectUtils;
@@ -34,7 +35,6 @@ public class DataServiceUtils {
      */
     public static Map<String, Object> getQueryStringParams() {
         HttpServletRequest request = getRequest();
-        assert request != null;
         Map<String, String[]> parameterMap = request.getParameterMap(); // 获取请求中的所有参数，包括参数名和参数值的数组
 
         if (ObjectUtils.isEmpty(parameterMap)) // 如果参数Map为空，则直接返回 null
@@ -151,7 +151,6 @@ public class DataServiceUtils {
     public static Map<String, Object> initParams(Map<String, Object> params, boolean isFormSubmitOnly) {
         if (isFormSubmitOnly) {
             HttpServletRequest req = DataServiceUtils.getRequest();
-            assert req != null;
             String queryString = req.getQueryString(); // 获取查询字符串
 
             // 解码查询字符串并处理参数
@@ -180,6 +179,6 @@ public class DataServiceUtils {
     public static Connection getConnectionByDataSourceInfo(DataSourceInfo info) {
 //        return new JdbcConn().getConnection(getDataSourceByDataSourceInfo(info));
         /* 貌似不能从 DataSource 获取 conn，直接创建 conn 吧 */
-        return new JdbcConn().getConnection(info.getUrl(), info.getUsername(), info.getPassword());
+        return JdbcConnection.getConnection(info.getUrl(), info.getUsername(), info.getPassword());
     }
 }
