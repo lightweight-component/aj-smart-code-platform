@@ -17,7 +17,6 @@ import java.sql.SQLException;
 @Service
 public class CommonApiService extends DataService implements CommonApiController {
     @Autowired
-//    @Lazy
     private CrudService crudService;
 
     @Override
@@ -28,10 +27,7 @@ public class CommonApiService extends DataService implements CommonApiController
     @EventListener
     public void handleContextRefresh(ContextRefreshedEvent event) throws SQLException {
         try (Connection conn = DataBaseConnection.initDb()) {
-            CrudService crudService = this.crudService;
-//            System.out.println("CRUD_Service init: " + crudService.hashCode());
             setDao(crudService);
-
             reloadConfig();// 在 Spring 初始化完成后执行的操作
         }
     }

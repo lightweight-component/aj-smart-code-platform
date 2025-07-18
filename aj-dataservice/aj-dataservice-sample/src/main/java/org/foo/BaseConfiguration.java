@@ -14,20 +14,6 @@ import javax.sql.DataSource;
  */
 @Configuration
 public class BaseConfiguration implements WebMvcConfigurer {
-    @Value("${db.url}")
-    private String url;
-
-    @Value("${db.user}")
-    private String user;
-
-    @Value("${db.psw}")
-    private String psw;
-
-    @Bean(value = "dataSource", destroyMethod = "close")
-    DataSource getDs() {
-        return DataBaseConnection.setupMySqlJdbcPool(url, user, psw);
-    }
-
     @Value("${auth.excludes: }")
     private String excludes;
 

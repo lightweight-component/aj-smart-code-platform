@@ -1,5 +1,6 @@
 package com.ajaxjs.dataservice.core;
 
+import com.ajaxjs.dataservice.core.model.PageVO;
 import com.ajaxjs.dataservice.crud.FastCrud;
 import com.ajaxjs.dataservice.crud.FastCrudService;
 import com.ajaxjs.sqlman.SmallMyBatis;
@@ -132,26 +133,27 @@ public abstract class DataService implements DataServiceController {
         return list(config);
     }
 
-    private PageResult<Map<String, Object>> page(DataServiceConfig config) {
+    private PageVO<Map<String, Object>> page(DataServiceConfig config) {
         FastCrud<Map<String, Object>, Long> crud = initFastCRUD(config);
 
         if (isSingle(config))
             crud.setListSql(config.getSql());
 
         String where = FastCrudService.getWhereClause(Objects.requireNonNull(DataServiceUtils.getRequest()));
+        PageResult<Map<String, Object>> result = crud.pageMap(where);
 
-        return crud.pageMap(where);
+        return new PageVO<>(result, result.getTotalCount());
     }
 
     @Override
-    public PageResult<Map<String, Object>> page(String namespace) {
+    public PageVO<Map<String, Object>> page(String namespace) {
         DataServiceConfig config = getConfig(namespace);
 
         return page(config);
     }
 
     @Override
-    public PageResult<Map<String, Object>> page(String namespace, String namespace2) {
+    public PageVO<Map<String, Object>> page(String namespace, String namespace2) {
         DataServiceConfig config = getConfig(namespace, namespace2);
 
         return page(config);
@@ -167,7 +169,7 @@ public abstract class DataService implements DataServiceController {
         if (StringUtils.hasText(config.getCreateSql())) {
             String sql = SmallMyBatis.handleSql(config.getCreateSql(), params);
 
-            return Sql.instance().input(sql).create( true, Long.class).getNewlyId();
+            return Sql.instance().input(sql).create(true, Long.class).getNewlyId();
         } else {// 无 SQL
             FastCrud<Map<String, Object>, Long> crud = initFastCRUD(config);
 

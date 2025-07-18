@@ -4,6 +4,7 @@ package com.ajaxjs.dataservice.crud;
 import com.ajaxjs.dataservice.AutoConfiguration;
 import com.ajaxjs.dataservice.core.DataAccessObject;
 import com.ajaxjs.dataservice.core.DataServiceUtils;
+import com.ajaxjs.dataservice.core.model.PageVO;
 import com.ajaxjs.sqlman.model.PageResult;
 
 import javax.servlet.http.HttpServletRequest;
@@ -44,10 +45,11 @@ public class FastCrudService implements FastCrudController {
     }
 
     @Override
-    public PageResult<Map<String, Object>> page(String namespace) {
+    public PageVO<Map<String, Object>> page(String namespace) {
         String where = getWhereClause(Objects.requireNonNull(DataServiceUtils.getRequest()));
+        PageResult<Map<String, Object>> result = getCRUD(namespace).page(where);
 
-        return getCRUD(namespace).page(where);
+        return new PageVO<>(result, result.getTotalCount());
     }
 
     @Override

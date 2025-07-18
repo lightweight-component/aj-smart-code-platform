@@ -1,5 +1,6 @@
 package com.ajaxjs.dataservice.core;
 
+import com.ajaxjs.dataservice.core.model.PageVO;
 import com.ajaxjs.dataservice.crud.FastCrudController;
 import com.ajaxjs.sqlman.model.PageResult;
 import org.springframework.web.bind.annotation.*;
@@ -40,7 +41,7 @@ public interface DataServiceController extends FastCrudController {
      * @return 实体列表
      */
     @GetMapping("/{namespace}/{namespace2}/page")
-    PageResult<Map<String, Object>> page(@PathVariable String namespace, @PathVariable String namespace2);
+    PageVO<Map<String, Object>> page(@PathVariable String namespace, @PathVariable String namespace2);
 
     /**
      * 创建实体

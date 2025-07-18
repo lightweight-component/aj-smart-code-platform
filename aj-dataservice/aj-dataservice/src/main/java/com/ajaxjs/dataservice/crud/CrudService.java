@@ -1,7 +1,9 @@
 package com.ajaxjs.dataservice.crud;
 
 import com.ajaxjs.dataservice.core.DataAccessObject;
+import com.ajaxjs.dataservice.core.DataServiceUtils;
 import com.ajaxjs.sqlman.DataAccessException;
+import com.ajaxjs.sqlman.Pager;
 import com.ajaxjs.sqlman.SmallMyBatis;
 import com.ajaxjs.sqlman.Sql;
 import com.ajaxjs.sqlman.annotation.Id;
@@ -81,7 +83,10 @@ public class CrudService implements DataAccessObject {
     public <T> PageResult<T> page(Class<T> beanClz, String sql, Map<String, Object> paramsMap) {
         sql = SmallMyBatis.handleSql(sql, paramsMap);
 
-        return Sql.instance().input(sql).page(beanClz);
+        Pager pager = new Pager();
+        pager.getParams(DataServiceUtils.getRequest());
+
+        return Sql.instance().input(sql).page(beanClz, pager.getStart(), pager.getLimit());
     }
 
     @Override
