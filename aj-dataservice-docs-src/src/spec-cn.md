@@ -1,10 +1,10 @@
 ---
-title: 首页
+title: 特点
 subTitle: 2024-12-05 by Frank Cheung
-description: 简介
+description: 特点
 date: 2022-01-05
 tags:
-  - 简介
+  - 特点
 layout: layouts/docs-cn.njk
 ---
 
@@ -27,6 +27,23 @@ Java 企业级开发中，要写 Model、DAO、Service 和 Controller 代码是�
 </ul>
 
 <p>DataService 不是代码生成器，更直观地说它是把一切常见 CRUD 工作抽象化，然后使之可配置化的快速业务开发工具。</p>
+
+<section>
+  <a name="point"></a>
+  <h2>特点</h2>
+  <ul>
+    <li>支持所有 JDBC 协议的数据库，包括
+    MySQL、Oracle、SQLServer、PostgreSQL、H2、HSQLDB、SQLite、MariaDB、DB2、Firebird、Derby、Sybase、Informix、Microsoft
+    SQL</li>
+    <li>支持动态 SQL，类似 MyBatis 的动态 SQL，支持 SQL 调用 Java 函数、支持 SQL 编辑、运行、调试</li>
+    <li>动态创建 API，支持 API 动态创建、编辑、下线、删除，API 动态发布，不需要重启</li>
+    <li>支持多 SQL 组合、事务、支持多数据源可自由切换</li>
+    <li>提供 Java 调用数据服务，无须经过 HTTP 调用 API，如同传统 Service 调用 DAO（Data Access Object） 模式那样子</li>
+    <li>丰富的插件扩展，支持缓存、数据转换、失败告警（TODO）</li>
+    <li>支持生成 API 接口文档，导入导出（TODO）</li>
+    <li>轻量级设计，既可独立运行，也可整合到 Spring 程序中。</li>
+  </ul>
+</section>
 
 ## 源代码
 
