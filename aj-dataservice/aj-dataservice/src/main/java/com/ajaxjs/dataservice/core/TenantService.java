@@ -3,6 +3,7 @@ package com.ajaxjs.dataservice.core;
 import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Enumeration;
 import java.util.Objects;
 
 /**
@@ -22,7 +23,7 @@ public class TenantService {
         return Objects.requireNonNull(DataServiceUtils.getRequest()).getHeader(AUTH_TENANT_CODE);
     }
 
-    public static final String AUTH_TENANT_ID = "auth_tenant_id";
+    public static final String AUTH_TENANT_ID = "auth-tenant-id";
 
     /**
      * 从 HTTP 头中获取租户 id

@@ -5,6 +5,8 @@ import com.ajaxjs.dataservice.metadata.model.DataSourceInfo;
 import com.ajaxjs.sqlman.JdbcConnection;
 import com.ajaxjs.sqlman.util.Utils;
 import com.ajaxjs.util.ConvertBasicValue;
+import com.ajaxjs.util.Version;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.context.request.RequestAttributes;
@@ -24,6 +26,7 @@ import java.util.regex.Pattern;
 /**
  * Utils for DataService
  */
+@Slf4j
 public class DataServiceUtils {
     /**
      * 获取查询字符串参数。
@@ -91,7 +94,10 @@ public class DataServiceUtils {
             Object result = method.invoke(obj); // 调用方法并获取结果
 
             return (T) result;// 将结果强制转换为期望的类型并返回
-        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+        } catch (NoSuchMethodException e) {
+            log.warn("There is NO such method when calling " + methodName, e);
+            return null;
+        } catch (IllegalAccessException | InvocationTargetException e) {
             throw new RuntimeException(e); // 如果在执行过程中遇到异常，则将其封装并抛出为运行时异常
         }
     }
@@ -109,7 +115,15 @@ public class DataServiceUtils {
         // 从请求中获取名为"USER_KEY_IN_REQUEST"的属性，确保该属性不为空
 //        if (simpleUser == null)
 //            throw new NullPointerException("上下文的用户不存在"); // 如果用户对象为空，则抛出异常
-        return Objects.requireNonNull(DataServiceUtils.getRequest()).getAttribute("USER_KEY_IN_REQUEST");
+        Object user = Objects.requireNonNull(DataServiceUtils.getRequest()).getAttribute("USER_KEY_IN_REQUEST");
+
+        if (user == null && Version.isDebug)
+            user = new Object();
+
+        if (user == null)
+            log.warn("User not found.");
+
+        return user;
     }
 
     /**
