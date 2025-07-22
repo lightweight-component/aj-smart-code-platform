@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    
+        <url>
+            <loc>https://dataservice.ajaxjs.com/cn/</loc>
+            <lastmod>2022-01-05T00:00:00.000Z</lastmod>
+        </url>
+    
+        <url>
+            <loc>https://dataservice.ajaxjs.com/install/install-cn/</loc>
+            <lastmod>2022-01-05T00:00:00.000Z</lastmod>
+        </url>
+    
+        <url>
+            <loc>https://dataservice.ajaxjs.com/install/</loc>
+            <lastmod>2022-01-05T00:00:00.000Z</lastmod>
+        </url>
+    
+        <url>
+            <loc>https://dataservice.ajaxjs.com/install/spring-cn/</loc>
+            <lastmod>2022-01-05T00:00:00.000Z</lastmod>
+        </url>
+    
+        <url>
+            <loc>https://dataservice.ajaxjs.com/install/spring/</loc>
+            <lastmod>2022-01-05T00:00:00.000Z</lastmod>
+        </url>
+    
+        <url>
+            <loc>https://dataservice.ajaxjs.com/misc/contact-cn/</loc>
+            <lastmod>2022-01-05T00:00:00.000Z</lastmod>
+        </url>
+    
+        <url>
+            <loc>https://dataservice.ajaxjs.com/misc/contact/</loc>
+            <lastmod>2022-01-05T00:00:00.000Z</lastmod>
+        </url>
+    
+        <url>
+            <loc>https://dataservice.ajaxjs.com/spec-cn/</loc>
+            <lastmod>2022-01-05T00:00:00.000Z</lastmod>
+        </url>
+    
+        <url>
+            <loc>https://dataservice.ajaxjs.com/tour/basic-cn/</loc>
+            <lastmod>2022-01-05T00:00:00.000Z</lastmod>
+        </url>
+    
+        <url>
+            <loc>https://dataservice.ajaxjs.com/tour/basic/</loc>
+            <lastmod>2022-01-05T00:00:00.000Z</lastmod>
+        </url>
+    
+        <url>
+            <loc>https://dataservice.ajaxjs.com/</loc>
+            <lastmod>2025-07-01T00:00:00.000Z</lastmod>
+        </url>
+    
+        <url>
+            <loc>https://dataservice.ajaxjs.com/test/cf/</loc>
+            <lastmod>2025-07-15T09:33:56.670Z</lastmod>
+        </url>
+    
+        <url>
+            <loc>https://dataservice.ajaxjs.com/asset/style/common.css</loc>
+            <lastmod>2025-07-15T09:33:57.064Z</lastmod>
+        </url>
+    
+        <url>
+            <loc>https://dataservice.ajaxjs.com/asset/style/main.css</loc>
+            <lastmod>2025-07-17T01:44:20.466Z</lastmod>
+        </url>
+    
+</urlset>

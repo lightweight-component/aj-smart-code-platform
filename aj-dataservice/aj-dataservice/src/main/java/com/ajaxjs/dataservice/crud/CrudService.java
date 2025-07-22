@@ -14,8 +14,10 @@ import com.ajaxjs.sqlman.model.PageResult;
 import com.ajaxjs.util.CollUtils;
 import com.ajaxjs.util.reflect.Methods;
 import lombok.Data;
+import org.springframework.core.task.TaskDecorator;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
+import org.springframework.web.filter.GenericFilterBean;
 
 import java.io.Serializable;
 import java.util.List;
@@ -75,6 +77,7 @@ public class CrudService implements DataAccessObject {
     @Override
     public List<Map<String, Object>> listMapBySqlId(String sqlId, Map<String, Object> mapParams, Object... params) {
         String sql = smallMyBatis.handleSql(mapParams, sqlId);
+        InheritableThreadLocal k;
 
         return CollUtils.getList(Sql.instance().input(sql, params).queryList());
     }
