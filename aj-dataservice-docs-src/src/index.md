@@ -1,77 +1,28 @@
 ---
-title: Home
-subTitle: 
-description: AJ Security Introduction
+title: Introduction
+subTitle:
+description: Introduction
 date: 2025-07-01
 tags:
-  -  AJ Security Introduction
+  - Introduction
 layout: layouts/docs.njk
 ---
 
-# AJ Security: A Practical Java Web Security Library
+# AJ DataService Introduction
 
-Based on the Spring/HandlerInterceptor mechanism, this library abstracts a set of filtering/validation mechanisms,
-forming a unified invocation chain that is flexibly configurable and extensible. The architecture of this security
-framework is simple, the code is concise, and it has no additional dependencies, making it suitable for any Spring-based
-project. Spring Boot applications can use it out of the box by simply importing the jar package.
-
-The features of this framework include:
-
-<style>
-  table, table td { 
-    border: 0!important;
-  }
-  table td {
-    text-align: left;
-    vertical-align: top;
-  }
-</style>
-<table><tr><td>
-
-- HTTP Web Security
-    - HTTP Referer validation
-    - Timestamp encrypted token validation
-    - IP whitelist/blacklist
-    - Prevention of duplicate submissions
-    - IP region-based restrictions (TODO)
-- General Web Validation
-    - XSS attack prevention
-    - CRLF attack prevention
-    - Cookie size check
-- HTTP Standard Authentication
-    - HTTP Basic Auth authentication
-    - HTTP Digest Auth authentication
-
-</td>
-
-<td>
-
-- Captcha Mechanisms
-    - Simple Java image captcha
-    - Image captcha based on kaptcha
-    - Captcha based on Google Recaptcha
-    - Captcha based on CloudFlare Turnstile
-
-- API Interface Features
-    - Rate limiting and quota (TODO)
-- Other Practical Features
-    - Entity field desensitization
-    - API interface encryption/decryption
-
-</td></tr></table>
-
-The code of AJ Security is small(A JAR of approximately 100 KB), straightforward and well commented. There are not much third-party dependencies, just
-Java 8 requires.
-
-## Source Code
-
-Under Apache License v3.0.
-
-- Github: [https://github.com/lightweight-component/aj-security](https://github.com/lightweight-component/aj-security)
--
-Gitcode: [https://gitcode.com/lightweight-component/aj-security](https://gitcode.com/lightweight-component/aj-security),
-for Chinese users faster access.
-
-## Links
-
-[User Manual](https://security.ajaxjs.com) | [JavaDoc](https://javadoc.io/doc/com.ajaxjs/aj-security) | [DeepWiki](https://deepwiki.com/lightweight-component/aj-security)
+<a name="intro"></a>
+<h4>Quickly build CRUD interface services by writing SQL business logic (or even no code at
+all!)</h4> <p style="text-align: right; font-style: italic;">— The easiest way: zero code. Configure parameters on the
+page, SQL is automatically generated and converted into HTTP
+API.</p> <img class="content" style="border: 1px solid #ccc;" src="asset/imgs/ds.jpg" title="Main Management Interface" /> <p style="text-align: center;"><a href="../../../demo/data-service" target="_blank">
+Try the Demo</a>, Account: admin, Password: 123123</p> <p> In Java enterprise development, writing Model, DAO, Service,
+and Controller code is often a tedious and repetitive task. AJ DataService was created to solve this problem. Depending
+on the complexity of the business logic, DataService can be used in the following three modes: </p> <ul> <li><strong>
+Basic data</strong>: These tables typically have little or only simple business logic. You can use DataService to create
+generic CRUD services.</li> <li><strong>Custom business logic</strong>: Not limited to simple CRUD, but can still be
+implemented using SQL. No need to write additional Java business code. Particularly suitable for backend interface
+development for BI reports or data visualization dashboards.</li> <li><strong>Complex business logic</strong>: Requires
+both Java and SQL working together. In this case, DataService can still act as an ORM mechanism, functioning as a Data
+Access Object (DAO) that returns Java Bean entities.</li> </ul> <p> DataService is not a code generator. More
+accurately, it abstracts common CRUD tasks and makes them configurable, serving as a rapid business development
+tool. </p> 
