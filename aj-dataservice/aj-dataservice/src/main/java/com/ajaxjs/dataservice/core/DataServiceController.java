@@ -1,8 +1,7 @@
 package com.ajaxjs.dataservice.core;
 
-import com.ajaxjs.dataservice.core.model.PageVO;
 import com.ajaxjs.dataservice.crud.FastCrudController;
-import com.ajaxjs.sqlman.model.PageResult;
+import com.ajaxjs.framework.model.PageVO;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

@@ -1,8 +1,9 @@
 package com.ajaxjs.dataservice.core;
 
-import com.ajaxjs.dataservice.core.model.PageVO;
 import com.ajaxjs.dataservice.crud.FastCrud;
 import com.ajaxjs.dataservice.crud.FastCrudService;
+import com.ajaxjs.framework.model.PageVO;
+import com.ajaxjs.framework.spring.DiContextUtil;
 import com.ajaxjs.sqlman.SmallMyBatis;
 import com.ajaxjs.sqlman.Sql;
 import com.ajaxjs.sqlman.crud.model.TableModel;
@@ -113,7 +114,7 @@ public abstract class DataService implements DataServiceController {
         if (isSingle(config))
             crud.setListSql(config.getSql());
 
-        String where = FastCrudService.getWhereClause(Objects.requireNonNull(DataServiceUtils.getRequest()));
+        String where = FastCrudService.getWhereClause(Objects.requireNonNull(DiContextUtil.getRequest()));
         System.out.println("ds:" + getDao().hashCode());
 
         return crud.listMap(where);
@@ -139,7 +140,7 @@ public abstract class DataService implements DataServiceController {
         if (isSingle(config))
             crud.setListSql(config.getSql());
 
-        String where = FastCrudService.getWhereClause(Objects.requireNonNull(DataServiceUtils.getRequest()));
+        String where = FastCrudService.getWhereClause(Objects.requireNonNull(DiContextUtil.getRequest()));
         PageResult<Map<String, Object>> result = crud.pageMap(where);
 
         return new PageVO<>(result, result.getTotalCount());

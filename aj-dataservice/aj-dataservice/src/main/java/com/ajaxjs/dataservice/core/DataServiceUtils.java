@@ -1,7 +1,7 @@
 package com.ajaxjs.dataservice.core;
 
-
 import com.ajaxjs.dataservice.metadata.model.DataSourceInfo;
+import com.ajaxjs.framework.spring.DiContextUtil;
 import com.ajaxjs.sqlman.JdbcConnection;
 import com.ajaxjs.sqlman.util.Utils;
 import com.ajaxjs.util.ConvertBasicValue;
@@ -9,9 +9,6 @@ import com.ajaxjs.util.Version;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
-import org.springframework.web.context.request.RequestAttributes;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.InvocationTargetException;
@@ -37,7 +34,8 @@ public class DataServiceUtils {
      * @return 包含查询参数的Map，如果不存在查询参数则返回 null
      */
     public static Map<String, Object> getQueryStringParams() {
-        HttpServletRequest request = getRequest();
+        HttpServletRequest request = DiContextUtil.getRequest();
+        assert request != null;
         Map<String, String[]> parameterMap = request.getParameterMap(); // 获取请求中的所有参数，包括参数名和参数值的数组
 
         if (ObjectUtils.isEmpty(parameterMap)) // 如果参数Map为空，则直接返回 null
@@ -46,35 +44,9 @@ public class DataServiceUtils {
         // 初始化一个Map用于存储处理后的参数
         Map<String, Object> params = new HashMap<>();
         // 遍历参数Map，将参数值转换为 Java 基本类型，并处理可能的 SQL 注入
-        parameterMap.forEach((key, value) -> params.put(key, value == null ? null : ConvertBasicValue.toJavaValue(escapeSqlInjection(value[0]))));
+        parameterMap.forEach((key, value) -> params.put(key, value == null ? null : ConvertBasicValue.toJavaValue(Utils.escapeSqlInjection(value[0]))));
 
         return params;
-    }
-
-    private static final Pattern PATTERN = Pattern.compile("(?i)select|update|delete|insert|drop|truncate|union|\\*|--|;");
-
-    /**
-     * 过滤输入字符串以避免 SQL 注入攻击。
-     * 该方法通过正则表达式匹配并移除可能导致 SQL 注入的特殊字符或关键字。
-     * 使用该方法对用户输入进行清理，可以增强系统的安全性。
-     *
-     * @param input 待过滤的字符串，通常是用户输入
-     * @return 过滤后的字符串，移除了可能的 SQL 注入关键字或字符
-     */
-    public static String escapeSqlInjection(String input) {
-        return PATTERN.matcher(input).replaceAll("");
-    }
-
-    /**
-     * 获取当前请求的 HttpServletRequest 对象
-     * 如果当前没有请求上下文，则根据是否正在运行测试来返回对应的请求对象
-     *
-     * @return 当前请求的 HttpServletRequest 对象，如果不存在请求上下文则返回 null
-     */
-    public static HttpServletRequest getRequest() {
-        RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
-
-        return ((ServletRequestAttributes) requestAttributes).getRequest();
     }
 
     /**
@@ -115,7 +87,7 @@ public class DataServiceUtils {
         // 从请求中获取名为"USER_KEY_IN_REQUEST"的属性，确保该属性不为空
 //        if (simpleUser == null)
 //            throw new NullPointerException("上下文的用户不存在"); // 如果用户对象为空，则抛出异常
-        Object user = Objects.requireNonNull(DataServiceUtils.getRequest()).getAttribute("USER_KEY_IN_REQUEST");
+        Object user = Objects.requireNonNull(DiContextUtil.getRequest()).getAttribute("USER_KEY_IN_REQUEST");
 
         if (user == null && Version.isDebug)
             user = new Object();
@@ -164,7 +136,7 @@ public class DataServiceUtils {
      */
     public static Map<String, Object> initParams(Map<String, Object> params, boolean isFormSubmitOnly) {
         if (isFormSubmitOnly) {
-            HttpServletRequest req = DataServiceUtils.getRequest();
+            HttpServletRequest req = DiContextUtil.getRequest();
             String queryString = req.getQueryString(); // 获取查询字符串
 
             // 解码查询字符串并处理参数
@@ -183,16 +155,5 @@ public class DataServiceUtils {
         params.forEach((key, value) -> _params.put(Utils.changeFieldToColumnName(key), ConvertBasicValue.toJavaValue(value.toString())));
 
         return _params;
-    }
-
-    /**
-     * 通过 Tomcat JDBC Pool 获取 Connection
-     *
-     * @return 数据库连接对象
-     */
-    public static Connection getConnectionByDataSourceInfo(DataSourceInfo info) {
-//        return new JdbcConn().getConnection(getDataSourceByDataSourceInfo(info));
-        /* 貌似不能从 DataSource 获取 conn，直接创建 conn 吧 */
-        return JdbcConnection.getConnection(info.getUrl(), info.getUsername(), info.getPassword());
     }
 }
