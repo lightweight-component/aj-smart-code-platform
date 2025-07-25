@@ -1,5 +1,6 @@
 package com.ajaxjs.dataservice.core;
 
+import com.ajaxjs.framework.spring.DiContextUtil;
 import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
@@ -20,7 +21,7 @@ public class TenantService {
      */
     @Deprecated
     public static String getTenantCode() {
-        return Objects.requireNonNull(DataServiceUtils.getRequest()).getHeader(AUTH_TENANT_CODE);
+        return Objects.requireNonNull(DiContextUtil.getRequest()).getHeader(AUTH_TENANT_CODE);
     }
 
     public static final String AUTH_TENANT_ID = "auth-tenant-id";
@@ -31,7 +32,7 @@ public class TenantService {
      * @return 租户 id
      */
     public static Integer getTenantId() {
-        HttpServletRequest request = DataServiceUtils.getRequest();
+        HttpServletRequest request = DiContextUtil.getRequest();
 
 //        if (request == null)
 //            return Version.isRunningTest() ? 1 : 0; // 单测模式下，给个测试值

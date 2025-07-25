@@ -17,8 +17,8 @@
     <dependencies>
         <dependency>
             <groupId>com.ajaxjs</groupId>
-            <artifactId>sqlman</artifactId>
-            <version>1.4</version>
+            <artifactId>ajaxjs-framework</artifactId>
+            <version>1.2.2</version>
         </dependency>
 
         <dependency>

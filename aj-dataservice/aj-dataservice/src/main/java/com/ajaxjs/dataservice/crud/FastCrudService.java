@@ -1,11 +1,11 @@
 package com.ajaxjs.dataservice.crud;
 
 
-import com.ajaxjs.dataservice.AutoConfiguration;
 import com.ajaxjs.dataservice.core.DataAccessObject;
-import com.ajaxjs.dataservice.core.DataServiceUtils;
-import com.ajaxjs.dataservice.core.model.PageVO;
+import com.ajaxjs.framework.model.PageVO;
+import com.ajaxjs.framework.spring.DiContextUtil;
 import com.ajaxjs.sqlman.model.PageResult;
+import com.ajaxjs.sqlman.util.Utils;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
@@ -20,7 +20,7 @@ public class FastCrudService implements FastCrudController {
 
     public void set(String namespace, FastCrud<Map<String, Object>, Long> item) {
         if (item.getDao() == null)
-            item.setDao(AutoConfiguration.getBean(DataAccessObject.class));
+            item.setDao(DiContextUtil.getBean(DataAccessObject.class));// TODO by @Autowired?
 
         namespaces.put(namespace, item);
     }
@@ -39,14 +39,14 @@ public class FastCrudService implements FastCrudController {
 
     @Override
     public List<Map<String, Object>> list(String namespace) {
-        String where = getWhereClause(Objects.requireNonNull(DataServiceUtils.getRequest()));
+        String where = getWhereClause(Objects.requireNonNull(DiContextUtil.getRequest()));
 
         return getCRUD(namespace).listMap(where);
     }
 
     @Override
     public PageVO<Map<String, Object>> page(String namespace) {
-        String where = getWhereClause(Objects.requireNonNull(DataServiceUtils.getRequest()));
+        String where = getWhereClause(Objects.requireNonNull(DiContextUtil.getRequest()));
         PageResult<Map<String, Object>> result = getCRUD(namespace).page(where);
 
         return new PageVO<>(result, result.getTotalCount());
@@ -92,7 +92,7 @@ public class FastCrudService implements FastCrudController {
 
             // 处理单值参数
             if (parameterValues.length == 1) {
-                String value = DataServiceUtils.escapeSqlInjection(parameterValues[0]).trim();
+                String value = Utils.escapeSqlInjection(parameterValues[0]).trim();
                 whereClause.append(" = ");
                 whereClause.append("'").append(value).append("'");
             } else {
@@ -102,7 +102,7 @@ public class FastCrudService implements FastCrudController {
                 if (parameterValues.length > 0) {
                     for (String parameterValue : parameterValues) {
                         whereClause.append("'");
-                        whereClause.append(DataServiceUtils.escapeSqlInjection(parameterValue).trim());
+                        whereClause.append(Utils.escapeSqlInjection(parameterValue).trim());
                         whereClause.append("',");
                     }
 

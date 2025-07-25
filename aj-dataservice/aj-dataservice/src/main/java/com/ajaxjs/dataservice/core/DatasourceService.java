@@ -100,7 +100,9 @@ public class DatasourceService implements DatasourceController {
     Connection getConnectionByDataSourceId(Long id) {
         DataSourceInfo info = Sql.instance().input("SELECT * FROM adp_datasource WHERE stat!= 1 AND id =?", id).query(DataSourceInfo.class);
 
-        return DataServiceUtils.getConnectionByDataSourceInfo(info);
+        //   return new JdbcConn().getConnection(getDataSourceByDataSourceInfo(info));
+        /* 貌似不能从 DataSource 获取 conn，直接创建 conn 吧 */
+        return JdbcConnection.getConnection(info.getUrl(), info.getUsername(), info.getPassword());
     }
 
     @Override
@@ -178,21 +180,16 @@ public class DatasourceService implements DatasourceController {
      * @return 注释内容，如果不存在注释则返回 null
      */
     private static String getCommentFromCreateTableSql(String createTableSql) {
-        // 查找注释起始位置
-        int commentStartIndex = createTableSql.indexOf("COMMENT='");
+        int commentStartIndex = createTableSql.indexOf("COMMENT='");// 查找注释起始位置
 
-        // 如果找不到注释起始位置，则返回null
         if (commentStartIndex == -1)
             return null;
-        // 查找注释结束位置
-        int commentEndIndex = createTableSql.indexOf("'", commentStartIndex + 9);
 
-        // 如果找不到注释结束位置，则返回null
+        int commentEndIndex = createTableSql.indexOf("'", commentStartIndex + 9);// 查找注释结束位置
+
         if (commentEndIndex == -1)
             return null;
 
-        // 返回注释内容
         return createTableSql.substring(commentStartIndex + 9, commentEndIndex);
     }
-
 }

@@ -3,6 +3,7 @@ package com.ajaxjs.dataservice.crud;
 import com.ajaxjs.dataservice.core.DataServiceUtils;
 import com.ajaxjs.dataservice.core.TenantService;
 import com.ajaxjs.dataservice.core.DataAccessObject;
+import com.ajaxjs.framework.model.BaseEntityConstants;
 import com.ajaxjs.sqlman.SmallMyBatis;
 import com.ajaxjs.sqlman.Sql;
 import com.ajaxjs.sqlman.model.PageResult;
