@@ -1,5 +1,6 @@
 package org.foo;
 
+import com.ajaxjs.framework.spring.PrintBanner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -7,6 +8,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class DataServiceApp {
     public static void main(String[] args) {
         SpringApplication.run(DataServiceApp.class, args);
-        System.out.println("\u001B[32m======================================(♥◠‿◠)ﾉﾞ 【AJ-Data Service 启动成功】ლ(´ڡ`ლ)ﾞ==============================================\u001B[0m"); // 绿色文本
+        PrintBanner.showOk("AJ-Data Service");
     }
 }

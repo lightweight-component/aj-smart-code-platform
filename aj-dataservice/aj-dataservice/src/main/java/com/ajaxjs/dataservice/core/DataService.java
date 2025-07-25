@@ -26,6 +26,11 @@ import java.util.function.Consumer;
 @Slf4j
 @Data
 public abstract class DataService implements DataServiceController {
+    @Override
+    public boolean test() {
+        return true;
+    }
+
     private DataAccessObject dao;
 
     public final Map<String, DataServiceConfig> namespaces = new HashMap<>();

@@ -31,7 +31,8 @@ public class Sync {
             DatabaseMetaData databaseMetaData = conn.getMetaData();
             ResultSet tables = databaseMetaData.getTables(null, null, "%", null);
 
-            while (tables.next()) new Sync().sync(tables.getString("TABLE_NAME"));
+            while (tables.next())
+                new Sync().sync(tables.getString("TABLE_NAME"));
         } catch (Exception e) {
             log.warn("Sync MySql", e);
         }

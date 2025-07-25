@@ -6,7 +6,62 @@
 import DataService from "./data-service/data-service.vue";
 import aj from '@ajaxjs/ui/dist/';
 
-aj.IAM.getLoginInfo(window.config.loginUrl, window.config.thisPageUrl);
+
+
+function get(url, successCallback, errorCallback) {
+  // 1. 创建 XHR 对象
+  const xhr = new XMLHttpRequest();
+
+  // 2. 配置请求
+  xhr.open('GET', url, true); // true 表示异步请求
+
+  // 3. 设置请求完成后的回调
+  xhr.onload = function () {
+    if (xhr.status >= 200 && xhr.status < 300) {
+      // 成功状态码（如 200）
+      try {
+        const response = JSON.parse(xhr.responseText); // 假设返回的是 JSON
+        successCallback(response);
+      } catch (e) {
+        errorCallback('解析响应失败');
+      }
+    } else {
+      errorCallback(new Error('请求失败，状态码：' + xhr.status));
+    }
+  };
+
+  // 4. 错误处理
+  xhr.onerror = function () {
+    errorCallback(new Error('网络错误'));
+  };
+
+  // 5. 发送请求
+  xhr.send();
+}
+
+get('/iam_api/user/info', (j) => {
+  if (json.status && json.data) {
+    console.log(json.data)
+
+    // this.userInfo = json.data;
+    // this.loginState = true;
+  } else {
+
+  }
+}, (error) => {
+  console.error('请求失败:', error);
+  if (confirm('你未登录！是否跳转到登录页面？')) {
+    // location.assign(`../../iam_api/oidc/authorization?response_type=code&client_id=lKi9p9FyicBd6eA` +
+    //     `&state=${Math.random().toString(36).substring(2, 15)}` +
+    //     `&nonce=${Math.random().toString(36).substring(2, 15)}` +
+    //     `&web_uri=${encodeURIComponent(location.href)}` +
+    //     `&redirect_uri=${encodeURIComponent('../../iam_api/client/callback')}`);
+
+    location.assign(`/api/client/to_login?web_url=${encodeURIComponent(location.href)}`);
+  }
+});
+
+// aj.IAM.getLoginInfo(window.config.loginUrl, window.config.thisPageUrl);
 
 export default {
   components: {
@@ -31,13 +86,13 @@ export default {
 }
 
 html,
-body{
+body {
   overflow: hidden;
 }
 
 html,
 body,
-.main > .ivu-menu {
+.main>.ivu-menu {
   height: 100%;
 }
 

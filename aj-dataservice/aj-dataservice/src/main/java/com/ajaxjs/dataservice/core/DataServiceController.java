@@ -12,6 +12,9 @@ import java.util.Map;
  * 数据服务控制器
  */
 public interface DataServiceController extends FastCrudController {
+    @GetMapping("/test")
+    boolean test();
+
     /**
      * 单笔详情
      *
