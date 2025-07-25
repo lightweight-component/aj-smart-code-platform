@@ -74,7 +74,7 @@ export default {
                 title: '确定删除吗？',
                 content: `<p>删除<b>工程 ${this.data.name}</b> 以及其所有的<b>服务</b>？</p>`,
                 onOk: () => {
-                    xhr_del(`${window.config.dsApiRoot}/common_api/project/${this.data.id}`, (j: RepsonseResult) => {
+                    xhr_del(`/api/common_api/project/${this.data.id}`, (j: RepsonseResult) => {
                         if (j.status) {
                             this.$Message.info('删除成功');
                             this.$parent.refreshTree();

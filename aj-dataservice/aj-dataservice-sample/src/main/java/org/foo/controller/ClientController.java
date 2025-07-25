@@ -47,7 +47,7 @@ public class ClientController extends BaseOidcClientUserController {
 
     @GetMapping("/to_login")
     public RedirectView loginPageUrl(HttpSession session, @RequestParam(required = false) String web_url) {
-        return loginPageUrl(session, "/iam_api/oidc/authorization", clientId, "/dataservice_api/client/callback", web_url);
+        return loginPageUrl(session, "http://localhost:8080/iam_api/oidc/authorization", clientId, "/api/client/callback", web_url);
     }
 
     @GetMapping("/callback")

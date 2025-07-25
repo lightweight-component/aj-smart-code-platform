@@ -5,18 +5,21 @@
       <div slot="left" class="split-pane-left">
         <leftTree ref="leftTreeCmp" />
       </div>
-      
+
       <div slot="right" class="split-pane-right">
         <toolbar :active-tab="activeTab" />
 
-        <Tabs ref="tab" class="content mainTab" name="mainTab" :value="activeTab" :animated="false" type="card" @on-click="onTabClick" @on-tab-remove="onTabClose">
+        <Tabs ref="tab" class="content mainTab" name="mainTab" :value="activeTab" :animated="false" type="card"
+          @on-click="onTabClick" @on-tab-remove="onTabClose">
           <tab-pane label="首页" name="index" :index="0" :closable="false" tab="mainTab" style="padding: 0 10px">
             <h1>Welcome to DataService</h1>
           </tab-pane>
-          <tab-pane v-for="tab in mainTabs" :key="tab.label" :index="tab.tabId" :label="tab.label" :name="tab.name" :closable="tab.closable" tab="mainTab" style="padding: 0 10px;">
+          <tab-pane v-for="tab in mainTabs" :key="tab.label" :index="tab.tabId" :label="tab.label" :name="tab.name"
+            :closable="tab.closable" tab="mainTab" style="padding: 0 10px;">
             <!--服务配置-->
+            {{ tab.data.type  }}
             <sInfo ref="sInfo" v-if="tab.data.type == 'SINGLE'" :main="$parent" :data="tab" />
-            <info  ref="info"  v-if="tab.data.type == 'CRUD'" :data="tab" />
+            <info ref="info" v-if="tab.data.type == 'CRUD'" :data="tab" />
           </tab-pane>
         </Tabs>
       </div>
@@ -29,7 +32,7 @@
     <project ref="project" />
 
     <Modal v-model="createSelect" title="选择创建服务的类型" :footer-hide="true" width="500">
-      在项目 <b>{{project.name}}{{project.parentServiceName ? '/' + project.parentServiceName : ''}}</b> 下新建……
+      在项目 <b>{{ project.name }}{{ project.parentServiceName ? '/' + project.parentServiceName : '' }}</b> 下新建……
       <div style="margin: 5% auto;width: 240px;">
         <Button type="primary" @click="addNewByTable">新建 CRUD 服务（从表中选择）</Button>
         <br />
@@ -64,44 +67,44 @@
 
 <style lang="less" scoped>
 .data-service {
-    height: 100%;
+  height: 100%;
 }
 
 .split-pane-right {
-    padding-left: 5px;
+  padding-left: 5px;
 }
 
 .content {
-    border-top: 1px solid lightgray;
-    padding: 1%;
+  border-top: 1px solid lightgray;
+  padding: 1%;
 }
 
 .status-bar {
-    position: absolute;
-    bottom: 0;
-    left: 0;
+  position: absolute;
+  bottom: 0;
+  left: 0;
 }
 
 table.layout {
+  border-collapse: collapse;
+  border-spacing: 0;
+
+  td {
     border-collapse: collapse;
     border-spacing: 0;
-
-    td {
-        border-collapse: collapse;
-        border-spacing: 0;
-    }
+  }
 }
 
 .table-selector .ivu-table-body table {
-    font-size: 10.5pt;
+  font-size: 10.5pt;
 }
 
 .table-selector {
 
-    .ivu-page-next,
-    .ivu-page-prev {
-        padding-top: 7px;
-    }
+  .ivu-page-next,
+  .ivu-page-prev {
+    padding-top: 7px;
+  }
 }
 </style>
 <style lang="less">

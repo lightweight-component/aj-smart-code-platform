@@ -3,12 +3,10 @@
     <span :class="'httpMethod ' + getHttpMethod()" style="font-weight: bold">
       {{ getHttpMethod() }}
     </span>
-    {{apiUrl}}
+    {{ apiUrl }}
     <a :href="apiUrl" target="_blank" title="打开连接">&#x1f517;</a>&nbsp;
     <a href="javascript:void(0)" @click="copy" title="复制">📄</a>&nbsp;
-    <a href="javascript:alert('TODO')" style="text-decoration: underline"
-      >测试</a
-    >
+    <a href="javascript:alert('TODO')" style="text-decoration: underline">测试</a>
   </div>
 </template>
 <script>
@@ -17,7 +15,7 @@ import { copyToClipboard } from "@ajaxjs/util/dist/util/utils";
 export default {
   props: {
     page: { type: Boolean, require: false },
-    apiUrl: { type: String,  require: true }
+    apiUrl: { type: String, require: true }
   },
   data() {
     return {

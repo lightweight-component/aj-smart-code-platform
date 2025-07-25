@@ -7,20 +7,20 @@ export default {
         data: { type: Object, required: true },
         main: { type: Object }
     },
-    data() {
-        return {
-            cmOption: {
-                tabSize: 4,
-                styleActiveLine: true,
-                lineNumbers: true,
-                mode: "text/x-mysql",
-                autoRefresh: true, // 重点是这句，为true
-                // theme: "monokai"
-            },
-        };
-    },
+    // data() {
+    //     return {
+    //         cmOption: {
+    //             tabSize: 4,
+    //             styleActiveLine: true,
+    //             lineNumbers: true,
+    //             mode: "text/x-mysql",
+    //             autoRefresh: true, // 重点是这句，为true
+    //             // theme: "monokai"
+    //         },
+    //     };
+    // },
     mounted(): void {
-        setTimeout(() => this.$refs.cm.refresh(), 500);// 加载codemirror编辑器必须点击一下代码才能正常显示并且代码向左偏移
+        setTimeout(() => this.$refs.cm && this.$refs.cm.refresh(), 500);// 加载codemirror编辑器必须点击一下代码才能正常显示并且代码向左偏移
         this.data.tabCmp = this;
     },
     methods: {
@@ -128,7 +128,7 @@ export default {
                         //     let tab: any = this.mainTabs[i];
 
                         //     if (tab.name === this.activeTab) {
-       
+
                         //         tab.name = current.id;
                         //         // this.$set(tab, 'label', name);
                         //         this.activeTab = current.id;
@@ -141,7 +141,7 @@ export default {
                     } else
                         this.$Message.error(j.message);
                 }, dml);
-            } else 
+            } else
                 xhr_put(`${prefix}/common_api/common_api`, (j: RepsonseResult) => {
                     if (j.status)
                         this.$Message.success('修改命令成功');

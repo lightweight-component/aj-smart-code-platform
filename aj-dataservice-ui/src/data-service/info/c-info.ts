@@ -31,6 +31,7 @@ export default {
         },
     },
     data() {
+        debugger
         let data = this.data.data;
         let isSignle = data.type && data.type === 'SINGLE';
 

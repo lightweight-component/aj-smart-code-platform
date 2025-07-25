@@ -37,7 +37,7 @@ export default {
 
         // 异步加载树数据
         loadTreeData(item: null, callback: Function): void {
-            xhr_get(`${window.config.dsApiRoot}/common_api/project/list`, (j: RepsonseResult) => {
+            xhr_get(`/api/common_api/project/list`, (j: RepsonseResult) => {
                 if (j.status) {
                     let data: DS_TreeNode_Project[] = [];
 
@@ -69,7 +69,7 @@ export default {
          * @param projectTreeNode 
          */
         loadTreeProejct(apiPrefix: string, projectTreeNode: DS_TreeNode_Project): void {
-            xhr_get(`${apiPrefix}/common_api/common_api/list`, (j: RepsonseResult) => {
+            xhr_get(`/api/common_api/common_api/list`, (j: RepsonseResult) => {
                 if (j.status) {
                     let data: DS_TreeNode_Service[] = [];
 

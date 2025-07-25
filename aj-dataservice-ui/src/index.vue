@@ -4,21 +4,13 @@
 
 <script>
 import DataService from "./data-service/data-service.vue";
-import aj from '@ajaxjs/ui/dist/';
-
-
 
 function get(url, successCallback, errorCallback) {
-  // 1. 创建 XHR 对象
   const xhr = new XMLHttpRequest();
-
-  // 2. 配置请求
   xhr.open('GET', url, true); // true 表示异步请求
-
-  // 3. 设置请求完成后的回调
   xhr.onload = function () {
     if (xhr.status >= 200 && xhr.status < 300) {
-      // 成功状态码（如 200）
+
       try {
         const response = JSON.parse(xhr.responseText); // 假设返回的是 JSON
         successCallback(response);
@@ -30,16 +22,14 @@ function get(url, successCallback, errorCallback) {
     }
   };
 
-  // 4. 错误处理
   xhr.onerror = function () {
     errorCallback(new Error('网络错误'));
   };
 
-  // 5. 发送请求
   xhr.send();
 }
 
-get('/iam_api/user/info', (j) => {
+get('/iam_api/user/info', (json) => {
   if (json.status && json.data) {
     console.log(json.data)
 
