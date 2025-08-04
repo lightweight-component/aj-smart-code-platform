@@ -8,7 +8,7 @@
   "success": true,
   "code": null,
   "msg": "操作成功!",
-  "data": 具体的数据
+  "data": "具体的数据"
 }
 ```
 DataService 默认返回`Map<String, Object>`或者`List<Map<String, Object>>`结构，这是在控制器直接返回的，没有经过任何包装。在整合到你的系统中的话会面临这两种情况：
