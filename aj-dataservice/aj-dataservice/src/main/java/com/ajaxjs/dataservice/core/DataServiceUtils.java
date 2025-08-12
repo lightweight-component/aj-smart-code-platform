@@ -1,8 +1,6 @@
 package com.ajaxjs.dataservice.core;
 
-import com.ajaxjs.dataservice.metadata.model.DataSourceInfo;
-import com.ajaxjs.framework.spring.DiContextUtil;
-import com.ajaxjs.sqlman.JdbcConnection;
+import com.ajaxjs.spring.DiContextUtil;
 import com.ajaxjs.sqlman.util.Utils;
 import com.ajaxjs.util.ConvertBasicValue;
 import com.ajaxjs.util.Version;
@@ -14,11 +12,9 @@ import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.nio.charset.StandardCharsets;
-import java.sql.Connection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
-import java.util.regex.Pattern;
 
 /**
  * Utils for DataService

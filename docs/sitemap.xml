@@ -62,12 +62,7 @@
         </url>
     
         <url>
-            <loc>https://dataservice.ajaxjs.com/asset/style/common.css</loc>
-            <lastmod>2025-07-15T09:33:57.064Z</lastmod>
-        </url>
-    
-        <url>
-            <loc>https://dataservice.ajaxjs.com/asset/style/main.css</loc>
+            <loc>https://dataservice.ajaxjs.com/asset/main.css</loc>
             <lastmod>2025-07-17T01:44:20.466Z</lastmod>
         </url>
     

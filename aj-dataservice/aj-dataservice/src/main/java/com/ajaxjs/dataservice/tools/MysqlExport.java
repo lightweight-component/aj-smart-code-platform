@@ -218,7 +218,7 @@ public class MysqlExport {
 
         FileHelper.writeFileContent(sqlFile, exportToSql());
         // 压缩 zip
-        ZipHelper.zip(sqlFile, sqlFile.replace(".sql", ".zip"));
+        ZipHelper.zipDirectory(sqlFile, sqlFile.replace(".sql", ".zip"), true);
         FileHelper.deleteFileOrDirectory(sqlFile);
         fileName = fileName.replace(".sql", ".zip");
 
