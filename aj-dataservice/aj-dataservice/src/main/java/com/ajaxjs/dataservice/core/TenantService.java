@@ -1,6 +1,6 @@
 package com.ajaxjs.dataservice.core;
 
-import com.ajaxjs.framework.spring.DiContextUtil;
+import com.ajaxjs.spring.DiContextUtil;
 import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;

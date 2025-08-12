@@ -3,7 +3,7 @@ package com.ajaxjs.dataservice.core;
 import com.ajaxjs.dataservice.crud.FastCrud;
 import com.ajaxjs.dataservice.crud.FastCrudService;
 import com.ajaxjs.framework.model.PageVO;
-import com.ajaxjs.framework.spring.DiContextUtil;
+import com.ajaxjs.spring.DiContextUtil;
 import com.ajaxjs.sqlman.SmallMyBatis;
 import com.ajaxjs.sqlman.Sql;
 import com.ajaxjs.sqlman.crud.model.TableModel;
