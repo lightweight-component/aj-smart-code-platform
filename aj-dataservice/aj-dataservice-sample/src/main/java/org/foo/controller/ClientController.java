@@ -2,7 +2,9 @@ package org.foo.controller;
 
 import com.ajaxjs.iam.UserConstants;
 import com.ajaxjs.iam.client.BaseOidcClientUserController;
+import com.ajaxjs.iam.client.CacheProvider;
 import com.ajaxjs.iam.jwt.JwtAccessToken;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
@@ -14,16 +16,23 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 /**
  * 用户客户端
  */
 @RestController
 @RequestMapping("/client")
+@RequiredArgsConstructor
 public class ClientController extends BaseOidcClientUserController {
+    private final CacheProvider cacheProvider;
+
     @Override
-    public JwtAccessToken onAccessTokenGot(JwtAccessToken token, HttpServletResponse resp, HttpSession session) {
+    public CacheProvider getCacheProvider() {
+        return cacheProvider;
+    }
+
+    @Override
+    public JwtAccessToken onAccessTokenGot(JwtAccessToken token, HttpServletResponse resp) {
         String tokenStr = token.getId_token();
         // 设置 Token 到 Cookie
         ResponseCookie cookie = ResponseCookie.from(UserConstants.ACCESS_TOKEN_KEY, tokenStr)
@@ -46,13 +55,13 @@ public class ClientController extends BaseOidcClientUserController {
     private String clientSecret;
 
     @GetMapping("/to_login")
-    public RedirectView loginPageUrl(HttpSession session, @RequestParam(required = false) String web_url) {
-        return loginPageUrl(session, "http://localhost:8080/iam_api/oidc/authorization", clientId, "/api/client/callback", web_url);
+    public RedirectView loginPageUrl(@RequestParam(required = false) String web_url) {
+        return loginPageUrl("http://localhost:8080/iam_api/oidc/authorization", clientId, "/api/client/callback", web_url);
     }
 
     @GetMapping("/callback")
-    public ModelAndView callbackToken(@RequestParam String code, @RequestParam String state, @RequestParam(required = false) String web_url, HttpSession session, HttpServletResponse resp) {
-        return callbackToken(clientId, clientSecret, code, state, web_url, session, resp);
+    public ModelAndView callbackToken(@RequestParam String code, @RequestParam String state, @RequestParam(required = false) String web_url, HttpServletResponse resp) {
+        return callbackToken(clientId, clientSecret, code, state, web_url, resp);
     }
 
 }
