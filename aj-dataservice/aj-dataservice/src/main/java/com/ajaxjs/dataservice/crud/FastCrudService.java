@@ -6,12 +6,10 @@ import com.ajaxjs.framework.model.PageVO;
 import com.ajaxjs.spring.DiContextUtil;
 import com.ajaxjs.sqlman.model.PageResult;
 import com.ajaxjs.sqlman.util.Utils;
+import com.ajaxjs.util.StrUtil;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 public class FastCrudService implements FastCrudController {
     public final Map<String, FastCrud<Map<String, Object>, Long>> namespaces = new HashMap<>();
@@ -69,50 +67,82 @@ public class FastCrudService implements FastCrudController {
 
     /**
      * 基于 URL 的 QueryString，设计一个条件查询的参数规范，可以转化为 SQL 的 Where 里面的查询
+     * usage:
+     * <pre>
+     *  ?q_name=张三&q_age=18&q_sex=1&ql_address=上海&lo=and // 默认是 OR 关系
+     * </pre>
      *
      * @param request 请求对象
      * @return SQL Where 语句
      */
     public static String getWhereClause(HttpServletRequest request) {
         Map<String, String[]> parameters = request.getParameterMap();   // 获取所有 QueryString 参数
-        StringBuilder whereClause = new StringBuilder(); // 创建一个用于存储 SQL 查询的 StringBuilder
+        List<String> arr = new ArrayList<>();
 
         // 遍历所有参数
         for (String parameterName : parameters.keySet()) {
             // 跳过不符合条件的参数
-            if (!parameterName.startsWith("q_"))
+            boolean isQuery = parameterName.startsWith("q_");
+            boolean isQueryLike = parameterName.startsWith("ql_");
+
+            if (!isQuery && !isQueryLike)
                 continue;
+
+            StringBuilder pair = new StringBuilder();
 
             // 获取参数值
             String[] parameterValues = parameters.get(parameterName);
 
             // 构建 SQL 查询
-            whereClause.append(" AND ");
-            whereClause.append(parameterName.substring(2));
+            String fieldName = parameterName.substring(isQueryLike ? 3 : 2);
+            Utils.escapeSqlInjection(fieldName);
+
+//            whereClause.append(" OR ");
+            pair.append(fieldName);
 
             // 处理单值参数
             if (parameterValues.length == 1) {
                 String value = Utils.escapeSqlInjection(parameterValues[0]).trim();
-                whereClause.append(" = ");
-                whereClause.append("'").append(value).append("'");
+
+                if (isQuery) {
+                    pair.append(" = ");
+                    pair.append("'").append(value).append("'");
+                }
+
+                if (isQueryLike) {
+                    pair.append(" LIKE ");
+                    pair.append("'%").append(value).append("%'");
+                }
             } else {
                 // 处理数组参数
-                whereClause.append(" IN (");
+                pair.append(" IN (");
 
                 if (parameterValues.length > 0) {
                     for (String parameterValue : parameterValues) {
-                        whereClause.append("'");
-                        whereClause.append(Utils.escapeSqlInjection(parameterValue).trim());
-                        whereClause.append("',");
+                        pair.append("'");
+                        pair.append(Utils.escapeSqlInjection(parameterValue).trim());
+                        pair.append("',");
                     }
 
-                    whereClause.deleteCharAt(whereClause.length() - 1);
+                    pair.deleteCharAt(pair.length() - 1);
                 }
 
-                whereClause.append(")");
+                pair.append(")");
             }
+
+            arr.add(pair.toString());
         }
 
-        return whereClause.toString();// 返回 SQL 查询
+        if (arr.size() == 0)
+            return StrUtil.EMPTY_STRING;
+        else {
+            StringBuilder whereClause = new StringBuilder(); // 创建一个用于存储 SQL 查询的 StringBuilder
+            whereClause.append(" AND (");
+            String logicalOperators = "and".equals(request.getParameter("lo")) ? " AND " : " OR ";
+            whereClause.append(String.join(logicalOperators, arr));
+            whereClause.append(")");
+
+            return whereClause.toString();// 返回 SQL 查询
+        }
     }
 }
