@@ -192,6 +192,11 @@ public abstract class DataService implements DataServiceController {
     }
 
     @Override
+    public Long create(Map<String, Object> params, String namespace) {
+        return create(namespace, params);
+    }
+
+    @Override
     public Long create(String namespace, String namespace2, Map<String, Object> params) {
         DataServiceConfig config = getConfig(namespace, namespace2);
         final Map<String, Object> _params = DataServiceUtils.initParams(params, true);

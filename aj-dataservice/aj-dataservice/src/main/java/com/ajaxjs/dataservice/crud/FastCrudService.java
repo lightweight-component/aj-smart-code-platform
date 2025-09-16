@@ -56,6 +56,11 @@ public class FastCrudService implements FastCrudController {
     }
 
     @Override
+    public Long create(Map<String, Object> params, String namespace) {
+        return getCRUD(namespace).create(params);
+    }
+
+    @Override
     public Boolean update(String namespace, Map<String, Object> params) {
         return getCRUD(namespace).update(params);
     }

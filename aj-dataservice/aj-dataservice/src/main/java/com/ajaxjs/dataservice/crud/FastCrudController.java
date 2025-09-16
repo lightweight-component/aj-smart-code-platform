@@ -2,6 +2,7 @@ package com.ajaxjs.dataservice.crud;
 
 
 import com.ajaxjs.framework.model.PageVO;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,7 +21,6 @@ public interface FastCrudController {
      */
     @GetMapping("/{namespace}/{id}")
     Map<String, Object> info(@PathVariable String namespace, @PathVariable Long id);
-
 
     /**
      * 实体列表
@@ -47,8 +47,18 @@ public interface FastCrudController {
      * @param params    实体
      * @return 实体 id
      */
-    @PostMapping("/{namespace}")
+    @PostMapping(value = "/{namespace}", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     Long create(@PathVariable String namespace, @RequestParam Map<String, Object> params);
+
+    /**
+     * 创建实体
+     *
+     * @param namespace 实体的命名空间
+     * @param params    实体
+     * @return 实体 id
+     */
+    @PostMapping(value = "/{namespace}", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+    Long create(@RequestBody Map<String, Object> params, @PathVariable String namespace);
 
     /**
      * 修改实体
