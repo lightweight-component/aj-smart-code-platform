@@ -148,7 +148,10 @@ public class DataServiceUtils {
         }
 
         Map<String, Object> _params = new HashMap<>(); // 创建新的参数映射，并将原始参数转换为指定格式
-        params.forEach((key, value) -> _params.put(Utils.changeFieldToColumnName(key), ConvertBasicValue.toJavaValue(value.toString())));
+        params.forEach((key, value) -> {
+            if (value != null)
+                _params.put(Utils.changeFieldToColumnName(key), ConvertBasicValue.toJavaValue(value.toString()));
+        });
 
         return _params;
     }

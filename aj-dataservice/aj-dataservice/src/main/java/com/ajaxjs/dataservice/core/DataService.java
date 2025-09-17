@@ -231,6 +231,11 @@ public abstract class DataService implements DataServiceController {
     }
 
     @Override
+    public Boolean update(Map<String, Object> params, String namespace) {
+        return update(namespace, params);
+    }
+
+    @Override
     public Boolean update(String namespace, String namespace2, Map<String, Object> params) {
         DataServiceConfig config = getConfig(namespace, namespace2);
         final Map<String, Object> _params = DataServiceUtils.initParams(params);

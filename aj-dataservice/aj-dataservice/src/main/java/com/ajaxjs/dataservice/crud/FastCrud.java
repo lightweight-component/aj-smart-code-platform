@@ -253,10 +253,8 @@ public class FastCrud<T, K extends Serializable> extends FastCrudConfig {
         if (beforeCreate != null)
             beforeCreate.accept(params);
 
-        Integer tenantId = TenantService.getTenantId();
-
-        if (tenantId != null)
-            params.put("tenant_id", tenantId);
+        if (isTenantIsolation() && TenantService.getTenantId() != null)
+            params.put("tenant_id", TenantService.getTenantId());
 
         if (isCurrentUserOnly())
             params.put("user_id", DataServiceUtils.getCurrentUserId());
