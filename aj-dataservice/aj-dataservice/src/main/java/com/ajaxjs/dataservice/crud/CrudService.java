@@ -18,6 +18,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -57,19 +58,19 @@ public class CrudService implements DataAccessObject {
 
     @Override
     public <T> List<T> list(Class<T> beanClz, String sql, Object... params) {
-        return CollUtils.getList(Sql.instance().input(sql, params).queryList(beanClz));
+        return getList(Sql.instance().input(sql, params).queryList(beanClz));
     }
 
     @Override
     public <T> List<T> listById(Class<T> beanClz, String sqlId, Map<String, Object> mapParams, Object... params) {
         String sql = smallMyBatis.handleSql(mapParams, sqlId);
 
-        return CollUtils.getList(Sql.instance().input(sql, params).queryList(beanClz));
+        return getList(Sql.instance().input(sql, params).queryList(beanClz));
     }
 
     @Override
     public List<Map<String, Object>> listMap(String sql, Object... params) {
-        return CollUtils.getList(Sql.instance().input(sql, params).queryList());
+        return getList(Sql.instance().input(sql, params).queryList());
     }
 
     @Override
@@ -77,7 +78,7 @@ public class CrudService implements DataAccessObject {
         String sql = smallMyBatis.handleSql(mapParams, sqlId);
         InheritableThreadLocal k;
 
-        return CollUtils.getList(Sql.instance().input(sql, params).queryList());
+        return getList(Sql.instance().input(sql, params).queryList());
     }
 
     @Override
@@ -215,4 +216,19 @@ public class CrudService implements DataAccessObject {
 
         return annotation.value();
     }
+
+    /**
+     * 即使 List 为空（null），也要返回一个空的 List
+     *
+     * @param <T>  范型，List 中元素的类别
+     * @param list 给定的 List对象，可以为 null
+     * @return 如果给定的 List 不为 null，则直接返回原 List 对象；如果为 null，则返回一个空的 List 对象
+     */
+    public static <T> List<T> getList(List<T> list) {
+        if (CollUtils.isEmpty(list))
+            list = Collections.emptyList();
+
+        return list;
+    }
+
 }
