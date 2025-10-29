@@ -203,6 +203,6 @@ public class DataBaseQuery extends BaseMetaQuery {
     }
 
     public static void saveToDiskJson(Connection conn, String path, String dbName) {
-        FileHelper.writeFileContent(path, "DOC_DATA = " + getDoc(conn, dbName));
+        new FileHelper(path).writeFileContent("DOC_DATA = " + getDoc(conn, dbName));
     }
 }

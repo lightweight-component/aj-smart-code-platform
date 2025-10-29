@@ -6,7 +6,7 @@ import com.ajaxjs.framework.model.PageVO;
 import com.ajaxjs.spring.DiContextUtil;
 import com.ajaxjs.sqlman.model.PageResult;
 import com.ajaxjs.sqlman.util.Utils;
-import com.ajaxjs.util.StrUtil;
+import com.ajaxjs.util.CommonConstant;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
@@ -144,7 +144,7 @@ public class FastCrudService implements FastCrudController {
         }
 
         if (arr.size() == 0)
-            return StrUtil.EMPTY_STRING;
+            return CommonConstant.EMPTY_STRING;
         else {
             StringBuilder whereClause = new StringBuilder(); // 创建一个用于存储 SQL 查询的 StringBuilder
             whereClause.append(" AND (");

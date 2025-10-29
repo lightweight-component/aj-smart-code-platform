@@ -3,7 +3,7 @@ package com.ajaxjs.dataservice.core;
 import com.ajaxjs.spring.DiContextUtil;
 import com.ajaxjs.sqlman.util.Utils;
 import com.ajaxjs.util.ConvertBasicValue;
-import com.ajaxjs.util.Version;
+import com.ajaxjs.util.DebugTools;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
@@ -85,7 +85,7 @@ public class DataServiceUtils {
 //            throw new NullPointerException("上下文的用户不存在"); // 如果用户对象为空，则抛出异常
         Object user = Objects.requireNonNull(DiContextUtil.getRequest()).getAttribute("USER_KEY_IN_REQUEST");
 
-        if (user == null && Version.isDebug)
+        if (user == null && DebugTools.isDebug)
             user = new Object();
 
         if (user == null)

@@ -3,7 +3,7 @@ package com.ajaxjs.dataservice.tools;
 import com.ajaxjs.dataservice.metadata.MetaQuery;
 import com.ajaxjs.dataservice.metadata.model.*;
 import com.ajaxjs.util.ObjectHelper;
-import com.ajaxjs.util.io.StreamHelper;
+import com.ajaxjs.util.io.DataReader;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
@@ -141,7 +141,7 @@ public class MySqlProbe {
             else
                 p = r.exec("env"); // Unix
 
-            StreamHelper.read(p.getInputStream(), StandardCharsets.UTF_8, line -> {
+            new DataReader(p.getInputStream()).readAsLineString(line -> {
                 String[] str = line.split("=");
 
                 if (2 <= str.length)

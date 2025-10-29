@@ -11,7 +11,7 @@ import com.ajaxjs.sqlman.annotation.Table;
 import com.ajaxjs.sqlman.crud.Entity;
 import com.ajaxjs.sqlman.crud.model.TableModel;
 import com.ajaxjs.sqlman.model.PageResult;
-import com.ajaxjs.util.CollUtils;
+import com.ajaxjs.util.ObjectHelper;
 import com.ajaxjs.util.reflect.Methods;
 import lombok.Data;
 import org.springframework.stereotype.Component;
@@ -225,7 +225,7 @@ public class CrudService implements DataAccessObject {
      * @return 如果给定的 List 不为 null，则直接返回原 List 对象；如果为 null，则返回一个空的 List 对象
      */
     public static <T> List<T> getList(List<T> list) {
-        if (CollUtils.isEmpty(list))
+        if (ObjectHelper.isEmpty(list))
             list = Collections.emptyList();
 
         return list;
