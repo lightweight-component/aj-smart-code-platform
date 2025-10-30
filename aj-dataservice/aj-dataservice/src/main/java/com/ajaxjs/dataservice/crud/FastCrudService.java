@@ -1,6 +1,5 @@
 package com.ajaxjs.dataservice.crud;
 
-
 import com.ajaxjs.dataservice.core.DataAccessObject;
 import com.ajaxjs.framework.model.PageVO;
 import com.ajaxjs.spring.DiContextUtil;
@@ -86,25 +85,19 @@ public class FastCrudService implements FastCrudController {
      * @return SQL Where 语句
      */
     public static String getWhereClause(HttpServletRequest request) {
-        Map<String, String[]> parameters = request.getParameterMap();   // 获取所有 QueryString 参数
+        Map<String, String[]> parameters = request.getParameterMap();
         List<String> arr = new ArrayList<>();
 
-        // 遍历所有参数
         for (String parameterName : parameters.keySet()) {
-            // 跳过不符合条件的参数
             boolean isQuery = parameterName.startsWith("q_");
             boolean isQueryLike = parameterName.startsWith("ql_");
 
-            if (!isQuery && !isQueryLike)
+            if (!isQuery && !isQueryLike)// 跳过不符合条件的参数
                 continue;
 
             StringBuilder pair = new StringBuilder();
-
-            // 获取参数值
             String[] parameterValues = parameters.get(parameterName);
-
-            // 构建 SQL 查询
-            String fieldName = parameterName.substring(isQueryLike ? 3 : 2);
+            String fieldName = parameterName.substring(isQueryLike ? 3 : 2);  // 构建 SQL 查询
             Utils.escapeSqlInjection(fieldName);
 
 //            whereClause.append(" OR ");

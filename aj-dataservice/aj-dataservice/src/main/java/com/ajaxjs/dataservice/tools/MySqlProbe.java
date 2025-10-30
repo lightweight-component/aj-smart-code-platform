@@ -8,7 +8,6 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.util.*;
@@ -37,6 +36,7 @@ public class MySqlProbe {
         threadsCached.putAll(slowLaunchThreads);
 
         Map<String, String> basicInfo;
+
         try {
             DatabaseMetaData metaData = connect.getMetaData();
             String url = metaData.getURL();

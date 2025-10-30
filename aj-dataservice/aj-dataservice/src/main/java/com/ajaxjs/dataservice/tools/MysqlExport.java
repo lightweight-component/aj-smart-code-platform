@@ -17,7 +17,6 @@ import java.util.function.Consumer;
  */
 @Slf4j
 public class MysqlExport {
-
     /**
      * ResultSet 处理器
      *
@@ -120,7 +119,7 @@ public class MysqlExport {
     /**
      * 生成insert语句
      *
-     * @param table the table to get inserts statement for
+     * @param table the table to get an insert statement for
      * @return String generated SQL insert
      */
     private String getDataInsertStatement(String table) {
