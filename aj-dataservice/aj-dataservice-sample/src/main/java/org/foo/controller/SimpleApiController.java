@@ -2,7 +2,7 @@ package org.foo.controller;
 
 import com.ajaxjs.dataservice.crud.FastCrud;
 import com.ajaxjs.dataservice.crud.FastCrudService;
-import com.ajaxjs.sqlman.crud.model.TableModel;
+import com.ajaxjs.sqlman.model.tablemodel.TableModel;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.web.bind.annotation.RequestMapping;

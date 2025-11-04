@@ -3,7 +3,7 @@ package com.ajaxjs.dataservice.crud;
 import com.ajaxjs.dataservice.core.DataAccessObject;
 import com.ajaxjs.framework.model.PageVO;
 import com.ajaxjs.spring.DiContextUtil;
-import com.ajaxjs.sqlman.model.PageResult;
+import com.ajaxjs.sqlman.v1.PageResult;
 import com.ajaxjs.sqlman.util.Utils;
 import com.ajaxjs.util.CommonConstant;
 

@@ -3,8 +3,8 @@ package com.ajaxjs.dataservice;
 
 import com.ajaxjs.dataservice.crud.CrudService;
 import com.ajaxjs.dataservice.crud.FastCrud;
-import com.ajaxjs.sqlman.crud.model.TableModel;
-import com.ajaxjs.sqlman.model.PageResult;
+import com.ajaxjs.sqlman.model.tablemodel.TableModel;
+import com.ajaxjs.sqlman.v1.PageResult;
 import com.ajaxjs.util.ObjectHelper;
 import lombok.Data;
 import org.junit.jupiter.api.Test;

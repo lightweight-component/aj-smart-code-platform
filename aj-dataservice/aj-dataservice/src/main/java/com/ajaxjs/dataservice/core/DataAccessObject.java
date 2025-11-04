@@ -1,6 +1,6 @@
 package com.ajaxjs.dataservice.core;
 
-import com.ajaxjs.sqlman.model.PageResult;
+import com.ajaxjs.sqlman.v1.PageResult;
 
 import java.io.Serializable;
 import java.util.List;

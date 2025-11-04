@@ -1,6 +1,6 @@
 package com.ajaxjs.dataservice.crud;
 
-import com.ajaxjs.sqlman.crud.model.TableModel;
+import com.ajaxjs.sqlman.model.tablemodel.TableModel;
 import lombok.Data;
 
 /**
