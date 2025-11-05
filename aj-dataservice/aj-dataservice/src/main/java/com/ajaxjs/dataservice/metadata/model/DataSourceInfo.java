@@ -1,7 +1,7 @@
 package com.ajaxjs.dataservice.metadata.model;
 
 
-import com.ajaxjs.sqlman.JdbcConstants;
+import com.ajaxjs.sqlman.model.DatabaseVendor;
 import lombok.Data;
 
 import javax.sql.DataSource;
@@ -46,7 +46,7 @@ public class DataSourceInfo {
     /**
      * 数据库厂商
      */
-    private JdbcConstants.DatabaseVendor type;
+    private DatabaseVendor type;
 
     /**
      * 连接地址
