@@ -2,12 +2,12 @@ package com.ajaxjs.dataservice.core;
 
 import com.ajaxjs.dataservice.crud.FastCrud;
 import com.ajaxjs.dataservice.crud.FastCrudService;
-import com.ajaxjs.framework.model.PageVO;
 import com.ajaxjs.spring.DiContextUtil;
+import com.ajaxjs.sqlman.Action;
 import com.ajaxjs.sqlman.SmallMyBatis;
-import com.ajaxjs.sqlman.v1.Sql;
 import com.ajaxjs.sqlman.model.tablemodel.TableModel;
 import com.ajaxjs.sqlman.v1.PageResult;
+import com.ajaxjs.sqlman.v1.Sql;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -139,27 +139,26 @@ public abstract class DataService implements DataServiceController {
         return list(config);
     }
 
-    private PageVO<Map<String, Object>> page(DataServiceConfig config) {
+    private PageResult<Map<String, Object>> page(DataServiceConfig config) {
         FastCrud<Map<String, Object>, Long> crud = initFastCRUD(config);
 
         if (isSingle(config))
             crud.setListSql(config.getSql());
 
         String where = FastCrudService.getWhereClause(Objects.requireNonNull(DiContextUtil.getRequest()));
-        PageResult<Map<String, Object>> result = crud.pageMap(where);
 
-        return new PageVO<>(result, result.getTotalCount());
+        return crud.pageMap(where);
     }
 
     @Override
-    public PageVO<Map<String, Object>> page(String namespace) {
+    public PageResult<Map<String, Object>> page(String namespace) {
         DataServiceConfig config = getConfig(namespace);
 
         return page(config);
     }
 
     @Override
-    public PageVO<Map<String, Object>> page(String namespace, String namespace2) {
+    public PageResult<Map<String, Object>> page(String namespace, String namespace2) {
         DataServiceConfig config = getConfig(namespace, namespace2);
 
         return page(config);
@@ -288,7 +287,8 @@ public abstract class DataService implements DataServiceController {
     public boolean reloadConfig() {
         namespaces.clear();
 
-        List<DataServiceConfig> list = dao.list(DataServiceConfig.class, "SELECT * FROM ds_common_api WHERE stat != 1");// 从数据库中查询所有状态不为1的配置项
+//        List<DataServiceConfig> list = dao.list(DataServiceConfig.class, "SELECT * FROM ds_common_api WHERE stat != 1");// 从数据库中查询所有状态不为1的配置项
+        List<DataServiceConfig> list = new Action("SELECT * FROM ds_common_api WHERE stat != 1").query().list(DataServiceConfig.class);// 从数据库中查询所有状态不为1的配置项
         list.sort(Comparator.comparingInt(DataServiceConfig::getPid)); // 根据pid对配置项进行排序
         Map<Integer, DataServiceConfig> configMap = new HashMap<>();
 

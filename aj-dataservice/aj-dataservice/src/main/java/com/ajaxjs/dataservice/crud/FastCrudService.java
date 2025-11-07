@@ -42,11 +42,11 @@ public class FastCrudService implements FastCrudController {
     }
 
     @Override
-    public PageVO<Map<String, Object>> page(String namespace) {
+    public PageResult<Map<String, Object>> page(String namespace) {
         String where = getWhereClause(Objects.requireNonNull(DiContextUtil.getRequest()));
         PageResult<Map<String, Object>> result = getCRUD(namespace).page(where);
 
-        return new PageVO<>(result, result.getTotalCount());
+        return getCRUD(namespace).page(where);
     }
 
     @Override
