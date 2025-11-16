@@ -11,14 +11,14 @@
 
     <artifactId>aj-dataservice</artifactId>
     <version>1.0</version>
-    <description>user</description>
+    <description>Fast CRUD and API services</description>
     <packaging>jar</packaging>
 
     <dependencies>
         <dependency>
             <groupId>com.ajaxjs</groupId>
             <artifactId>ajaxjs-framework</artifactId>
-            <version>1.2.2</version>
+            <version>1.2.4</version>
         </dependency>
 
         <dependency>
