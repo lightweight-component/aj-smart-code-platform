@@ -40,15 +40,15 @@ get('/iam_api/user/info', (json) => {
   }
 }, (error) => {
   console.error('请求失败:', error);
-  if (confirm('你未登录！是否跳转到登录页面？')) {
+ // if (confirm('你未登录！是否跳转到登录页面？')) {
     // location.assign(`../../iam_api/oidc/authorization?response_type=code&client_id=lKi9p9FyicBd6eA` +
     //     `&state=${Math.random().toString(36).substring(2, 15)}` +
     //     `&nonce=${Math.random().toString(36).substring(2, 15)}` +
     //     `&web_uri=${encodeURIComponent(location.href)}` +
     //     `&redirect_uri=${encodeURIComponent('../../iam_api/client/callback')}`);
 
-    location.assign(`/api/client/to_login?web_url=${encodeURIComponent(location.href)}`);
-  }
+    //location.assign(`/api/client/to_login?web_url=${encodeURIComponent(location.href)}`);
+ // }
 });
 
 // aj.IAM.getLoginInfo(window.config.loginUrl, window.config.thisPageUrl);
