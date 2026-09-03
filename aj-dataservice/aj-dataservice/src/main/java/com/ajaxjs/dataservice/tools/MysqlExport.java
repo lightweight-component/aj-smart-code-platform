@@ -1,19 +1,34 @@
 package com.ajaxjs.dataservice.tools;
 
 import com.ajaxjs.util.date.DateTools;
-import com.ajaxjs.util.io.FileHelper;
-import com.ajaxjs.util.io.ZipHelper;
 import lombok.extern.slf4j.Slf4j;
 
-import java.io.File;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 /**
  * 免 mysqldump 命令备份 SQL
+ * <pre>{@code
+ * @Scheduled(cron = "0 0 23 * * ?")  // 每天晚上11点执行
+ * public void backup() {
+ * String path = "/home/backup/mysql";
+ * new File(path).mkdirs();
+ * try (Connection connection = DataBaseConnection.initDb()) {
+ * new MysqlExport(connection, path).export();
+ * } catch (Exception e) {
+ * log.error("Failed to backup database", e);
+ * }
+ * }
+ * }</pre>
  */
 @Slf4j
 public class MysqlExport {
@@ -28,7 +43,7 @@ public class MysqlExport {
         try (ResultSet rs = stmt.executeQuery(sql)) {
             handle.accept(rs);
         } catch (SQLException e) {
-            log.warn("", e);
+            log.warn("Failed to handle sql:" + sql, e);
         }
     }
 
@@ -39,25 +54,32 @@ public class MysqlExport {
      * @param saveFolder 保存目录
      */
     public MysqlExport(Connection conn, String saveFolder) {
-        String[] arr = conn.toString().split("\\?")[0].split("/");
-        databaseName = arr[arr.length - 1];
-        this.saveFolder = saveFolder;
-
         try {
-            stmt = conn.createStatement();
+            databaseName = conn.getCatalog();
+            stmt = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_READ_ONLY);
         } catch (SQLException e) {
-            log.warn("", e);
+            log.error("Failed tp get the name of database failed, or the statement failed");
+            throw new RuntimeException(e);
         }
+
+        this.saveFolder = saveFolder;
     }
 
+    /**
+     * SQL 片段开始标识。
+     */
     private static final String SQL_START_PATTERN = "-- start";
 
+    /**
+     * SQL 片段结束标识。
+     */
     private static final String SQL_END_PATTERN = "-- end";
 
     /**
      * 执行语句
      */
-    private Statement stmt;
+    private final Statement stmt;
 
     /**
      * 数据库名
@@ -77,11 +99,11 @@ public class MysqlExport {
     private List<String> getAllTables() {
         List<String> tables = new ArrayList<>();
 
-        rsHandle(stmt, "SHOW TABLE STATUS FROM `" + databaseName + "`;", rs -> {
+        rsHandle(stmt, "SHOW TABLE STATUS FROM " + escapeIdentifier(databaseName), rs -> {
             try {
                 while (rs.next()) tables.add(rs.getString("Name"));
             } catch (SQLException e) {
-                log.warn("", e);
+                log.warn("Failed to get all tables.", e);
             }
         });
 
@@ -97,7 +119,7 @@ public class MysqlExport {
     private String getTableInsertStatement(String table) {
         StringBuilder sql = new StringBuilder();
 
-        try (ResultSet rs = stmt.executeQuery("SHOW CREATE TABLE `" + table + "`;")) {
+        try (ResultSet rs = stmt.executeQuery("SHOW CREATE TABLE " + escapeIdentifier(table))) {
             while (rs.next()) {
                 String qtbl = rs.getString(1), query = rs.getString(2);
                 query = query.trim().replace("CREATE TABLE", "CREATE TABLE IF NOT EXISTS");
@@ -110,7 +132,7 @@ public class MysqlExport {
 
             sql.append("\n\n--\n").append(SQL_END_PATTERN).append(" table dump: ").append(table).append("\n--\n\n");
         } catch (SQLException e) {
-            log.warn("", e);
+            log.warn("Failed to create the CREATE statement", e);
         }
 
         return sql.toString();
@@ -122,12 +144,13 @@ public class MysqlExport {
      * @param table the table to get an insert statement for
      * @return String generated SQL insert
      */
-    private String getDataInsertStatement(String table) {
+    @Deprecated
+    String getDataInsertStatementInMemory(String table) {
         StringBuilder sql = new StringBuilder();
 
-        rsHandle(stmt, "SELECT * FROM " + "`" + table + "`;", rs -> {
+        rsHandle(stmt, "SELECT * FROM " + escapeIdentifier(table), rs -> {
             try {
-                rs.last();
+//                rs.last();
 //				int rowCount = rs.getRow();
 //			if (rowCount <= 0)
 //				return sql.toString();
@@ -156,7 +179,7 @@ public class MysqlExport {
                         else if (columnType == Types.INTEGER || columnType == Types.TINYINT || columnType == Types.BIT)
                             sql.append(rs.getInt(columnIndex)).append(", ");
                         else {
-                            String val = rs.getString(columnIndex).replace("'", "\\'");
+                            String val = escapeString(rs.getString(columnIndex));
                             sql.append("'").append(val).append("', ");
                         }
                     }
@@ -165,7 +188,7 @@ public class MysqlExport {
                     sql.append(rs.isLast() ? ")" : "),\n");
                 }
             } catch (SQLException e) {
-                log.warn("", e);
+                log.warn("Failed to process table: " + table, e);
             }
         });
 
@@ -181,28 +204,14 @@ public class MysqlExport {
      *
      * @return 完整的 SQL 备份内容
      */
-    private String exportToSql() {
-        StringBuilder sql = new StringBuilder();
-        sql.append("--\n-- Generated by AJAXJS-Data");
-        sql.append("\n-- Date: ").append(DateTools.now("d-M-Y H:m:s")).append("\n--");
+    String exportToSql() {
+        try (StringWriter writer = new StringWriter()) {
+            writeExport(writer);
 
-        // these declarations are extracted from HeidiSQL
-        sql.append("\n\n/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;").append("\n/*!40101 SET NAMES utf8 */;\n/*!50503 SET NAMES utf8mb4 */;").append("\n/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;").append("\n/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;");
-
-        for (String s : getAllTables()) {
-            sql.append(getTableInsertStatement(s.trim()));
-            sql.append(getDataInsertStatement(s.trim()));
+            return writer.toString();
+        } catch (IOException | SQLException e) {
+            throw new RuntimeException("导出数据库失败", e);
         }
-
-        try {
-            stmt.close();
-        } catch (SQLException e) {
-            log.warn("", e);
-        }
-
-        sql.append("\n/*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;").append("\n/*!40014 SET FOREIGN_KEY_CHECKS=IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;").append("\n/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;");
-
-        return sql.toString();
     }
 
     /**
@@ -212,15 +221,91 @@ public class MysqlExport {
      */
     public String export() {
         String fileName = "db-dump-" + DateTools.now("yyyy-MM-dd") + "-" + databaseName + ".sql";
-        String sqlFile = saveFolder + File.separator + fileName;
+        String zipFileName = fileName.replace(".sql", ".zip");
+        Path folder = Path.of(saveFolder);
 
-        new FileHelper(sqlFile).writeFileContent(exportToSql());
-        // 压缩 zip
-        ZipHelper.zipDirectory(sqlFile, sqlFile.replace(".sql", ".zip"), true);
-        new FileHelper(sqlFile).delete();
-        fileName = fileName.replace(".sql", ".zip");
+        try {
+            Files.createDirectories(folder);
+            try (ZipOutputStream zip = new ZipOutputStream(Files.newOutputStream(folder.resolve(zipFileName)));
+                 Writer writer = new BufferedWriter(new OutputStreamWriter(zip, StandardCharsets.UTF_8))) {
+                zip.putNextEntry(new ZipEntry(fileName));
+                writeExport(writer);
+                writer.flush();
+                zip.closeEntry();
+            }
+        } catch (IOException | SQLException e) {
+            throw new RuntimeException("导出数据库失败", e);
+        }
 
-        return fileName;
+        return zipFileName;
 
+    }
+
+    void writeExport(Writer writer) throws IOException, SQLException {
+        writer.write("-- Generated by AJAXJS-Data\n");
+
+        for (String table : getAllTables()) {
+            try (ResultSet create = stmt.executeQuery("SHOW CREATE TABLE " + escapeIdentifier(table))) {
+                if (create.next())
+                    writer.write(create.getString(2).replace("CREATE TABLE", "CREATE TABLE IF NOT EXISTS") + ";\n");
+            }
+
+            getDataInsertStatement(table, writer);
+        }
+    }
+
+    /**
+     * 将单张表的数据以 INSERT 语句流式写入输出目标。
+     *
+     * @param table  要导出的表名
+     * @param writer SQL 输出目标
+     * @throws IOException  写入输出目标失败时抛出
+     * @throws SQLException 读取表数据失败时抛出
+     */
+    public void getDataInsertStatement(String table, Writer writer) throws IOException, SQLException {
+        try (ResultSet rows = stmt.executeQuery("SELECT * FROM " + escapeIdentifier(table))) {
+            ResultSetMetaData meta = rows.getMetaData();
+            int count = meta.getColumnCount();
+            while (rows.next()) {
+                writer.write("INSERT INTO " + escapeIdentifier(table) + " VALUES (");
+                for (int i = 1; i <= count; i++) {
+                    if (i > 1) writer.write(", ");
+                    Object value = rows.getObject(i);
+                    if (value == null) writer.write("NULL");
+                    else if (value instanceof Number || value instanceof Boolean) writer.write(value.toString());
+                    else writer.write(escapeString(rows.getString(i)));
+                }
+                writer.write(");\n");
+            }
+        }
+    }
+
+    /**
+     * 使用 MySQL 反引号转义数据库标识符。
+     *
+     * @param identifier 表名或数据库名
+     * @return 可嵌入 SQL 的转义标识符
+     */
+    private String escapeIdentifier(String identifier) {
+        return "`" + identifier.replace("`", "``") + "`";
+    }
+
+    /**
+     * 转义字符串字面量中的 MySQL 特殊字符。
+     *
+     * @param str 原始字符串
+     * @return 已转义的字符串字面量；空值返回 {@code NULL}
+     */
+    private String escapeString(String str) {
+        if (str == null)
+            return "NULL";
+
+        // 修正后的转义逻辑
+        return "'" + str.replace("\\", "\\\\") // 将 \ 替换为 \\
+                .replace("'", "\\'")       // 将 ' 替换为 \'
+                .replace("\n", "\\n")      // 将换行符替换为 \n
+                .replace("\r", "\\r")      // 将回车符替换为 \r
+                .replace("\0", "\\0")      // 将 NUL 字符替换为 \0
+                + "'";
     }
 }

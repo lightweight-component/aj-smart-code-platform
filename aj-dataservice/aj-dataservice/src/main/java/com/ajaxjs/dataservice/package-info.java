@@ -1,4 +1,4 @@
 /**
- * AJ DataService
+ * Fast way to create CRUD API.
  */
 package com.ajaxjs.dataservice;

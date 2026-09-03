@@ -6,17 +6,21 @@ import com.ajaxjs.dataservice.metadata.model.TableIndex;
 import lombok.extern.slf4j.Slf4j;
 
 import java.sql.*;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 /**
  * 一些数据库的详情，好像没什么用
- *
- * @author Frank Cheung sp42@qq.com
  */
 @Slf4j
 public class MetaQuery extends BaseMetaQuery {
+    /**
+     * 使用指定 JDBC 连接创建 MySQL 运行信息查询器。
+     *
+     * @param conn 用于执行查询的 JDBC 连接
+     */
     public MetaQuery(Connection conn) {
         super(conn);
     }
@@ -26,13 +30,14 @@ public class MetaQuery extends BaseMetaQuery {
      *
      * @param name 变量名名
      * @param sql  要执行的 SQL 语句
+     * @return 查询到的变量值；未找到或查询失败时返回 {@code null}
      */
     public String getVariable(String name, String sql) {
         try (Statement st = conn.createStatement(); ResultSet result = st.executeQuery(sql)) {
             if (result.next())
                 return result.getString(name);
         } catch (SQLException e) {
-            log.warn("getVariable", e);
+            throw new MetadataQueryException("读取数据库变量失败", e);
         }
 
         return null;
@@ -61,7 +66,7 @@ public class MetaQuery extends BaseMetaQuery {
 
                 map.put(name, value);
             } catch (SQLException e) {
-                log.warn("", e);
+                throw new MetadataQueryException("读取数据库变量失败", e);
             }
         });
     }
@@ -76,7 +81,7 @@ public class MetaQuery extends BaseMetaQuery {
         String sql = "SELECT table_schema, CONCAT(TRUNCATE(SUM(max_data_length)/1024/1024,2),'mb') AS max_data_size, " +
                 "SUM( data_length + index_length ) / 1024 / 1024 AS total_mb, SUM( data_length ) / 1024 / 1024 AS data_mb," +
                 "CONCAT(TRUNCATE(SUM(data_free)/1024/1024,2),'mb') AS data_free, SUM( index_length ) / 1024 / 1024 AS index_mb," +
-                "COUNT(*) AS TABLES, CURDATE() AS today FROM information_schema.TABLES WHERE table_schema = '" + database +
+                "COUNT(*) AS TABLES, CURDATE() AS today FROM information_schema.TABLES WHERE table_schema = '" + quoteIdentifier(database).replace("`", "") +
                 "' GROUP BY table_schema ORDER BY 2 DESC";
 
         return getMapResult(sql, (rs, map) -> {
@@ -90,7 +95,7 @@ public class MetaQuery extends BaseMetaQuery {
                     map.put(name, value);
                 }
             } catch (SQLException e) {
-                log.warn("", e);
+                throw new MetadataQueryException("读取数据库容量失败", e);
             }
         }, false);
     }
@@ -106,8 +111,7 @@ public class MetaQuery extends BaseMetaQuery {
             try {
                 return rs.getString(1);
             } catch (SQLException e) {
-                log.warn("", e);
-                return null;
+                throw new MetadataQueryException("读取数据表名称失败", e);
             }
         }, String.class);
     }
@@ -120,13 +124,16 @@ public class MetaQuery extends BaseMetaQuery {
      * @return 表的详情信息
      */
     public Map<String, TableDesc> getTableDesc(String database, List<String> tables) {
+        if (tables == null || tables.isEmpty())
+            return Collections.emptyMap();
+
         StringBuilder sqlIn = new StringBuilder();
 
         for (String table : tables)
-            sqlIn.append("'").append(table).append("',");
+            sqlIn.append("'").append(quoteIdentifier(table).replace("`", "")).append("',");
 
         sqlIn = new StringBuilder(sqlIn.substring(0, sqlIn.lastIndexOf(",")));
-        String sql = "SHOW TABLE STATUS FROM " + database + " WHERE name IN (" + sqlIn + ")";
+        String sql = "SHOW TABLE STATUS FROM " + quoteIdentifier(database) + " WHERE name IN (" + sqlIn + ")";
         Map<String, TableDesc> map = new HashMap<>();
 
         try (Statement st = conn.createStatement(); ResultSet result = st.executeQuery(sql)) {
@@ -157,7 +164,7 @@ public class MetaQuery extends BaseMetaQuery {
 
             String sql2 = "SELECT table_name, (data_length/1024/1024) AS data_mb, (index_length/1024/1024) AS index_mb,"
                     + " ((data_length+index_length)/1024/1024) AS all_mb, table_rows from information_schema.tables " +
-                    "WHERE table_schema = '" + database + "'";
+                    "WHERE table_schema = '" + quoteIdentifier(database).replace("`", "") + "'";
 
             try (ResultSet rs2 = st.executeQuery(sql2)) {
                 while (rs2.next()) {
@@ -173,7 +180,7 @@ public class MetaQuery extends BaseMetaQuery {
             }
 
         } catch (SQLException e) {
-            log.warn("", e);
+            throw new MetadataQueryException("读取数据表详情失败", e);
         }
 
         return map;
@@ -187,7 +194,7 @@ public class MetaQuery extends BaseMetaQuery {
      * @return 表的详情信息
      */
     public List<TableColumns> getTableColumns(String database, String tableName) {
-        String sql = "SHOW FULL COLUMNS FROM " + database + "." + tableName;
+        String sql = "SHOW FULL COLUMNS FROM " + quoteTable(database, tableName);
 
         return getResult(sql, rs -> {
             TableColumns columns = new TableColumns();
@@ -205,10 +212,8 @@ public class MetaQuery extends BaseMetaQuery {
 
                 return columns;
             } catch (SQLException e) {
-                log.warn("", e);
+                throw new MetadataQueryException("读取字段详情失败", e);
             }
-
-            return null;
         }, TableColumns.class);
     }
 
@@ -240,10 +245,8 @@ public class MetaQuery extends BaseMetaQuery {
 
                 return index;
             } catch (SQLException e) {
-                log.warn("", e);
+                throw new MetadataQueryException("读取索引详情失败", e);
             }
-
-            return null;
         }, TableIndex.class);
     }
 }

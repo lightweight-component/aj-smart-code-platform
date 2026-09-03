@@ -1,14 +1,13 @@
 package com.ajaxjs.dataservice.metadata;
 
-
 import com.ajaxjs.dataservice.metadata.model.Column;
 import com.ajaxjs.dataservice.metadata.model.Database;
 import com.ajaxjs.dataservice.metadata.model.Table;
+import com.ajaxjs.sqlman.util.SnowflakeId;
 import com.ajaxjs.util.JsonUtil;
 import com.ajaxjs.util.RegExpUtils;
 import com.ajaxjs.util.StrUtil;
 import com.ajaxjs.util.io.FileHelper;
-import com.ajaxjs.sqlman.util.SnowflakeId;
 import net.sf.jsqlparser.JSQLParserException;
 import net.sf.jsqlparser.parser.CCJSqlParserUtil;
 import net.sf.jsqlparser.statement.create.table.ColumnDefinition;
@@ -28,6 +27,11 @@ import java.util.List;
  * @author frank
  */
 public class DataBaseQuery extends BaseMetaQuery {
+    /**
+     * 使用指定 JDBC 连接创建数据库结构查询器。
+     *
+     * @param conn 用于执行查询的 JDBC 连接
+     */
     public DataBaseQuery(Connection conn) {
         super(conn);
     }
@@ -42,8 +46,7 @@ public class DataBaseQuery extends BaseMetaQuery {
             try {
                 return rs.getString("Database");
             } catch (SQLException e) {
-                e.printStackTrace();
-                return null;
+                throw new MetadataQueryException("读取数据库名称失败", e);
             }
         }, String.class);
 
@@ -59,9 +62,20 @@ public class DataBaseQuery extends BaseMetaQuery {
         return getDataBaseWithTable(getDatabase());
     }
 
+    /**
+     * 查询数据库列表时需要忽略的 MySQL 系统数据库名称。
+     */
     static final String[] IGNORE_SYSTEM_TABLE = {"information_schema", "performance_schema", "mysql", "sys"};
 
+    /**
+     * 获取指定数据库及其表名的两级结构。
+     *
+     * @param databases 要读取的数据库名称数组
+     * @return 数据库及表名信息
+     */
     public Database[] getDataBaseWithTable(String[] databases) {
+        if (databases == null)
+            return new Database[0];
         List<Database> list = new ArrayList<>();
         TableQuery tableQuery = new TableQuery(conn);
 
@@ -84,6 +98,7 @@ public class DataBaseQuery extends BaseMetaQuery {
     /**
      * 完整的信息，包括 CreateDDL
      *
+     * @param dbName 要读取的数据库名称；为空时读取所有非系统数据库
      * @return 完整的信息，包括 CreateDDL
      */
     public Database[] getDataBaseWithTableFull(String dbName) {
@@ -98,7 +113,8 @@ public class DataBaseQuery extends BaseMetaQuery {
                 }
             }
 
-            if (_database == null) return null; // 找不到 dbName 的
+            if (_database == null)
+                return null; // 找不到 dbName 的
             else {
                 List<Table> full = getDataBaseWithTableFull(_database.getTables(), _database.getName());
                 _database.setTableInfo(full);
@@ -115,6 +131,11 @@ public class DataBaseQuery extends BaseMetaQuery {
         }
     }
 
+    /**
+     * 获取所有非系统数据库及其表、列定义。
+     *
+     * @return 所有数据库的完整结构信息
+     */
     public Database[] getDataBaseWithTableFull() {
         return getDataBaseWithTableFull(null);
     }
@@ -132,9 +153,9 @@ public class DataBaseQuery extends BaseMetaQuery {
 
         try (Statement stmt = conn.createStatement()) {
             for (String tableName : tableNames) {
-                String t = hasDbName ? dbName + "." + tableName : tableName;
+                String t = quoteTable(hasDbName ? dbName : null, tableName);
 
-                try (ResultSet rs = stmt.executeQuery("SHOW CREATE TABLE " + tableName)) {
+                try (ResultSet rs = stmt.executeQuery("SHOW CREATE TABLE " + t)) {
                     String createDDL = null;
                     if (rs.next())
                         createDDL = rs.getString(2);
@@ -150,7 +171,7 @@ public class DataBaseQuery extends BaseMetaQuery {
                 }
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new MetadataQueryException("读取数据表建表语句失败", e);
         }
 
         return tables;
@@ -162,7 +183,10 @@ public class DataBaseQuery extends BaseMetaQuery {
      * @param ddl DDL 语句
      * @return 列信息
      */
-    private List<Column> parseColumns(String ddl) {
+    List<Column> parseColumns(String ddl) {
+        if (!StringUtils.hasText(ddl))
+            throw new MetadataQueryException("建表 DDL 为空，无法解析列定义", null);
+
         List<Column> list = new ArrayList<>();
 
         try {
@@ -184,17 +208,26 @@ public class DataBaseQuery extends BaseMetaQuery {
                     colInfo.setLength(Integer.parseInt(regMatch));
 
                 String ddlItem = col.toString();
-                String comment = RegExpUtils.regMatch("COMMENT '(.*)'", ddlItem, 1);
+                String comment = RegExpUtils.regMatch("COMMENT\\s+'((?:''|[^'])*)'", ddlItem, 1);
+                if (comment != null)
+                    comment = comment.replace("''", "'");
                 colInfo.setComment(comment);
                 colInfo.setIsRequired(ddlItem.contains("NOT NULL"));
             }
-        } catch (JSQLParserException e) {
-            e.printStackTrace();
+        } catch (JSQLParserException | ClassCastException e) {
+            throw new MetadataQueryException("解析建表 DDL 失败", e);
         }
 
         return list;
     }
 
+    /**
+     * 将数据库结构导出为 JSON 文档。
+     *
+     * @param conn   已连接的 JDBC 连接
+     * @param dbName 要导出的数据库名称；为空时导出全部非系统数据库
+     * @return 数据库结构 JSON
+     */
     public static String getDoc(Connection conn, String dbName) {
         DataBaseQuery d = new DataBaseQuery(conn);
         Database[] dataBaseWithTable = d.getDataBaseWithTableFull(dbName);
@@ -202,6 +235,13 @@ public class DataBaseQuery extends BaseMetaQuery {
         return JsonUtil.toJson(dataBaseWithTable);
     }
 
+    /**
+     * 将数据库结构以 JavaScript 变量形式保存到磁盘。
+     *
+     * @param conn   已连接的 JDBC 连接
+     * @param path   目标文件路径
+     * @param dbName 要导出的数据库名称；为空时导出全部非系统数据库
+     */
     public static void saveToDiskJson(Connection conn, String path, String dbName) {
         new FileHelper(path).writeFileContent("DOC_DATA = " + getDoc(conn, dbName));
     }
