@@ -3,7 +3,7 @@ package com.ajaxjs.dataservice;
 import com.ajaxjs.dataservice.model.Endpoint;
 import com.ajaxjs.dataservice.model.Group;
 import com.ajaxjs.util.ObjectHelper;
-import com.ajaxjs.util.UrlHelper;
+import com.ajaxjs.util.UrlCodec;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.HashMap;
@@ -68,7 +68,7 @@ public class EndpointMgr extends HashMap<String, Endpoint> {
             if (!prefix.startsWith("/")) // ensure that starts with /
                 prefix = '/' + prefix;
 
-            String url = UrlHelper.concatUrl(prefix, endpoint.getUrl());
+            String url = UrlCodec.concatUrl(prefix, endpoint.getUrl());
             url += '#' + endpoint.getMethod().toString();
             log.info("Registering endpoint: {}", url);
             endpoint.setUrlMethod(url);

@@ -6,7 +6,6 @@ import com.ajaxjs.dataservice.metadata.model.Table;
 import com.ajaxjs.sqlman.util.SnowflakeId;
 import com.ajaxjs.util.JsonUtil;
 import com.ajaxjs.util.RegExpUtils;
-import com.ajaxjs.util.StrUtil;
 import com.ajaxjs.util.io.FileHelper;
 import net.sf.jsqlparser.JSQLParserException;
 import net.sf.jsqlparser.parser.CCJSqlParserUtil;
@@ -81,7 +80,7 @@ public class DataBaseQuery extends BaseMetaQuery {
 
         for (String databaseName : databases) {
             // ignore system table
-            if (StrUtil.isWordOneOfThem(databaseName, IGNORE_SYSTEM_TABLE))
+            if (isWordOneOfThem(databaseName, IGNORE_SYSTEM_TABLE))
                 continue;
 
             Database database = new Database();
@@ -93,6 +92,22 @@ public class DataBaseQuery extends BaseMetaQuery {
         }
 
         return list.toArray(new Database[0]);
+    }
+
+    /**
+     * 判断一个字符串是否属于指定的字符串数组中
+     *
+     * @param word 待判断字符串
+     * @param arr  指定字符串数组
+     * @return 如果字符串属于数组中，则返回 true；否则返回 false
+     */
+    public static boolean isWordOneOfThem(String word, String[] arr) {
+        for (String str : arr) {
+            if (word.equals(str))
+                return true;
+        }
+
+        return false;
     }
 
     /**

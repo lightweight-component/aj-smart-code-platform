@@ -1,6 +1,6 @@
 package com.ajaxjs.dataservice.model;
 
-import com.ajaxjs.util.httpremote.HttpConstant;
+import com.ajaxjs.util.httpremote.model.HttpMethod;
 import lombok.Data;
 
 /**
@@ -21,7 +21,7 @@ public class Endpoint {
     /**
      * 允许访问端点的 HTTP 方法。
      */
-    HttpConstant.HttpMethod method;
+    HttpMethod method;
 
     /**
      * 相对于所属分组的访问路径。

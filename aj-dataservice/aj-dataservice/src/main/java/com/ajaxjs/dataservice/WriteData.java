@@ -9,8 +9,7 @@ import com.ajaxjs.sqlman.model.UpdateResult;
 import com.ajaxjs.util.JsonUtil;
 import com.ajaxjs.util.MapTool;
 import com.ajaxjs.util.ObjectHelper;
-import com.ajaxjs.util.UrlEncode;
-import com.ajaxjs.util.httpremote.HttpConstant;
+import com.ajaxjs.util.httpremote.model.HttpConstant;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 
@@ -92,7 +91,7 @@ public class WriteData {
      */
     public Serializable createForm() {
         String raw = getInputData();
-        Map<String, String> mapParams = UrlEncode.parseStringToMap(raw);
+        Map<String, String> mapParams = MapTool.toMap(raw);
 
         if (endpoint.isAutoSql()) {
             Map<String, Object> dataObject = MapTool.as(mapParams, v -> v);
@@ -153,7 +152,7 @@ public class WriteData {
      */
     public UpdateResult updateForm(String idField) {
         String raw = getInputData();
-        Map<String, String> mapParams = UrlEncode.parseStringToMap(raw);
+        Map<String, String> mapParams = MapTool.toMap(raw);
 
         if (endpoint.isAutoSql()) {
             Map<String, Object> dataObject = MapTool.as(mapParams, v -> v);
