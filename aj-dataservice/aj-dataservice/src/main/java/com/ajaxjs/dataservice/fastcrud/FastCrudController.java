@@ -1,9 +1,9 @@
 package com.ajaxjs.dataservice.fastcrud;
 
 import com.ajaxjs.spring.annotation.BizAction;
-import com.ajaxjs.sqlman.crud.page.PageResult;
 import com.ajaxjs.sqlman.model.CreateResult;
 import com.ajaxjs.sqlman.model.UpdateResult;
+import com.ajaxjs.sqlman.page.PageResult;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 

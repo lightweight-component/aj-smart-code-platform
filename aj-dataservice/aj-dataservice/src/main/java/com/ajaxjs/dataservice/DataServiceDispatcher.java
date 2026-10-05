@@ -3,9 +3,9 @@ package com.ajaxjs.dataservice;
 import com.ajaxjs.dataservice.model.Endpoint;
 import com.ajaxjs.sqlman.Action;
 import com.ajaxjs.sqlman.JdbcConnection;
-import com.ajaxjs.sqlman.crud.Query;
-import com.ajaxjs.sqlman.crud.Update;
-import com.ajaxjs.sqlman.crud.page.PageQuery;
+import com.ajaxjs.sqlman.Query;
+import com.ajaxjs.sqlman.Update;
+import com.ajaxjs.sqlman.page.PageQuery;
 import com.ajaxjs.util.CommonConstant;
 import com.ajaxjs.util.ObjectHelper;
 import jakarta.servlet.http.HttpServletRequest;
@@ -29,7 +29,7 @@ public abstract class DataServiceDispatcher {
     /**
      * 动态数据服务接口的统一 URL 前缀。
      */
-    static final String URL_PREFIX = "/ds_api";
+    public static final String URL_PREFIX = "/ds_api";
 
     /**
      * Reuse the AntPathMatcher from Spring.

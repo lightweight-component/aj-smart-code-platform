@@ -4,7 +4,6 @@ import com.ajaxjs.sqlman.annotation.Table;
 import com.ajaxjs.sqlman.model.DatabaseVendor;
 import lombok.Data;
 
-import javax.sql.DataSource;
 import java.util.Date;
 
 /**

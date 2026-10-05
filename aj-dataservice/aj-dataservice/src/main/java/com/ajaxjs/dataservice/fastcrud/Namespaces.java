@@ -2,10 +2,10 @@ package com.ajaxjs.dataservice.fastcrud;
 
 import com.ajaxjs.dataservice.fastcrud.dbconfig.AutoQueryBusinessConfig;
 import com.ajaxjs.dataservice.fastcrud.dbconfig.NamespaceDataEntity;
+import com.ajaxjs.dataservice.fastcrud.sqlgenerator.AutoQuery;
 import com.ajaxjs.sqlman.Action;
-import com.ajaxjs.sqlman.crud.page.PageResult;
 import com.ajaxjs.sqlman.model.tablemodel.TableModel;
-import com.ajaxjs.sqlman.sqlgenerator.AutoQuery;
+import com.ajaxjs.sqlman.page.PageResult;
 import com.ajaxjs.util.JsonUtil;
 import com.ajaxjs.util.ObjectHelper;
 import lombok.extern.slf4j.Slf4j;

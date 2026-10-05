@@ -1,9 +1,9 @@
 package com.ajaxjs.dataservice;
 
 import com.ajaxjs.sqlman.JdbcConnection;
-import com.ajaxjs.sqlman.crud.page.PageResult;
 import com.ajaxjs.sqlman.model.UpdateResult;
-import com.ajaxjs.util.httpremote.HttpConstant;
+import com.ajaxjs.sqlman.page.PageResult;
+import com.ajaxjs.util.httpremote.model.HttpConstant;
 import jakarta.servlet.ServletInputStream;
 import jakarta.servlet.http.HttpServletRequest;
 import org.h2.jdbcx.JdbcDataSource;
@@ -88,7 +88,7 @@ class TestDataService {
 
     @AfterAll
     static void end() {
-        JdbcConnection.closeDb(conn);
+        JdbcConnection.closeConnection(conn);
     }
 
     @Test

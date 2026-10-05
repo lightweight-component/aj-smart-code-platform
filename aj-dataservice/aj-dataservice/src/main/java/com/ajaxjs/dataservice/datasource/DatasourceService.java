@@ -5,7 +5,7 @@ import com.ajaxjs.dataservice.metadata.TableQuery;
 import com.ajaxjs.dataservice.metadata.model.Column;
 import com.ajaxjs.sqlman.Action;
 import com.ajaxjs.sqlman.JdbcConnection;
-import com.ajaxjs.sqlman.crud.page.PageResult;
+import com.ajaxjs.sqlman.page.PageResult;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -187,7 +187,7 @@ public class DatasourceService implements DatasourceController {
             List<String> subList = start >= total ? Collections.emptyList() : new ArrayList<>(allTableName.subList(start, end));
             list = subList.isEmpty() ? Collections.emptyList() : tableQuery.getTableCommentWithAnnotateAsList(subList, dbName);
         } finally {
-            JdbcConnection.closeDb(connection);
+            JdbcConnection.closeConnection(connection);
         }
 
         PageResult<Map<String, Object>> result = new PageResult<>();

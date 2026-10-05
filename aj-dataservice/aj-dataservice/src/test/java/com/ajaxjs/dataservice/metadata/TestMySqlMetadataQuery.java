@@ -1,10 +1,6 @@
 package com.ajaxjs.dataservice.metadata;
 
-import com.ajaxjs.dataservice.metadata.model.Column;
-import com.ajaxjs.dataservice.metadata.model.Database;
-import com.ajaxjs.dataservice.metadata.model.Table;
-import com.ajaxjs.dataservice.metadata.model.TableColumns;
-import com.ajaxjs.dataservice.metadata.model.TableIndex;
+import com.ajaxjs.dataservice.metadata.model.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -16,14 +12,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertArrayEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoInteractions;
-import static org.mockito.Mockito.when;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 class TestMySqlMetadataQuery {
     Connection connection;

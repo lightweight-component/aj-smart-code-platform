@@ -1,7 +1,7 @@
 package com.ajaxjs.dataservice.datasource;
 
 import com.ajaxjs.dataservice.metadata.model.Column;
-import com.ajaxjs.sqlman.crud.page.PageResult;
+import com.ajaxjs.sqlman.page.PageResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.SQLException;

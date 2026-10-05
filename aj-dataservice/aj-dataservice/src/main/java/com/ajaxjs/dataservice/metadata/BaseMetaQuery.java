@@ -1,17 +1,13 @@
 package com.ajaxjs.dataservice.metadata;
 
-import java.sql.Connection;
-import java.sql.DatabaseMetaData;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Pattern;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
+import java.util.regex.Pattern;
 
 /**
  * 抽象基类，用于数据库元数据查询
@@ -38,7 +34,7 @@ public abstract class BaseMetaQuery {
      *
      * @param conn 待检查的 JDBC 连接
      * @throws IllegalArgumentException 当连接为空或数据库不是 MySQL/MariaDB 时抛出
-     * @throws IllegalStateException 当无法读取数据库产品信息时抛出
+     * @throws IllegalStateException    当无法读取数据库产品信息时抛出
      */
     static void assertMySqlCompatible(Connection conn) {
         if (conn == null)

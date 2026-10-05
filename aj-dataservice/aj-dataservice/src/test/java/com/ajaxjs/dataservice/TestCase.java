@@ -4,7 +4,7 @@ import com.ajaxjs.dataservice.model.ActionType;
 import com.ajaxjs.dataservice.model.Endpoint;
 import com.ajaxjs.dataservice.model.Group;
 import com.ajaxjs.util.ObjectHelper;
-import com.ajaxjs.util.httpremote.HttpConstant;
+import com.ajaxjs.util.httpremote.model.HttpMethod;
 
 import java.util.List;
 
@@ -22,7 +22,7 @@ public class TestCase {
         endpoint.setUrl("/bar");
         endpoint.setActionType(ActionType.INFO);
         endpoint.setSql("select * from shop_address where id = ${id}");
-        endpoint.setMethod(HttpConstant.HttpMethod.GET);
+        endpoint.setMethod(HttpMethod.GET);
 
         Endpoint endpoint1 = new Endpoint();
         endpoint1.setId(2);
@@ -30,7 +30,7 @@ public class TestCase {
         endpoint1.setUrl("/");
         endpoint1.setActionType(ActionType.LIST);
         endpoint1.setSql("select * from shop_address");
-        endpoint1.setMethod(HttpConstant.HttpMethod.GET);
+        endpoint1.setMethod(HttpMethod.GET);
 
         Endpoint endpoint2 = new Endpoint();
         endpoint2.setId(3);
@@ -38,7 +38,7 @@ public class TestCase {
         endpoint2.setUrl("/patch/{id}");
         endpoint2.setActionType(ActionType.INFO);
         endpoint2.setSql("select * from shop_address where id = ?");
-        endpoint2.setMethod(HttpConstant.HttpMethod.GET);
+        endpoint2.setMethod(HttpMethod.GET);
 
         Endpoint endpoint3 = new Endpoint();
         endpoint3.setId(4);
@@ -48,7 +48,7 @@ public class TestCase {
         endpoint3.setTableName("shop_address");
         endpoint3.setAutoIns(true);
         endpoint3.setAutoSql(true);
-        endpoint3.setMethod(HttpConstant.HttpMethod.POST);
+        endpoint3.setMethod(HttpMethod.POST);
 
         Endpoint endpoint4 = new Endpoint();
         endpoint4.setId(5);
@@ -59,7 +59,7 @@ public class TestCase {
         endpoint4.setIdField("id");
         endpoint4.setAutoSql(true);
 //        endpoint3.setSql("select * from shop_address where id = ?");
-        endpoint4.setMethod(HttpConstant.HttpMethod.PUT);
+        endpoint4.setMethod(HttpMethod.PUT);
 
         Endpoint endpoint5 = new Endpoint();
         endpoint5.setId(6);
@@ -70,7 +70,7 @@ public class TestCase {
         endpoint5.setIdField("id");
         endpoint5.setAutoSql(false);
         endpoint5.setSql("UPDATE shop_address SET name = #{name} where id = ?");
-        endpoint5.setMethod(HttpConstant.HttpMethod.PUT);
+        endpoint5.setMethod(HttpMethod.PUT);
 
         Endpoint endpoint6 = new Endpoint();
         endpoint6.setId(7);
@@ -81,7 +81,7 @@ public class TestCase {
         endpoint6.setAutoSql(false);
         endpoint6.setAutoIns(true);
         endpoint6.setSql("INSERT INTO shop_address (name, address) VALUES (#{name}, #{address});");
-        endpoint6.setMethod(HttpConstant.HttpMethod.POST);
+        endpoint6.setMethod(HttpMethod.POST);
 
         List<Endpoint> endpoints = ObjectHelper.listOf(endpoint, endpoint1,
                 endpoint2, endpoint3, endpoint4, endpoint5, endpoint6, page(), delete());
@@ -96,7 +96,7 @@ public class TestCase {
         endpoint.setUrl("/page");
         endpoint.setActionType(ActionType.PAGE_LIST);
         endpoint.setSql("select * from shop_address");
-        endpoint.setMethod(HttpConstant.HttpMethod.GET);
+        endpoint.setMethod(HttpMethod.GET);
 
         return endpoint;
     }
@@ -108,7 +108,7 @@ public class TestCase {
         endpoint.setUrl("/del");
         endpoint.setActionType(ActionType.DELETE);
         endpoint.setSql("update shop_address set name = 'hi' where id = 2");
-        endpoint.setMethod(HttpConstant.HttpMethod.DELETE);
+        endpoint.setMethod(HttpMethod.DELETE);
 
         return endpoint;
     }

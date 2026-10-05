@@ -9,7 +9,6 @@ import java.util.Map;
  */
 @Data
 public class NamespaceDataEntity {
-
     /**
      * 主键 id，自增
      */

@@ -1,7 +1,7 @@
 package com.ajaxjs.dataservice.fastcrud.dbconfig;
 
-import com.ajaxjs.sqlman.sqlgenerator.AutoQueryBusiness;
-import com.ajaxjs.sqlman.sqlgenerator.TableJoin;
+import com.ajaxjs.dataservice.fastcrud.sqlgenerator.AutoQueryBusiness;
+import com.ajaxjs.dataservice.fastcrud.sqlgenerator.TableJoin;
 import com.ajaxjs.util.JsonUtil;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;

@@ -5,7 +5,7 @@ import com.ajaxjs.dataservice.metadata.model.Database;
 import com.ajaxjs.dataservice.metadata.model.Table;
 import com.ajaxjs.sqlman.util.SnowflakeId;
 import com.ajaxjs.util.JsonUtil;
-import com.ajaxjs.util.RegExpUtils;
+import com.ajaxjs.util.RegExpHelper;
 import com.ajaxjs.util.io.FileHelper;
 import net.sf.jsqlparser.JSQLParserException;
 import net.sf.jsqlparser.parser.CCJSqlParserUtil;
@@ -217,15 +217,17 @@ public class DataBaseQuery extends BaseMetaQuery {
                 type = type.replaceAll("\\s+\\(", "("); // remove space
 
                 colInfo.setType(type);
-                String regMatch = RegExpUtils.regMatch("\\((\\d+)\\)", type, 1);
+                String regMatch = RegExpHelper.regMatch("\\((\\d+)\\)", type, 1);
 
                 if (StringUtils.hasText(regMatch))
                     colInfo.setLength(Integer.parseInt(regMatch));
 
                 String ddlItem = col.toString();
-                String comment = RegExpUtils.regMatch("COMMENT\\s+'((?:''|[^'])*)'", ddlItem, 1);
+                String comment = RegExpHelper.regMatch("COMMENT\\s+'((?:''|[^'])*)'", ddlItem, 1);
+
                 if (comment != null)
                     comment = comment.replace("''", "'");
+
                 colInfo.setComment(comment);
                 colInfo.setIsRequired(ddlItem.contains("NOT NULL"));
             }
