@@ -2,6 +2,7 @@ import type {
   DataServiceProject,
   ProjectTreeNode,
   ServiceConfig,
+  ServiceKind,
   ServiceTreeNode,
 } from "../types/dataservice";
 
@@ -62,12 +63,13 @@ export function buildProjectTree(projects: DataServiceProject[], services: Servi
  * @param parentId 可选的父服务 ID；默认挂在根节点。
  * @returns 包含默认字段值的服务草稿。
  */
-export function createDraft(kind: ServiceConfig["type"], parentId?: number): ServiceConfig {
+export function createDraft(kind: ServiceKind = "CRUD", parentId?: number): ServiceConfig {
   return {
     pid: parentId ?? -1,
-    type: kind,
     namespace: "",
+    method: "GET",
     name: "",
+    type: kind,
     tableName: "",
     idType: 1,
     hasIsDeleted: false,

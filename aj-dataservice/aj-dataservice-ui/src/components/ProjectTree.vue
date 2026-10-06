@@ -1,200 +1,234 @@
 <template>
   <aside class="tree-panel">
     <div class="tree-actions">
-      <Input v-model="keyword" aria-label="搜索数据服务" placeholder="搜索数据服务……" suffix="ios-search" />
-      <Button icon="md-add" shape="circle" title="新建项目" type="default" @click="$emit('create-project')" />
+      <Input v-model="keyword" aria-label="搜索 URL 分组" placeholder="搜索 URL 分组……" suffix="ios-search" />
+      <Button icon="md-add" shape="circle" title="新建根分组" type="default" @click="openCreate(ROOT_PARENT_ID)" />
     </div>
     <div v-if="loading" class="tree-state">正在加载…</div>
-    <div v-else-if="visibleProjects.length === 0" class="tree-state">暂无项目或服务</div>
-    <Tree v-else :data="treeData" class="service-tree" @on-contextmenu="onContextMenu"
-      @on-select-change="onSelectChange">
+    <div v-else-if="loadError" class="tree-state error">{{ loadError }}</div>
+    <div v-else-if="visibleGroups.length === 0" class="tree-state">暂无 URL 分组</div>
+    <Tree v-else :data="visibleGroups" class="group-tree" @on-contextmenu="onContextMenu" @on-select-change="onSelectChange">
       <template #contextMenu>
-        <DropdownItem v-if="contextProject" style="color:green" @click="$emit('create-project')">
-          <Icon type="ios-add" /> 新建项目
+        <DropdownItem v-if="contextGroup" style="color:green" @click="openCreate(contextGroup.id)">
+          <Icon type="ios-add" /> 新建子分组
         </DropdownItem>
-        <DropdownItem v-if="contextProject" @click="$emit('edit-project', contextProject)">
-          <Icon type="ios-create" /> 编辑项目
+        <DropdownItem v-if="contextGroup" @click="openEdit(contextGroup)">
+          <Icon type="ios-create" /> 编辑 / 移动
         </DropdownItem>
-        <DropdownItem v-if="contextProject" style="color:#ed4014" @click="$emit('delete-project', contextProject)">
-          <Icon type="ios-trash" /> 删除项目
+        <DropdownItem v-if="contextGroup" style="color:#ed4014" @click="removeGroup(false)">
+          <Icon type="ios-trash" /> 删除叶子节点
+        </DropdownItem>
+        <DropdownItem v-if="contextGroup" style="color:#ed4014" @click="removeGroup(true)">
+          <Icon type="ios-trash" /> 删除节点及子节点
         </DropdownItem>
       </template>
     </Tree>
+
+    <Modal :model-value="dialogOpen" :title="editingId ? '编辑 URL 分组' : '新建 URL 分组'" :mask-closable="false" ok-text="保存" @on-cancel="dialogOpen = false"
+      @on-ok="save" @update:model-value="visibleChanged">
+      <Form :model="draft" :label-width="90">
+        <FormItem label="分组名称" prop="name" required>
+          <Input v-model.trim="draft.name" autofocus maxlength="50" placeholder="请输入分组名称" />
+        </FormItem>
+        <FormItem label="URL 路径" prop="url" required>
+          <Input v-model.trim="draft.url" maxlength="100" placeholder="例如 users，不含首尾斜杠" />
+        </FormItem>
+        <FormItem label="上级分组" prop="parentId" required>
+          <Select v-model="draft.parentId">
+            <Option :value="ROOT_PARENT_ID">根分组</Option>
+            <Option v-for="item in parentOptions" :key="item.id" :value="item.id">{{ item.label }}</Option>
+          </Select>
+        </FormItem>
+      </Form>
+    </Modal>
   </aside>
 </template>
 
 <script setup lang="ts">
-import { computed, type h, ref } from "vue";
-import type { DataServiceProject, ProjectTreeNode, ServiceTreeNode } from "../types/dataservice";
+import { Message, Modal } from "view-ui-plus";
+import { computed, onMounted, reactive, ref } from "vue";
+import { dataServiceApi } from "../api/dataservice";
+import type { UrlGroup } from "../types/dataservice";
 
-const props = defineProps<{
-  projects: ProjectTreeNode[];
-  loading: boolean;
-  selectedProjectKey?: string;
-}>();
+const ROOT_PARENT_ID: number = -1;
 
 const emit = defineEmits<{
-  "select-project": [project: DataServiceProject];
-  "open-service": [project: DataServiceProject, node: ServiceTreeNode];
-  "create-project": [];
-  "edit-project": [project: DataServiceProject];
-  "delete-project": [project: DataServiceProject];
+  "select-group": [group: UrlGroup];
+  "groups-loaded": [groups: UrlGroup[]];
 }>();
 
-/** 
- * 用户输入的项目/服务搜索关键字。 
- */
-const keyword = ref("");
-
-/** 
- * 右键菜单当前关联的项目；服务节点不显示项目操作菜单。
- */
-const contextProject = ref<DataServiceProject>();
-
-/** 
- * 规范化后的搜索文本，供过滤逻辑复用。 
- */
-const normalizedKeyword = computed(() => keyword.value.trim().toLowerCase());
-
-/** 
- * 仅保留名称或子服务命中搜索关键字的项目。 
- */
-const visibleProjects = computed(() => {
-  if (!normalizedKeyword.value) return props.projects;
-
-  return props.projects.filter((project) =>
-    project.project.name.toLowerCase().includes(normalizedKeyword.value) ||
-    project.services.some((service) =>
-      contains(service, normalizedKeyword.value)
-    )
-  );
-});
-
-/** iView Tree 节点中保存的领域对象，用于选择和右键事件回调。 */
-type TreePayload =
-  | { kind: "project"; project: DataServiceProject }
-  | { kind: "service"; project: DataServiceProject; node: ServiceTreeNode };
-
-/** 供 iView Tree 渲染的视图节点结构。 */
-type ViewTreeNode = {
-  title: string;
-  expand: boolean;
-  selected?: boolean;
-  contextmenu: boolean;
-  payload: TreePayload;
-  children?: ViewTreeNode[];
-  render: (render: typeof h, context: { data: ViewTreeNode }) => unknown;
+type GroupTreeNode = UrlGroup & {
+  id: number;
+  title?: string;
+  expand?: boolean;
+  contextmenu?: boolean;
+  children?: GroupTreeNode[];
 };
 
-/** 
- * 将领域树转换为 iView Tree 所需的节点格式。
- */
-const treeData = computed<ViewTreeNode[]>(() =>
-  visibleProjects.value.map((project) => ({
-    title: project.project.name,
-    expand: true,
-    selected: props.selectedProjectKey === project.key,
-    contextmenu: true,
-    payload: { kind: "project", project: project.project },
-    render: renderProject,
-    children: project.services.map((service) => toTreeNode(project.project, service)),
-  })),
-);
+type MessageService = Record<"success" | "error" | "warning", (options: { content: string; duration: number }) => void>;
+type ModalService = {
+  confirm: (options: { title: string; content: string; okText: string; cancelText: string; onOk: () => void }) => void;
+};
 
-/**
- * 递归转换服务树节点。
- *
- * @param project 当前服务所属项目。
- * @param node 原始服务树节点。
- * @returns 可供 iView Tree 渲染的节点。
- */
-function toTreeNode(project: DataServiceProject, node: ServiceTreeNode): ViewTreeNode {
-  return {
-    title: node.service.name || node.service.namespace,
-    expand: true,
-    contextmenu: true,
-    payload: { kind: "service", project, node },
-    render: renderService,
-    children: node.children.map((child) => toTreeNode(project, child)),
-  };
+const message = Message as unknown as MessageService;
+const modal = Modal as unknown as ModalService;
+const loading = ref<boolean>(false);
+const loadError = ref<string>("");
+const keyword = ref<string>("");
+const groups = ref<GroupTreeNode[]>([]);
+const contextGroup = ref<GroupTreeNode>();
+const dialogOpen = ref<boolean>(false);
+const editingId = ref<number>();
+const draft = reactive<UrlGroup>(emptyGroup());
+
+const normalizedKeyword = computed(() => keyword.value.trim().toLowerCase());
+const visibleGroups = computed(() => filterGroups(groups.value, normalizedKeyword.value));
+const parentOptions = computed(() => flattenGroups(groups.value, editingId.value));
+
+onMounted(loadGroups);
+
+function emptyGroup(parentId = ROOT_PARENT_ID): UrlGroup {
+  return { name: "", url: "", parentId };
 }
 
-/**
- * 渲染项目节点前的 P 标识，保持旧版 iView Tree 的视觉语义。
- *
- * @param render Vue 渲染函数。
- * @param context iView Tree 提供的当前节点上下文。
- * @returns 项目节点的 VNode 列表。
- */
-function renderProject(render: typeof h, { data }: { data: ViewTreeNode }) {
-  return [
-    render("span", { class: "http-method project" }, "P"),
-    render("span", { style: "font-weight:bold" }, data.title),
-  ];
+async function loadGroups(): Promise<void> {
+  loading.value = true;
+  loadError.value = "";
+
+  try {
+    groups.value = ((await dataServiceApi.listUrlGroups()) ?? []) as GroupTreeNode[];
+    emit("groups-loaded", groups.value);
+  } catch (error) {
+    loadError.value = error instanceof Error ? error.message : "加载 URL 分组失败";
+  } finally {
+    loading.value = false;
+  }
 }
 
-/**
- * 根据服务类型渲染 CRUD 或 Single SQL 的节点标识。
- *
- * @param render Vue 渲染函数。
- * @param context iView Tree 提供的当前节点上下文。
- * @returns 服务节点的 VNode 列表。
- */
-function renderService(render: typeof h, { data }: { data: ViewTreeNode }) {
-  const service = data.payload.kind === "service" ? data.payload.node.service : undefined;
-
-  return [
-    render("span",
-      {
-        class: ["http-method", service?.type === "SINGLE" ? "single" : "crud"],
-      },
-      service?.type === "SINGLE" ? "S" : "C"
-    ),
-    render("span", data.title),
-  ];
+function openCreate(parentId: number): void {
+  editingId.value = undefined;
+  Object.assign(draft, emptyGroup(parentId));
+  dialogOpen.value = true;
 }
 
-/**
- * 将 iView Tree 的选择结果转换为项目选择或服务打开事件。
- *
- * @param nodes 当前选中的树节点数组。
- * @returns 无返回值。
- */
-function onSelectChange(nodes: ViewTreeNode[]): void {
-  const selected = nodes[0]?.payload;
+function openEdit(group: GroupTreeNode): void {
+  editingId.value = group.id;
+  Object.assign(draft, { name: group.name, url: group.url, parentId: group.parentId, sortNo: group.sortNo });
+  dialogOpen.value = true;
+}
 
-  if (!selected)
+async function save(): Promise<void> {
+  if (!draft.name || !draft.url) {
+    message.warning({ content: "请输入分组名称和 URL 路径", duration: 2 });
+    return;
+  }
+
+  const url = draft.url.replace(/^\/+|\/+$/g, "");
+
+  if (!url) {
+    message.warning({ content: "URL 路径不能只包含斜杠", duration: 2 });
+    return;
+  }
+
+  try {
+    const payload: UrlGroup = { name: draft.name, url, parentId: draft.parentId };
+    const done = editingId.value
+      ? await dataServiceApi.updateUrlGroup(editingId.value, payload)
+      : await dataServiceApi.createUrlGroup(payload);
+
+    if (!done)
+      throw new Error("保存 URL 分组失败");
+
+    dialogOpen.value = false;
+    await loadGroups();
+    message.success({ content: "URL 分组已保存", duration: 2 });
+  } catch (error) {
+    message.error({ content: error instanceof Error ? error.message : "保存 URL 分组失败", duration: 4 });
+  }
+}
+
+function removeGroup(includeChildren: boolean): void {
+  const group = contextGroup.value;
+  if (!group)
     return;
 
-  if (selected.kind === "project")
-    emit("select-project", selected.project);
-  else
-    emit("open-service", selected.project, selected.node);
+  const scope = includeChildren ? "及其全部子分组" : "";
+  modal.confirm({
+    title: "确认删除",
+    content: `确定删除 URL 分组“${escapeHtml(group.name)}”${scope}吗？`,
+    okText: "删除",
+    cancelText: "取消",
+    onOk: () => void deleteGroup(group, includeChildren),
+  });
 }
 
-/**
- * 记录右键节点对应项目，以驱动 Tree 的上下文菜单。
- *
- * @param data 被右键点击的 iView Tree 节点。
- * @returns 无返回值。
- */
-function onContextMenu(data: ViewTreeNode): void {
-  contextProject.value = data.payload.kind === "project" ? data.payload.project : undefined;
+async function deleteGroup(group: GroupTreeNode, includeChildren: boolean): Promise<void> {
+  try {
+    const done = await dataServiceApi.deleteUrlGroup(group.id, includeChildren);
+
+    if (!done && !includeChildren)
+      throw new Error("该分组包含子分组，请选择“删除节点及子节点”");
+
+    if (!done)
+      throw new Error("删除 URL 分组失败");
+
+    contextGroup.value = undefined;
+    await loadGroups();
+    message.success({ content: "URL 分组已删除", duration: 2 });
+  } catch (error) {
+    message.error({ content: error instanceof Error ? error.message : "删除 URL 分组失败", duration: 4 });
+  }
 }
 
-/**
- * 判断服务节点或其任意子节点是否匹配搜索关键字。
- *
- * @param node 待检查的服务树节点。
- * @param value 已标准化的小写搜索词。
- * @returns 命中时返回 `true`。
- */
-function contains(node: ServiceTreeNode, value: string): boolean {
-  return (
-    `${node.service.name ?? ""} ${node.service.namespace}`
-      .toLowerCase()
-      .includes(value) || node.children.some((child) => contains(child, value))
-  );
+function escapeHtml(value: string): string {
+  return value.replace(/[&<>"']/g, (char) => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#39;",
+  }[char] ?? char));
+}
+
+function onContextMenu(group: GroupTreeNode): void {
+  contextGroup.value = group;
+}
+
+function onSelectChange(nodes: GroupTreeNode[]): void {
+  const group: GroupTreeNode = nodes[0];
+
+  if (group)
+    emit("select-group", group);
+}
+
+function visibleName(group: UrlGroup): string {
+  return group.title ?? group.name;
+}
+
+function filterGroups(nodes: GroupTreeNode[], value: string): GroupTreeNode[] {
+  return nodes.flatMap((node) => {
+    const children = filterGroups(node.children ?? [], value);
+
+    if (value && !visibleName(node).toLowerCase().includes(value) && children.length === 0)
+      return [];
+
+    return [{ ...node, title: visibleName(node), expand: true, contextmenu: true, children }];
+  });
+}
+
+function flattenGroups(nodes: GroupTreeNode[], excludedId?: number, depth = 0): Array<{ id: number; label: string }> {
+  return nodes.flatMap((node) => {
+    if (node.id === excludedId)
+      return [];
+
+    const current = { id: node.id, label: `${"　".repeat(depth)}${visibleName(node)}` };
+    return [current, ...flattenGroups(node.children ?? [], excludedId, depth + 1)];
+  });
+}
+
+function visibleChanged(visible: boolean): void {
+  if (!visible)
+    dialogOpen.value = false;
 }
 </script>
 
@@ -234,7 +268,11 @@ function contains(node: ServiceTreeNode, value: string): boolean {
   border-top: 1px solid #dcdcdc;
 }
 
-.service-tree {
+.tree-state.error {
+  color: #ed4014;
+}
+
+.group-tree {
   height: calc(100% - 69px);
   overflow-y: auto;
   margin-left: 10px;
@@ -247,29 +285,5 @@ function contains(node: ServiceTreeNode, value: string): boolean {
 :deep(.ivu-tree-title-selected),
 :deep(.ivu-tree-title:hover) {
   background: #e5f1f7;
-}
-
-:deep(.http-method) {
-  margin-right: 5px;
-  border: 1px solid;
-  border-radius: 3px;
-  padding: 0 2px;
-  font-size: 8px;
-  vertical-align: middle;
-}
-
-.project {
-  color: #3175fe;
-  border-color: #3175fe;
-}
-
-.crud {
-  color: green;
-  border-color: green;
-}
-
-.single {
-  color: #b12fbc;
-  border-color: #b12fbc;
 }
 </style>

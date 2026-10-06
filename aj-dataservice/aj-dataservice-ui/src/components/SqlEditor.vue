@@ -1,6 +1,8 @@
 <template>
-  <Codemirror :extensions="extensions" :model-value="modelValue" :style="{ height }"
-    @update:model-value="$emit('update:modelValue', $event)" />
+  <div class="sql-editor-shell" :style="{ height }">
+    <Codemirror :extensions="extensions" :model-value="modelValue" :style="{ height: '100%', overflow: 'hidden' }"
+      @update:model-value="$emit('update:modelValue', $event)" />
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -23,8 +25,21 @@ const extensions = [sql()];
 </script>
 
 <style scoped>
+.sql-editor-shell {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  overflow: hidden;
+}
+
 :deep(.cm-editor) {
+  box-sizing: border-box;
   height: 100%;
+  min-height: 0;
+  min-width: 0;
+  max-width: 100%;
+  overflow: hidden;
   border: 1px solid #e3e3e3;
   border-radius: 0;
   background: white;
@@ -32,6 +47,9 @@ const extensions = [sql()];
 }
 
 :deep(.cm-scroller) {
+  height: 100%;
+  min-width: 0;
+  max-width: 100%;
   overflow: auto;
   font-family: Consolas, "Courier New", monospace;
   line-height: 1.5;

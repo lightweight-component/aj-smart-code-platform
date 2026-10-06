@@ -1,6 +1,33 @@
 /** 服务配置支持的两种编辑模式。 */
 export type ServiceKind = "CRUD" | "SINGLE";
 
+/** 与后端 `HttpMethod` 枚举保持一致的 HTTP 请求方法。 */
+export type HttpMethod = "GET" | "POST" | "PUT" | "DELETE" | "HEAD" | "OPTIONS" | "PATCH" | "TRACE" | "CONNECT";
+export type ActionType = "VALUE" | "INFO" | "LIST" | "PAGE_LIST" | "CREATE" | "UPDATE" | "DELETE";
+
+/** `ds_endpoint` 表及后端 `EndpointEntity` 对应的前端模型。 */
+export interface EndpointEntity {
+  id?: number;
+  groupId: number;
+  method: HttpMethod;
+  url: string;
+  sql?: string;
+  name: string;
+  content?: string;
+  actionType: ActionType;
+  isAutoSql: boolean;
+  tableName?: string;
+  isAutoIns: boolean;
+  idField?: string;
+  stat?: number;
+  creator?: string;
+  creatorId?: number;
+  createDate?: string;
+  updater?: string;
+  updaterId?: number;
+  updateDate?: string;
+}
+
 /** 后端通用响应信封。 */
 export interface ApiResponse<T> {
   /** 业务操作是否成功。 */
@@ -13,19 +40,35 @@ export interface ApiResponse<T> {
   code?: number;
 }
 
-/** 数据服务项目及其开发/生产运行端前缀。 */
-export interface DataServiceProject {
-  /** 项目主键；新建时为空。 */
+/** URL 分组树节点；根节点的 {@link parentId} 固定为 -1。 */
+export interface UrlGroup {
+  /** 分组主键；新建时为空。 */
   id?: number;
-  /** 项目名称。 */
+  /** 分组名称。 */
   name: string;
-  /** 项目简介。 */
+  /** 当前分组在最终端点 URL 中使用的路径片段，不包含首尾斜杠。 */
+  url: string;
+  /** 父分组主键，根节点为 -1。 */
+  parentId: number;
+  /** 可选排序号。 */
+  sortNo?: number;
+  /** 后端为 iView Tree 补充的展示标题。 */
+  title?: string;
+  /** 子分组。 */
+  children?: UrlGroup[];
+}
+
+/**
+ * 旧服务编辑器使用的运行端上下文。
+ *
+ * @deprecated 左侧树的选择状态请使用 {@link UrlGroup}；该类型仅用于未迁移的服务编辑器。
+ */
+export interface DataServiceProject {
+  id?: number;
+  name: string;
   content?: string;
-  /** 开发环境运行端前缀。 */
   apiPrefixDev: string;
-  /** 生产环境运行端前缀。 */
   apiPrefixProd: string;
-  /** 后端保存的项目级默认配置。 */
   defaultConfig?: unknown;
 }
 
@@ -39,6 +82,8 @@ export interface ServiceConfig {
   name?: string;
   /** 服务 URL 命名空间。 */
   namespace: string;
+  /** 服务端点允许的 HTTP 请求方法。 */
+  method?: HttpMethod;
   /** 服务编辑模式。 */
   type: ServiceKind;
   /** CRUD 服务对应的数据库表。 */
@@ -107,10 +152,14 @@ export interface WorkspaceTab {
   key: string;
   /** 标签页显示名称。 */
   label: string;
-  /** 服务所属项目。 */
-  project: DataServiceProject;
-  /** 与树节点隔离的可编辑服务草稿。 */
-  draft: ServiceConfig;
-  /** 是否尚未提交到后端的新服务。 */
+  /** 当前端点所属的 URL 分组。 */
+  group: UrlGroup;
+  /** 分组树拼接得到的完整 URL 前缀。 */
+  urlPrefix: string;
+  /** 当前工作区内维护的端点列表。 */
+  endpoints: EndpointEntity[];
+  /** 当前在端点列表中选中的端点下标。 */
+  activeEndpointIndex: number;
+  /** 是否是尚未提交到后端的新服务批次。 */
   isNew: boolean;
 }

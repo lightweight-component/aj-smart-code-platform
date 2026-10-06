@@ -31,27 +31,33 @@ function select(name: string): void {
 
 <style scoped lang="less">
 .tabs {
-  height: 47px;
+  /* 卡片 Tab 的激活项高度为 32px，需为其向下覆盖分割线保留 1px 空间。 */
+  height: 49px;
   overflow: hidden;
   padding: 16px 10px 0;
   border-top: 1px solid #dcdcdc;
-  border-bottom: 1px solid lightgray;
   background: white;
 }
 
 :deep(.ivu-tabs-bar) {
   margin-bottom: 0;
-  border-bottom: 0;
+  /* 分割线必须位于 Tab bar，不能放在外层，否则激活标签无法盖住它。 */
+  border-bottom: 1px solid lightgray;
 }
 
 :deep(.ivu-tabs.ivu-tabs-card > .ivu-tabs-bar .ivu-tabs-tab) {
-  height: 30px;
+  height: 31px;
   padding: 4px 14px;
   color: #666;
   line-height: 20px;
 }
 
 :deep(.ivu-tabs.ivu-tabs-card > .ivu-tabs-bar .ivu-tabs-tab-active) {
+  height: 32px;
+  padding-bottom: 5px;
+  position: relative;
+  z-index: 1;
+  background: #fff;
   color: #555;
   font-weight: 600;
 }

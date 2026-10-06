@@ -1,20 +1,15 @@
 <template>
   <section class="toolbar">
-    <div :disabled="!selectedProject" style="float: right;" class="tool" type="text" @click="$emit('reload-config')">
+    <div :disabled="!hasSelectedGroup" style="float: right;" class="tool" type="text" @click="$emit('reload-config')">
       <div class="tool-icon config">
         <Icon type="md-refresh" />
       </div><span>刷新配置</span>
     </div>
-    <div class="tool" type="text" @click="$emit('create-crud')">
+    <div class="tool" type="text" @click="$emit('create')">
       <div class="tool-icon new">
         <Icon type="md-add" />
       </div>
       <span>新建服务</span>
-    </div>
-
-    <div class="tool" type="text" @click="$emit('create-single')">
-      <div class="tool-icon sql">S</div>
-      <span>新建 SQL</span>
     </div>
 
     <div :disabled="!hasActiveTab" class="tool" type="text" @click="$emit('delete')">
@@ -37,11 +32,10 @@
 </template>
 
 <script setup lang="ts">
-defineProps<{ hasActiveTab: boolean; selectedProject: boolean }>();
+defineProps<{ hasActiveTab: boolean; hasSelectedGroup: boolean }>();
 
 defineEmits<{
-  "create-crud": [];
-  "create-single": [];
+  create: [];
   save: [];
   delete: [];
   "refresh-tree": [];

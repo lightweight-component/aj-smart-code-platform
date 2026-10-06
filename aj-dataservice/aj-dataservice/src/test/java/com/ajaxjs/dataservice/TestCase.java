@@ -21,7 +21,7 @@ public class TestCase {
         endpoint.setGroupId(1);
         endpoint.setUrl("/bar");
         endpoint.setActionType(ActionType.INFO);
-        endpoint.setSql("select * from shop_address where id = ${id}");
+        endpoint.setSql("select * from shop_address where id = #{id}");
         endpoint.setMethod(HttpMethod.GET);
 
         Endpoint endpoint1 = new Endpoint();
