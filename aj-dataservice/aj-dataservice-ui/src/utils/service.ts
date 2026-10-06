@@ -28,11 +28,9 @@ export function normalizeService(service: ServiceConfig): ServiceConfig {
  * @param service 原始服务配置。
  * @returns 包含稳定键和子节点的服务树节点。
  */
-function toServiceNode(
-  project: DataServiceProject,
-  service: ServiceConfig,
-): ServiceTreeNode {
+function toServiceNode(project: DataServiceProject, service: ServiceConfig): ServiceTreeNode {
   const normalized = normalizeService(service);
+
   return {
     key: `${project.id ?? project.name}:${normalized.id ?? normalized.namespace}`,
     service: normalized,
@@ -49,10 +47,7 @@ function toServiceNode(
  * @param services 服务配置列表。
  * @returns 按项目组织的树节点数组。
  */
-export function buildProjectTree(
-  projects: DataServiceProject[],
-  services: ServiceConfig[],
-): ProjectTreeNode[] {
+export function buildProjectTree(projects: DataServiceProject[], services: ServiceConfig[]): ProjectTreeNode[] {
   return projects.map((project) => ({
     key: `project:${project.id ?? project.name}`,
     project,
@@ -67,10 +62,7 @@ export function buildProjectTree(
  * @param parentId 可选的父服务 ID；默认挂在根节点。
  * @returns 包含默认字段值的服务草稿。
  */
-export function createDraft(
-  kind: ServiceConfig["type"],
-  parentId?: number,
-): ServiceConfig {
+export function createDraft(kind: ServiceConfig["type"], parentId?: number): ServiceConfig {
   return {
     pid: parentId ?? -1,
     type: kind,
@@ -98,11 +90,15 @@ export function createDraft(
 export function cleanServiceForSave(service: ServiceConfig): ServiceConfig {
   const cleaned = { ...service } as Record<string, unknown>;
   delete cleaned.children;
+
   for (const [key, value] of Object.entries(cleaned)) {
     if (value === null || value === undefined || value === "")
       delete cleaned[key];
-    if (typeof value === "boolean") cleaned[key] = value ? 1 : 0;
+
+    if (typeof value === "boolean")
+      cleaned[key] = value ? 1 : 0;
   }
+
   return cleaned as unknown as ServiceConfig;
 }
 

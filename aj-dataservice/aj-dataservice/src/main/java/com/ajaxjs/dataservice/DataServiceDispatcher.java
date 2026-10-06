@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -24,8 +25,9 @@ import java.util.Map;
  * Base controller for data service.
  */
 @Slf4j
+@RestController
 @RequestMapping(DataServiceDispatcher.URL_PREFIX)
-public abstract class DataServiceDispatcher {
+public class DataServiceDispatcher {
     /**
      * 动态数据服务接口的统一 URL 前缀。
      */

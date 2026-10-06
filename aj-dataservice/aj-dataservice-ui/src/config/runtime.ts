@@ -24,12 +24,9 @@ const normalizeRoot = (value: string): string => value.replace(/\/$/, "");
  */
 export const runtimeConfig: RuntimeConfig = {
   adminApiRoot: normalizeRoot(
-    window.__AJ_DATASERVICE_CONFIG__?.adminApiRoot ??
-      import.meta.env.VITE_DS_API_ROOT ??
-      "/api",
+    window.__AJ_DATASERVICE_CONFIG__?.adminApiRoot ?? import.meta.env.VITE_DS_API_ROOT ?? "/api",
   ),
-  useProductionApi:
-    window.__AJ_DATASERVICE_CONFIG__?.useProductionApi ?? import.meta.env.PROD,
+  useProductionApi: window.__AJ_DATASERVICE_CONFIG__?.useProductionApi ?? import.meta.env.PROD,
 };
 
 /**

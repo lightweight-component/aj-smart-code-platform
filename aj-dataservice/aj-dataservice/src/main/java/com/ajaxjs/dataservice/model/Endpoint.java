@@ -67,5 +67,4 @@ public class Endpoint {
      * Required when doing the update of an entity, to know which field is the ID.
      */
     String idField;
-
 }

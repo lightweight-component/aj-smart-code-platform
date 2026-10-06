@@ -1,13 +1,11 @@
 <template>
   <li v-if="matches || hasMatchingChild" class="service-item">
     <div class="service-row" @click="$emit('open', node)">
-      <span :class="['kind', node.service.type === 'SINGLE' ? 'single' : 'crud']">{{ node.service.type === 'SINGLE' ?
-        'S' : 'C' }}</span>
+      <span :class="['kind', node.service.type === 'SINGLE' ? 'single' : 'crud']">{{ node.service.type === 'SINGLE' ? 'S' : 'C' }}</span>
       <span :title="node.service.namespace">{{ node.service.name || node.service.namespace }}</span>
     </div>
     <ul v-if="node.children.length">
-      <ServiceTreeItem v-for="child in node.children" :key="child.key" :node="child" :keyword="keyword"
-        @open="$emit('open', $event)" />
+      <ServiceTreeItem v-for="child in node.children" :key="child.key" :node="child" :keyword="keyword" @open="$emit('open', $event)" />
     </ul>
   </li>
 </template>
@@ -23,21 +21,12 @@ defineEmits<{ open: [node: ServiceTreeNode] }>();
 /** 
  * 当前服务自身是否命中搜索词。
  */
-const matches = computed(
-  () => !props.keyword ||
-    `${props.node.service.name ?? ""} ${props.node.service.namespace}`.toLowerCase().includes(props.keyword.trim().toLowerCase()),
-);
+const matches = computed(() => !props.keyword || `${props.node.service.name ?? ""} ${props.node.service.namespace}`.toLowerCase().includes(props.keyword.trim().toLowerCase()));
 
 /** 
  * 当前服务的直接子节点是否命中搜索词，用于保留父级导航路径。
  */
-const hasMatchingChild = computed(() =>
-  props.node.children.some((child) =>
-    `${child.service.name ?? ""} ${child.service.namespace}`
-      .toLowerCase()
-      .includes(props.keyword.trim().toLowerCase()),
-  ),
-);
+const hasMatchingChild = computed(() => props.node.children.some((child: any) => `${child.service.name ?? ""} ${child.service.namespace}`.toLowerCase().includes(props.keyword.trim().toLowerCase())));
 </script>
 
 <style scoped lang="less">

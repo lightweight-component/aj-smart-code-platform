@@ -1,6 +1,5 @@
 <template>
-  <Tabs :model-value="selected" :animated="false" class="tabs" type="card" @on-click="select"
-    @on-tab-remove="$emit('close', $event)">
+  <Tabs :model-value="selected" :animated="false" class="tabs" type="card" @on-click="select" @on-tab-remove="$emit('close', $event)">
     <TabPane label="首页" name="__home__" />
     <TabPane v-for="tab in tabs" :key="tab.key" :label="tab.label" :name="tab.key" closable />
   </Tabs>
@@ -35,6 +34,7 @@ function select(name: string): void {
   height: 47px;
   overflow: hidden;
   padding: 16px 10px 0;
+  border-top: 1px solid #dcdcdc;
   border-bottom: 1px solid lightgray;
   background: white;
 }

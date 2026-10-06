@@ -137,8 +137,7 @@ public class BaseConfiguration implements WebMvcConfigurer {
         endpoint6.setSql("INSERT INTO shop_address (name, address) VALUES (#{name}, #{address});");
         endpoint6.setMethod(HttpMethod.POST);
 
-        List<Endpoint> endpoints = ObjectHelper.listOf(endpoint, endpoint1,
-                endpoint2, endpoint3, endpoint4, endpoint5, endpoint6);
+        List<Endpoint> endpoints = ObjectHelper.listOf(endpoint, endpoint1, endpoint2, endpoint3, endpoint4, endpoint5, endpoint6);
 
         return EndpointMgr.init(groups, endpoints);
     }

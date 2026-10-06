@@ -12,7 +12,7 @@ withDefaults(
     modelValue: string;
     height?: string;
   }>(),
-  { height: "280px" },
+  { height: "280px" }
 );
 defineEmits<{ "update:modelValue": [value: string] }>();
 

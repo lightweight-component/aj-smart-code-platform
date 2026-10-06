@@ -91,38 +91,33 @@ const singleSql = computed({
   get: () => props.service.sql ?? "",
   set: (value: string) => {
     props.service.sql = value;
-  },
+  }
 });
 
 /** 当前 SQL 操作的中文名称，用于默认逻辑提示。 */
 const activeOperationLabel = computed(
-  () =>
-    operations.find((item) => item.key === activeOperation.value)?.label ?? "",
+  () => operations.find((item) => item.key === activeOperation.value)?.label ?? ""
 );
 
 /** 当前 CRUD SQL 字段与编辑器内容之间的双向映射。 */
 const activeSql = computed({
-  get: () =>
-    props.service[activeOperation.value] === EMPTY_SQL
-      ? ""
-      : (props.service[activeOperation.value] ?? ""),
+  get: () => props.service[activeOperation.value] === EMPTY_SQL ? "" : (props.service[activeOperation.value] ?? ""),
   set: (value: string) => {
     props.service[activeOperation.value] = value;
-  },
+  }
 });
 
 /** 
  * 当前操作是否已启用自定义 SQL；关闭时写入后端约定的默认逻辑标记。
  */
 const isCustomSql = computed({
-  get: () =>
-    Boolean(
-      props.service[activeOperation.value] &&
-      props.service[activeOperation.value] !== EMPTY_SQL,
-    ),
+  get: () => Boolean(
+    props.service[activeOperation.value] &&
+    props.service[activeOperation.value] !== EMPTY_SQL,
+  ),
   set: (value: boolean) => {
     props.service[activeOperation.value] = value ? "" : EMPTY_SQL;
-  },
+  }
 });
 
 /** 
@@ -132,15 +127,14 @@ const enabled = computed({
   get: () => props.service.enable !== false && props.service.enable !== 0,
   set: (value: boolean) => {
     props.service.enable = value;
-  },
+  }
 });
 
 /** 
  * 将逻辑删除字段的 `0/1` 或布尔值统一映射为 Checkbox 状态。
  */
 const softDelete = computed({
-  get: () =>
-    props.service.hasIsDeleted === true || props.service.hasIsDeleted === 1,
+  get: () => props.service.hasIsDeleted === true || props.service.hasIsDeleted === 1,
   set: (value: boolean) => {
     props.service.hasIsDeleted = value;
   }

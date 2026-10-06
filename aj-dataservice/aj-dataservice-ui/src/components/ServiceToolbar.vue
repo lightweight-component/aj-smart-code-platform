@@ -1,24 +1,38 @@
 <template>
   <section class="toolbar">
-    <Button class="tool" type="text" @click="$emit('create-crud')"><span class="tool-icon new">
+    <div :disabled="!selectedProject" style="float: right;" class="tool" type="text" @click="$emit('reload-config')">
+      <div class="tool-icon config">
+        <Icon type="md-refresh" />
+      </div><span>刷新配置</span>
+    </div>
+    <div class="tool" type="text" @click="$emit('create-crud')">
+      <div class="tool-icon new">
         <Icon type="md-add" />
-      </span><span>新建服务</span></Button>
-    <Button class="tool" type="text" @click="$emit('create-single')"><span class="tool-icon sql">S</span><span>新建
-        SQL</span></Button>
-    <Button :disabled="!hasActiveTab" class="tool" type="text" @click="$emit('delete')"><span class="tool-icon delete">
+      </div>
+      <span>新建服务</span>
+    </div>
+
+    <div class="tool" type="text" @click="$emit('create-single')">
+      <div class="tool-icon sql">S</div>
+      <span>新建 SQL</span>
+    </div>
+
+    <div :disabled="!hasActiveTab" class="tool" type="text" @click="$emit('delete')">
+      <div class="tool-icon delete">
         <Icon type="md-close" />
-      </span><span>删除</span></Button>
-    <Button :disabled="!hasActiveTab" class="tool" type="text" @click="$emit('save')"><span class="tool-icon save">
+      </div><span>删除</span>
+    </div>
+    <div :disabled="!hasActiveTab" class="tool" type="text" @click="$emit('save')">
+      <div class="tool-icon save">
         <Icon type="ios-create" />
-      </span><span>保存</span></Button>
-    <Button class="tool" type="text" @click="$emit('refresh-tree')"><span class="tool-icon refresh">
+      </div><span>保存</span>
+    </div>
+    <div class="tool" type="text" @click="$emit('refresh-tree')">
+      <div class="tool-icon refresh">
         <Icon type="md-refresh" />
-      </span><span>重新加载</span></Button>
-    <span class="toolbar-spacer" />
-    <Button :disabled="!selectedProject" class="tool" type="text" @click="$emit('reload-config')"><span
-        class="tool-icon config">
-        <Icon type="md-refresh" />
-      </span><span>刷新配置</span></Button>
+      </div><span>重新加载</span>
+    </div>
+
   </section>
 </template>
 
@@ -35,14 +49,11 @@ defineEmits<{
 }>();
 </script>
 
+
 <style scoped lang="less">
 .toolbar {
-  display: flex;
   min-height: 70px;
-  align-items: start;
-  gap: 20px;
   padding: 12px 15px 2px;
-  border-top: 1px solid lightgray;
   border-bottom: 1px solid white;
   background-color: #eaeaea;
   background-image: linear-gradient(#fefefe, #e6e6e6);
@@ -51,17 +62,36 @@ defineEmits<{
 }
 
 .tool {
-  display: flex;
-  width: 50px;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
+  display: inline-block;
+  width: 48px;
+  text-align: center;
+  margin-right: 20px;
   border: 0;
-  background: transparent;
   padding: 0;
   color: gray;
-  font-size: .73rem;
+  font-size: .72rem;
   white-space: nowrap;
+  text-shadow: 1px 1px 1px #fff;
+  cursor: pointer;
+
+  &:hover {
+    background-color: transparent;
+  }
+
+  .tool-icon {
+    width: 30px;
+    height: 26px;
+    margin: 0 auto;
+    margin-bottom: 5px;
+    border: 1px solid lightgray;
+    border-radius: 3px;
+    box-shadow: 1px 1px 1px white;
+    font-size: 25px;
+    font-weight: 300;
+    line-height: 1;
+    padding-top: 3px;
+    font-size: 19px;
+  }
 }
 
 .tool:hover:not(:disabled) {
@@ -73,19 +103,7 @@ defineEmits<{
   color: lightgray;
 }
 
-.tool-icon {
-  display: inline-grid;
-  width: 32px;
-  height: 29px;
-  place-content: center;
-  border: 1px solid lightgray;
-  border-radius: 3px;
-  box-shadow: 1px 1px 1px white;
-  background: #fff;
-  font-size: 25px;
-  font-weight: 300;
-  line-height: 1;
-}
+
 
 .tool:hover:not(:disabled) .tool-icon {
   border-color: gray;

@@ -25,11 +25,7 @@
 
 <script setup lang="ts">
 import { computed, type h, ref } from "vue";
-import type {
-  DataServiceProject,
-  ProjectTreeNode,
-  ServiceTreeNode,
-} from "../types/dataservice";
+import type { DataServiceProject, ProjectTreeNode, ServiceTreeNode } from "../types/dataservice";
 
 const props = defineProps<{
   projects: ProjectTreeNode[];
@@ -66,12 +62,11 @@ const normalizedKeyword = computed(() => keyword.value.trim().toLowerCase());
 const visibleProjects = computed(() => {
   if (!normalizedKeyword.value) return props.projects;
 
-  return props.projects.filter(
-    (project) =>
-      project.project.name.toLowerCase().includes(normalizedKeyword.value) ||
-      project.services.some((service) =>
-        contains(service, normalizedKeyword.value),
-      ),
+  return props.projects.filter((project) =>
+    project.project.name.toLowerCase().includes(normalizedKeyword.value) ||
+    project.services.some((service) =>
+      contains(service, normalizedKeyword.value)
+    )
   );
 });
 
@@ -113,10 +108,7 @@ const treeData = computed<ViewTreeNode[]>(() =>
  * @param node 原始服务树节点。
  * @returns 可供 iView Tree 渲染的节点。
  */
-function toTreeNode(
-  project: DataServiceProject,
-  node: ServiceTreeNode,
-): ViewTreeNode {
+function toTreeNode(project: DataServiceProject, node: ServiceTreeNode): ViewTreeNode {
   return {
     title: node.service.name || node.service.namespace,
     expand: true,
@@ -149,15 +141,14 @@ function renderProject(render: typeof h, { data }: { data: ViewTreeNode }) {
  * @returns 服务节点的 VNode 列表。
  */
 function renderService(render: typeof h, { data }: { data: ViewTreeNode }) {
-  const service =
-    data.payload.kind === "service" ? data.payload.node.service : undefined;
+  const service = data.payload.kind === "service" ? data.payload.node.service : undefined;
+
   return [
-    render(
-      "span",
+    render("span",
       {
         class: ["http-method", service?.type === "SINGLE" ? "single" : "crud"],
       },
-      service?.type === "SINGLE" ? "S" : "C",
+      service?.type === "SINGLE" ? "S" : "C"
     ),
     render("span", data.title),
   ];
@@ -172,10 +163,13 @@ function renderService(render: typeof h, { data }: { data: ViewTreeNode }) {
 function onSelectChange(nodes: ViewTreeNode[]): void {
   const selected = nodes[0]?.payload;
 
-  if (!selected) return;
+  if (!selected)
+    return;
 
-  if (selected.kind === "project") emit("select-project", selected.project);
-  else emit("open-service", selected.project, selected.node);
+  if (selected.kind === "project")
+    emit("select-project", selected.project);
+  else
+    emit("open-service", selected.project, selected.node);
 }
 
 /**
@@ -185,8 +179,7 @@ function onSelectChange(nodes: ViewTreeNode[]): void {
  * @returns 无返回值。
  */
 function onContextMenu(data: ViewTreeNode): void {
-  contextProject.value =
-    data.payload.kind === "project" ? data.payload.project : undefined;
+  contextProject.value = data.payload.kind === "project" ? data.payload.project : undefined;
 }
 
 /**
@@ -209,7 +202,6 @@ function contains(node: ServiceTreeNode, value: string): boolean {
 .tree-panel {
   height: 100%;
   overflow: auto;
-  border-right: 1px solid lightgray;
   background: #fff;
 }
 
@@ -219,7 +211,7 @@ function contains(node: ServiceTreeNode, value: string): boolean {
   height: 69px;
   align-items: start;
   padding: 14px 10px 0 15px;
-  border-bottom: 1px solid lightgray;
+  border-bottom: 1px solid white;
   background-image: linear-gradient(#fefefe, #e6e6e6);
 }
 
@@ -239,6 +231,7 @@ function contains(node: ServiceTreeNode, value: string): boolean {
   padding: 24px 12px;
   color: gray;
   text-align: center;
+  border-top: 1px solid #dcdcdc;
 }
 
 .service-tree {
