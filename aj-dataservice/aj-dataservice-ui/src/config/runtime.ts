@@ -1,8 +1,6 @@
 export interface RuntimeConfig {
   /** 管理端 API 根路径，例如 /api 或 https://host/dataservice_api */
   adminApiRoot: string;
-  /** 生产环境使用项目生产 API 前缀；开发时默认为开发 API 前缀。 */
-  useProductionApi: boolean;
 }
 
 declare global {
@@ -19,14 +17,13 @@ declare global {
  */
 const normalizeRoot = (value: string): string => value.replace(/\/$/, "");
 
-/** 
+/**
  * 当前运行环境的服务地址与环境选择配置。
  */
 export const runtimeConfig: RuntimeConfig = {
   adminApiRoot: normalizeRoot(
     window.__AJ_DATASERVICE_CONFIG__?.adminApiRoot ?? import.meta.env.VITE_DS_API_ROOT ?? "/api",
   ),
-  useProductionApi: window.__AJ_DATASERVICE_CONFIG__?.useProductionApi ?? import.meta.env.PROD,
 };
 
 /**
@@ -36,5 +33,4 @@ export const runtimeConfig: RuntimeConfig = {
  * @param path 相对接口路径。
  * @returns 完整的接口 URL。
  */
-export const joinUrl = (root: string, path: string): string =>
-  `${normalizeRoot(root)}/${path.replace(/^\//, "")}`;
+export const joinUrl = (root: string, path: string): string => `${normalizeRoot(root)}/${path.replace(/^\//, "")}`;

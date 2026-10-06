@@ -1,5 +1,6 @@
 package org.foo.controller;
 
+import com.ajaxjs.dataservice.admin.TreeNodeAdminController;
 import com.ajaxjs.dataservice.model.UrlGroup;
 import com.ajaxjs.sqlman.Action;
 import com.ajaxjs.sqlman.JdbcConnection;

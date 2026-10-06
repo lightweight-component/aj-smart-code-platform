@@ -1,5 +1,6 @@
 package com.ajaxjs.dataservice;
 
+import com.ajaxjs.dataservice.model.Empty;
 import com.ajaxjs.dataservice.model.Endpoint;
 import com.ajaxjs.sqlman.Action;
 import com.ajaxjs.sqlman.JdbcConnection;
@@ -9,7 +10,6 @@ import com.ajaxjs.sqlman.page.PageQuery;
 import com.ajaxjs.util.CommonConstant;
 import com.ajaxjs.util.ObjectHelper;
 import jakarta.servlet.http.HttpServletRequest;
-import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.AntPathMatcher;
@@ -193,17 +193,6 @@ public class DataServiceDispatcher {
             arr = values.toArray();
 
         return arr;
-    }
-
-    /**
-     * 没有查询结果或操作结果时使用的空响应对象。
-     */
-    @Data
-    static class Empty {
-        /**
-         * 空响应的提示文本。
-         */
-        String msg = "No data";
     }
 
     /**

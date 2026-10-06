@@ -43,10 +43,9 @@ defineEmits<{
 }>();
 </script>
 
-
 <style scoped lang="less">
 .toolbar {
-  min-height: 70px;
+  min-height: 67px;
   padding: 12px 15px 2px;
   border-bottom: 1px solid white;
   background-color: #eaeaea;

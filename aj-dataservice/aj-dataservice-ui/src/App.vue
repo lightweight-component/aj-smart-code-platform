@@ -29,13 +29,13 @@
 import { computed, ref } from "vue";
 import { Message, Modal } from "view-ui-plus";
 import { dataServiceApi } from "./api/dataservice";
+import { runtimeConfig } from "./config/runtime";
+import type { EndpointEntity, UrlGroup, WorkspaceTab } from "./types/dataservice";
 import AppHeader from "./components/AppHeader.vue";
 import ProjectTree from "./components/ProjectTree.vue";
 import ServiceEditor from "./components/ServiceEditor.vue";
 import ServiceToolbar from "./components/ServiceToolbar.vue";
 import WorkspaceTabs from "./components/WorkspaceTabs.vue";
-import { runtimeConfig } from "./config/runtime";
-import type { EndpointEntity, UrlGroup, WorkspaceTab } from "./types/dataservice";
 
 type NoticeType = "success" | "error" | "info" | "warning";
 type MessageService = Record<NoticeType, (options: { content: string; duration: number }) => void>;
@@ -120,6 +120,7 @@ async function selectUrlGroup(group: UrlGroup): Promise<void> {
 
 function createService(): void {
   const group = selectedUrlGroup.value;
+
   if (!group?.id) {
     show("warning", "请先在左侧选择一个 URL 分组");
     return;
@@ -145,38 +146,54 @@ function addEndpoint(tab: WorkspaceTab): void {
 
 function closeTab(key: string): void {
   const index = tabs.value.findIndex((tab) => tab.key === key);
-  if (index < 0) return;
+
+  if (index < 0)
+    return;
+
   tabs.value.splice(index, 1);
-  if (activeKey.value === key) activeKey.value = tabs.value[index - 1]?.key ?? tabs.value[index]?.key;
+
+  if (activeKey.value === key)
+    activeKey.value = tabs.value[index - 1]?.key ?? tabs.value[index]?.key;
 }
 
 function validateEndpoint(item: EndpointEntity): string | undefined {
-  if (!item.name.trim()) return "Endpoint 名称不能为空";
-  if (!item.url.trim()) return "Endpoint 访问路径不能为空";
-  if (item.isAutoSql && !item.tableName?.trim()) return `“${item.name}”使用自动 SQL 时必须填写数据库表名`;
+  if (!item.name.trim())
+    return "Endpoint 名称不能为空";
+  if (!item.url.trim())
+    return "Endpoint 访问路径不能为空";
+  if (item.isAutoSql && !item.tableName?.trim())
+    return `“${item.name}”使用自动 SQL 时必须填写数据库表名`;
 }
 
 async function saveActiveEndpoints(): Promise<void> {
   const tab = activeTab.value;
-  if (!tab) return;
+  if (!tab)
+    return;
+
   if (tab.endpoints.length === 0) {
     show("warning", "请至少新增一个 Endpoint");
+
     return;
   }
+
   const error = tab.endpoints.map(validateEndpoint).find(Boolean);
+
   if (error) {
     show("error", error);
+
     return;
   }
 
   try {
     for (const item of tab.endpoints) {
       item.groupId = tab.group.id!;
+
       if (item.id)
         await dataServiceApi.updateEndpoint(item);
       else
         item.id = await dataServiceApi.createEndpoint(item);
     }
+
     tab.isNew = false;
     tab.label = tab.group.name;
     show("success", "Endpoint 已逐条保存");
@@ -188,7 +205,10 @@ async function saveActiveEndpoints(): Promise<void> {
 function deleteActiveEndpoint(): void {
   const tab = activeTab.value;
   const item = tab?.endpoints[tab.activeEndpointIndex];
-  if (!tab || !item) return;
+
+  if (!tab || !item)
+    return;
+
   modal.confirm({
     title: "确认删除",
     content: `确定删除 Endpoint“${escapeHtml(item.name || item.url)}”吗？`,
@@ -200,9 +220,14 @@ function deleteActiveEndpoint(): void {
 
 async function removeEndpoint(tab: WorkspaceTab, item: EndpointEntity): Promise<void> {
   try {
-    if (item.id) await dataServiceApi.deleteEndpoint(item.id);
+    if (item.id)
+      await dataServiceApi.deleteEndpoint(item.id);
+
     const index = tab.endpoints.indexOf(item);
-    if (index >= 0) tab.endpoints.splice(index, 1);
+
+    if (index >= 0)
+      tab.endpoints.splice(index, 1);
+
     tab.activeEndpointIndex = Math.min(tab.activeEndpointIndex, tab.endpoints.length - 1);
     show("success", "Endpoint 已删除");
   } catch (error) {
@@ -211,7 +236,8 @@ async function removeEndpoint(tab: WorkspaceTab, item: EndpointEntity): Promise<
 }
 
 async function refreshSelectedGroup(): Promise<void> {
-  if (selectedUrlGroup.value) await selectUrlGroup(selectedUrlGroup.value);
+  if (selectedUrlGroup.value)
+    await selectUrlGroup(selectedUrlGroup.value);
 }
 
 function escapeHtml(value: string): string {
@@ -220,8 +246,44 @@ function escapeHtml(value: string): string {
 </script>
 
 <style scoped lang="less">
-.app-shell { display: flex; height: 100%; flex-direction: column; background: white; }
-.workspace-layout { min-height: 0; flex: 1; border-top: 1px solid lightgray; }
-.main-workspace { display: flex; height: 100%; min-width: 0; flex-direction: column; padding-left: 5px; }
-.editor-host { min-height: 0; flex: 1; }.welcome { padding: 15px 10px; }.welcome h1 { margin: 0; color: #555; font-size: 22px; font-weight: 400; }.muted { color: #999; }
+.app-shell {
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+  background: white;
+}
+
+.workspace-layout {
+  min-height: 0;
+  flex: 1;
+  border-top: 1px solid lightgray;
+}
+
+.main-workspace {
+  display: flex;
+  height: 100%;
+  min-width: 0;
+  flex-direction: column;
+  padding-left: 5px;
+}
+
+.editor-host {
+  min-height: 0;
+  flex: 1;
+}
+
+.welcome {
+  padding: 15px 10px;
+}
+
+.welcome h1 {
+  margin: 0;
+  color: #555;
+  font-size: 22px;
+  font-weight: 400;
+}
+
+.muted {
+  color: #999;
+}
 </style>

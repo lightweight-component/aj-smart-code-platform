@@ -22,7 +22,6 @@ CREATE TABLE `ds_datasource` (
 COMMENT='数据源'
 COLLATE='utf8mb4_unicode_ci'
 
-
 CREATE TABLE `ds_url_group` (
     `id` INT NOT NULL AUTO_INCREMENT COMMENT '主键 id，自增',
     `name` VARCHAR(50) NOT NULL COMMENT '分组名称',

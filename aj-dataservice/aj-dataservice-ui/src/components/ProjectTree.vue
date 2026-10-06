@@ -276,6 +276,34 @@ function visibleChanged(visible: boolean): void {
   height: calc(100% - 69px);
   overflow-y: auto;
   margin-left: 10px;
+  padding-right: 6px;
+  scrollbar-width: thin;
+  scrollbar-color: #b7c4cf transparent;
+}
+
+/*
+ * 仅美化 URL 分组树自身的滚动条，避免影响页面其他滚动区域。
+ */
+.group-tree::-webkit-scrollbar {
+  width: 8px;
+}
+
+.group-tree::-webkit-scrollbar-track {
+  margin: 6px 0;
+  border-radius: 8px;
+  background: transparent;
+}
+
+.group-tree::-webkit-scrollbar-thumb {
+  border: 2px solid transparent;
+  border-radius: 8px;
+  background: #b7c4cf;
+  background-clip: padding-box;
+}
+
+.group-tree::-webkit-scrollbar-thumb:hover {
+  background: #879cab;
+  background-clip: padding-box;
 }
 
 :deep(.ivu-tree-title) {

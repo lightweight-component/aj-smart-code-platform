@@ -1,4 +1,4 @@
-package org.foo.controller;
+package com.ajaxjs.dataservice.admin;
 
 import com.ajaxjs.dataservice.model.EndpointEntity;
 import com.ajaxjs.sqlman.Action;
@@ -44,8 +44,7 @@ public class EndpointAdminController {
 
     @DeleteMapping("/{id}")
     public boolean delete(@PathVariable Integer id) {
-        return new Action("DELETE FROM ds_endpoint WHERE id = ?")
-                .update(id).execute().getEffectedRows() > 0;
+        return new Action("DELETE FROM ds_endpoint WHERE id = ?").update(id).execute().getEffectedRows() > 0;
     }
 
     private void validate(EndpointEntity endpoint, Integer endpointId) {

@@ -2,14 +2,27 @@
   <header class="app-header">
     <div class="brand"><img alt="" src="../assets/icon.png" /> 数据服务 Data Service</div>
     <div class="header-actions">
-      <span v-if="apiRoot">数据源：</span><a href="https://dev.ajaxjs.com/docs/data-service/" rel="noreferrer"
-        target="_blank">帮助</a><span>|</span><a href="#" @click.prevent>关于</a>
+      
+      <a href="https://dev.ajaxjs.com/docs/data-service/" rel="noreferrer" target="_blank">帮助</a>
+      <span>|</span><a href="#" @click.prevent="showAbout">关于</a>
     </div>
   </header>
 </template>
 
 <script setup lang="ts">
-defineProps<{ apiRoot: string }>();
+import { Modal } from "view-ui-plus";
+
+/**
+ * 展示 DataService 的版本与功能说明。
+ *
+ * @returns 无返回值。
+ */
+function showAbout(): void {
+  Modal.info({
+    title: "关于 DataService",
+    content: "DataService：用数据库管理 SQL 语句，快捷生成 API 接口<br><br>v1.0",
+  });
+}
 </script>
 
 <style scoped lang="less">

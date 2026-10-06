@@ -1,4 +1,4 @@
-package org.foo.controller;
+package com.ajaxjs.dataservice.admin;
 
 import com.ajaxjs.dataservice.model.UrlGroup;
 import com.ajaxjs.framework.tree.TreeController;
