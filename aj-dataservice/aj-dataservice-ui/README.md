@@ -27,7 +27,7 @@ The style of API is based on CRUD(Create, Read, Update, Delete), For greater pre
 
 - Single Value Retrieval: to get a value, int or other numbers, or string, boolean, etc.
 - Detail Retrieval: to get a detail(info), a Map or a Java Bean, return as JSON Object
-- List Retrieval: to get list, might be a list of Map or a list of Java Bean, return as JSON Array
+- List Retrieval: to get a list, might be a list of Map or a list of Java Bean, return as JSON Array
 - Paged List Retrieval: to get paging list, with the field 'total' for the count
 - Record Creation: to create a record, return the ID of the record
 - Record Update: to update a record, return the boolean value that the record is updated

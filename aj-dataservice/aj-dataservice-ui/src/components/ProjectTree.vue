@@ -10,7 +10,7 @@
     <Tree v-else :data="visibleGroups" class="group-tree" @on-contextmenu="onContextMenu" @on-select-change="onSelectChange">
       <template #contextMenu>
         <DropdownItem v-if="contextGroup" style="color:green" @click="openCreate(contextGroup.id)">
-          <Icon type="ios-add" /> 新建子分组
+          <Icon type="ios-add" style="font-weight: bold;" /> 新建子分组
         </DropdownItem>
         <DropdownItem v-if="contextGroup" @click="openEdit(contextGroup)">
           <Icon type="ios-create" /> 编辑 / 移动
@@ -271,7 +271,6 @@ function visibleChanged(visible: boolean): void {
 .tree-state.error {
   color: #ed4014;
 }
-
 .group-tree {
   height: calc(100% - 69px);
   overflow-y: auto;

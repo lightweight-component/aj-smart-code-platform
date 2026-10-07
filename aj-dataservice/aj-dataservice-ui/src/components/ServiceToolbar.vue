@@ -62,7 +62,7 @@ defineEmits<{
   border: 0;
   padding: 0;
   color: gray;
-  font-size: .72rem;
+  font-size: 12px;
   white-space: nowrap;
   text-shadow: 1px 1px 1px #fff;
   cursor: pointer;
