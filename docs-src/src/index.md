@@ -1,28 +1,31 @@
 ---
-title: Introduction
-subTitle:
-description: Introduction
-date: 2025-07-01
+title: SmartCode Platform
+description: An integrated low-code platform with data services, configurable components, and a visual form designer.
+date: 2026-10-11
 tags:
-  - Introduction
+  - SmartCode
+  - Low-code
 layout: layouts/docs.njk
 ---
 
-# AJ DataService Introduction
+# SmartCode Platform
 
-<a name="intro"></a>
-<h4>Quickly build CRUD interface services by writing SQL business logic (or even no code at
-all!)</h4> <p style="text-align: right; font-style: italic;">— The easiest way: zero code. Configure parameters on the
-page, SQL is automatically generated and converted into HTTP
-API.</p> <img class="content" style="border: 1px solid #ccc;" src="asset/imgs/ds.jpg" title="Main Management Interface" /> <p style="text-align: center;"><a href="../../../demo/data-service" target="_blank">
-Try the Demo</a>, Account: admin, Password: 123123</p> <p> In Java enterprise development, writing Model, DAO, Service,
-and Controller code is often a tedious and repetitive task. AJ DataService was created to solve this problem. Depending
-on the complexity of the business logic, DataService can be used in the following three modes: </p> <ul> <li><strong>
-Basic data</strong>: These tables typically have little or only simple business logic. You can use DataService to create
-generic CRUD services.</li> <li><strong>Custom business logic</strong>: Not limited to simple CRUD, but can still be
-implemented using SQL. No need to write additional Java business code. Particularly suitable for backend interface
-development for BI reports or data visualization dashboards.</li> <li><strong>Complex business logic</strong>: Requires
-both Java and SQL working together. In this case, DataService can still act as an ORM mechanism, functioning as a Data
-Access Object (DAO) that returns Java Bean entities.</li> </ul> <p> DataService is not a code generator. More
-accurately, it abstracts common CRUD tasks and makes them configurable, serving as a rapid business development
-tool. </p> 
+SmartCode is a low-code platform built from three components. Together, they help teams build data-driven business applications with less repetitive work.
+
+## Data Service
+
+AJ DataService provides a unified way to build CRUD services and manage SQL-backed APIs.
+
+[Browse the Data Service source on GitHub](https://github.com/lightweight-component/aj-smart-code-platform/tree/main/aj-dataservice)
+
+## Configurable Components
+
+Reusable configurable components help assemble application features through configuration.
+
+[Browse the configurable components source on GitHub](https://github.com/lightweight-component/aj-smart-code-platform/tree/main/aj-ui-designer-vue3)
+
+## Visual Form Designer
+
+Design forms visually with Vue 3 and View UI Plus, then use the resulting form schema in your application.
+
+[Browse the visual form designer source on GitHub](https://github.com/lightweight-component/aj-smart-code-platform/tree/main/aj-form-designer)

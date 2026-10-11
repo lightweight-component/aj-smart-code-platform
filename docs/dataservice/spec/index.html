@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+        <title>AJ DataService - Features</title>
+        <meta name="description" content="AJ DataService: Features" />
+        <meta name="keywords" content="dataservice, aj-dataservice, crud, Features" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="stylesheet" href="https://framework.ajaxjs.com/static/new-ui/css/common.css" />
+        <script defer src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/highlight.min.js"></script>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/styles/github.min.css" />
+        <link rel="stylesheet" href="https://aj-util.ajaxjs.com/asset/main.css" />
+        <script src="https://aj-util.ajaxjs.com/asset/js/common.js"></script>
+        <script>
+            AJUtils.initTheme();
+            AJUtils.onReady(function () {
+                var button = document.querySelector('[data-document-language-toggle]');
+                var path = window.location.pathname;
+                button.setAttribute('data-language-target', path === '/' ? '/index-cn/' : path.replace(/\/?$/, '-cn/'));
+                AJUtils.bindThemeToggle();
+                AJUtils.bindDocumentationLanguageToggle();
+            });
+        </script>
+        <link rel="icon" type="image/png" href="/asset/favicon.ico" />
+        <script>
+            var _hmt = _hmt || [];
+            (function() {
+              var hm = document.createElement("script");
+              hm.src = "https://hm.baidu.com/hm.js?734ea877e4a740968e40994221d9c877";
+              var s = document.getElementsByTagName("script")[0];
+              s.parentNode.insertBefore(hm, s);
+            })();
+        </script>
+    </head>
+    <body>
+        <nav>
+            <div>
+                <div class="links">
+                    <a href="/">🏠 Home</a>
+                    | ⚙️ Source:
+                    <a target="_blank" href="https://github.com/lightweight-component/aj-smart-code-platform">Github</a>/<a target="_blank" href="https://gitcode.com/lightweight-component/aj-smart-code-platform">Gitcode</a>
+                    |
+                    <button class="language-toggle" type="button" data-document-language-toggle aria-label="Switch to Chinese" title="Switch to Chinese">中</button>
+                    <button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch theme" title="Switch theme">☾</button>
+                </div>
+                <h1><img src="/asset/imgs/icon.png" style="vertical-align: middle;height: 35px;margin-bottom: 6px;" /> AJ DataService</h1>
+                <h3>A One-Stop CRUD Service</h3>
+            </div>
+        </nav>
+        <div class="docs-layout">
+            <menu class="docs-navigation" aria-label="Documentation navigation">
+                <ul>
+                    <li class="selected">
+                        <a href="/">Home</a>
+                    </li>
+                </ul>
+                <h3>Data Service</h3>
+                <ul>
+                    <li><a href="/dataservice/index">Introduction</a></li>
+                    <li><a href="/dataservice/spec">Features</a></li>
+                    <li><a href="/dataservice/install/install">Installation and Integration</a></li>
+                    <li><a href="/dataservice/install/spring">Integration with Spring</a></li>
+                    <li><a href="/dataservice/usage/basic">Basic Concepts</a></li>
+                </ul>
+                <h3>Configurable Components</h3>
+                <ul><li><a href="/todo">Configurable Components</a></li></ul>
+                <h3>Visual Form Designer</h3>
+                <ul><li><a href="/todo">Visual Form Designer</a></li></ul>
+                <h3>Other</h3>
+                <ul><li><a href="/misc/contact">Contact</a></li></ul>
+            </menu>
+            <article class="aj-text">
+                <h1>Features</h1>
+<section>
+    <a name="point"></a>
+    <ul>
+        <li>Supports databases accessible through JDBC, including MySQL, Oracle, SQL Server, PostgreSQL, H2, HSQLDB, SQLite, MariaDB, DB2, Firebird, Derby, Sybase, Informix, and Microsoft SQL Server.</li>
+        <li>Supports dynamic SQL, similar to MyBatis dynamic SQL, including calls to Java functions from SQL, as well as SQL editing, execution, and debugging.</li>
+        <li>Creates APIs dynamically: APIs can be created, edited, taken offline, and deleted; changes take effect without a restart.</li>
+        <li>Supports composing multiple SQL statements, transactions, and switching between multiple data sources.</li>
+        <li>Provides Java access to the data service without making HTTP API calls, much like the traditional Service-to-DAO (Data Access Object) pattern.</li>
+        <li>Offers extensible plugins for caching, data transformation, and failure alerts (TODO).</li>
+        <li>Supports generating API documentation and importing and exporting it (TODO).</li>
+        <li>Lightweight by design: it can run standalone or integrate with a Spring application.</li>
+    </ul>
+</section>
+<section>
+    <a name="start"></a>
+    <h2>Background</h2>
+    <p>
+        Enterprise application development involves many form-based workflows and the database tables behind them. Although some operations and business logic involve complex relationships between tables, much of the work is repetitive: in short, CRUD operations. On the backend, a unified CRUD service can coexist with complex and changing business requirements: abstract what can be standardized, and leave the rest open. Write operations (create or update) are often easy to standardize, while some query behavior (SELECT), such as pagination, can also be abstracted. We need a practical, efficient set of application conventions to achieve this goal. For the frontend, the backend assembles a complete SQL statement from the submitted parameters, executes it, and returns the result as JSON. The frontend may call different API endpoints, while the backend can route requests through a single API entry point based on the URL path.
+    </p>
+    <p>
+        Frontend forms do not always need to be designed individually. The balance between customization and consistency should depend on development costs. With a consistent design, automatically generating form interfaces becomes important. Form and list UI generators are covered separately.
+    </p>
+    <p>
+        A frontend form can use a shared CRUD component; its field names only need to match those on the backend. It can then submit the parameters as JSON to the unified CRUD service.
+    </p>
+    <p>
+        The same applies to frontend list components. The key challenge is building queries with different combinations of conditions for complex SELECT queries. One simple approach is to have the frontend send a SQL WHERE clause to the backend. This is only a SQL fragment, not a complete statement, and is safer (though the backend must still check for SQL injection and similar issues).
+    </p>
+    <p>
+        Even without a unified CRUD API, the data service can be used as an ORM tool, or as a further layer over MyBatis. The author uses it this way extensively. This is another mode of the data service: the DAO pattern (Data Access Object). Backend developers are already familiar with DAO, so using the data service purely on the backend feels natural and requires little intrusion. The main change is that SQL statements previously written in MyBatis XML are now stored in the database. You do not need to edit SQL directly in the database; instead, edit it in the data service's GUI, where changes take effect immediately without a restart. SQL is managed in a new environment, while MyBatis remains underneath and backend code continues to use the familiar DAO pattern. Another benefit is that Java callers can use typed Bean entities for ORM instead of Maps (though Maps are also available when appropriate).
+    </p>
+</section>
+<h2>Similar Products</h2>
+<p> <span class="external-link">
+        <span>↗</span>
+    </span>
+    <a href="https://www.51dbapi.com/" target="_blank">DBAPI</a> |
+    <span class="external-link">
+        <span>↗</span>
+    </span>
+    <a href="https://crudapi.cn/" target="_blank">crudapi</a> |
+    <span class="external-link">
+        <span>↗</span>
+    </span>
+    <a href="https://www.ssssssss.org/" target="_blank">magic-api</a>
+</p>
+
+            </article>
+        </div>
+        <footer>
+            AJ DataService is part of the open-source
+            <a href="https://framework.ajaxjs.com" target="_blank">AJ-Framework</a>.
+            Contact: frank@ajaxjs.com,
+            <a href="https://blog.csdn.net/zhangxin09" target="_blank">author's blog (in Chinese)</a>.
+            <br/><br/>Copyright © 2025 Frank Cheung. All rights reserved.
+        </footer>
+    </body>
+</html>

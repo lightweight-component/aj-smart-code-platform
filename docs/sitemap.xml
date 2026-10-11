@@ -2,27 +2,47 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     
         <url>
-            <loc>https://dataservice.ajaxjs.com/cn/</loc>
+            <loc>https://dataservice.ajaxjs.com/dataservice/index-cn/</loc>
             <lastmod>2022-01-05T00:00:00.000Z</lastmod>
         </url>
     
         <url>
-            <loc>https://dataservice.ajaxjs.com/install/install-cn/</loc>
+            <loc>https://dataservice.ajaxjs.com/dataservice/install/install-cn/</loc>
             <lastmod>2022-01-05T00:00:00.000Z</lastmod>
         </url>
     
         <url>
-            <loc>https://dataservice.ajaxjs.com/install/</loc>
+            <loc>https://dataservice.ajaxjs.com/dataservice/install/install/</loc>
             <lastmod>2022-01-05T00:00:00.000Z</lastmod>
         </url>
     
         <url>
-            <loc>https://dataservice.ajaxjs.com/install/spring-cn/</loc>
+            <loc>https://dataservice.ajaxjs.com/dataservice/install/spring-cn/</loc>
             <lastmod>2022-01-05T00:00:00.000Z</lastmod>
         </url>
     
         <url>
-            <loc>https://dataservice.ajaxjs.com/install/spring/</loc>
+            <loc>https://dataservice.ajaxjs.com/dataservice/install/spring/</loc>
+            <lastmod>2022-01-05T00:00:00.000Z</lastmod>
+        </url>
+    
+        <url>
+            <loc>https://dataservice.ajaxjs.com/dataservice/spec-cn/</loc>
+            <lastmod>2022-01-05T00:00:00.000Z</lastmod>
+        </url>
+    
+        <url>
+            <loc>https://dataservice.ajaxjs.com/dataservice/spec/</loc>
+            <lastmod>2022-01-05T00:00:00.000Z</lastmod>
+        </url>
+    
+        <url>
+            <loc>https://dataservice.ajaxjs.com/dataservice/usage/basic-cn/</loc>
+            <lastmod>2022-01-05T00:00:00.000Z</lastmod>
+        </url>
+    
+        <url>
+            <loc>https://dataservice.ajaxjs.com/dataservice/usage/basic/</loc>
             <lastmod>2022-01-05T00:00:00.000Z</lastmod>
         </url>
     
@@ -37,33 +57,28 @@
         </url>
     
         <url>
-            <loc>https://dataservice.ajaxjs.com/spec-cn/</loc>
-            <lastmod>2022-01-05T00:00:00.000Z</lastmod>
-        </url>
-    
-        <url>
-            <loc>https://dataservice.ajaxjs.com/tour/basic-cn/</loc>
-            <lastmod>2022-01-05T00:00:00.000Z</lastmod>
-        </url>
-    
-        <url>
-            <loc>https://dataservice.ajaxjs.com/tour/basic/</loc>
-            <lastmod>2022-01-05T00:00:00.000Z</lastmod>
-        </url>
-    
-        <url>
-            <loc>https://dataservice.ajaxjs.com/</loc>
+            <loc>https://dataservice.ajaxjs.com/dataservice/</loc>
             <lastmod>2025-07-01T00:00:00.000Z</lastmod>
         </url>
     
         <url>
-            <loc>https://dataservice.ajaxjs.com/test/cf/</loc>
-            <lastmod>2025-07-15T09:33:56.670Z</lastmod>
+            <loc>https://dataservice.ajaxjs.com/temp/</loc>
+            <lastmod>2026-08-30T13:38:59.012Z</lastmod>
         </url>
     
         <url>
-            <loc>https://dataservice.ajaxjs.com/temp/</loc>
-            <lastmod>2025-08-28T07:15:29.033Z</lastmod>
+            <loc>https://dataservice.ajaxjs.com/index-cn/</loc>
+            <lastmod>2026-10-11T00:00:00.000Z</lastmod>
+        </url>
+    
+        <url>
+            <loc>https://dataservice.ajaxjs.com/</loc>
+            <lastmod>2026-10-11T00:00:00.000Z</lastmod>
+        </url>
+    
+        <url>
+            <loc>https://dataservice.ajaxjs.com/todo/</loc>
+            <lastmod>2026-10-11T11:24:04.546Z</lastmod>
         </url>
     
 </urlset>

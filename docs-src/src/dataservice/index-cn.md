@@ -13,7 +13,7 @@ layout: layouts/docs-cn.njk
 <a name="intro"></a>
 <h4>只需写 SQL 业务逻辑（甚至零代码不写！），即可快速搭建 CRUD 接口服务</h4>
 <p style="text-align: right;font-style: italic;">——最简单的方式：零代码，在页面上配置好参数，自动生成 SQL 并且直接转化成 HTTP API。</p>
-<img class="content" style="border: 1px solid #ccc;" src="../asset/imgs/ds.jpg" title="管理主界面" />
+<img class="content" style="border: 1px solid #ccc;" src="../../asset/imgs/ds.jpg" title="管理主界面" />
 <p style="text-align: center;"><a href="../../../demo/data-service" target="_blank">进入演示</a>，账号：admin，密码：123123</p>
 <p>
 Java 企业级开发中，要写 Model、DAO、Service 和 Controller 代码是一件非常繁琐的事情，里面存在着大量的重复工作，DataService

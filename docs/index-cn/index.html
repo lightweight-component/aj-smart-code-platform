@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+        <title>数据服务 AJ DataService-SmartCode 平台</title>
+        <meta name="description" content="数据服务 集数据服务、可配置化组件和可视化表单设计器于一体的低代码平台。"/>
+        <meta name="keywords" content="dataservice, aj-dataservice, crud, 数据服务, SmartCode,低代码"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@200..900&family=Noto+Serif:ital,wght@0,100..900;1,100..900&display=swap&family=Noto+Sans+SC:wght@100..900&display=swap" />
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@100..900&family=Noto+Serif:ital,wght@0,100..900;1,100..900&display=swap" />
+        <link rel="stylesheet" href="https://framework.ajaxjs.com/static/new-ui/css/common.css" />
+        <script defer src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/highlight.min.js"></script>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/styles/github.min.css" />
+        <link rel="stylesheet" href="https://aj-util.ajaxjs.com/asset/main.css" />
+        <script src="https://aj-util.ajaxjs.com/asset/js/common.js"></script>
+        <script>
+            AJUtils.initTheme();
+            AJUtils.onReady(function () {
+                var button = document.querySelector('[data-document-language-toggle]');
+                var path = window.location.pathname;
+                button.setAttribute('data-language-target', path === '/index-cn/' ? '/' : path.replace(/-cn(?=\/?$)/, ''));
+                AJUtils.bindThemeToggle();
+                AJUtils.bindDocumentationLanguageToggle();
+            });
+        </script>
+        <link rel="icon" type="image/png" href="/asset/favicon.ico"/>
+
+        <script>
+            var _hmt = _hmt || [];
+            (function() {
+              var hm = document.createElement("script");
+              hm.src = "https://hm.baidu.com/hm.js?734ea877e4a740968e40994221d9c877";
+              var s = document.getElementsByTagName("script")[0];
+              s.parentNode.insertBefore(hm, s);
+            })();
+        </script>
+    </head>
+    <body>
+        <nav>
+            <div>
+                <div class="links">
+                    <a href="/">🏠 首页</a>
+                    | ⚙️ 源码:
+                    <a target="_blank" href="https://github.com/lightweight-component/aj-smart-code-platform">Github</a>/<a target="_blank" href="https://gitcode.com/lightweight-component/aj-smart-code-platform">Gitcode</a>
+                    |
+                    <button class="language-toggle" type="button" data-document-language-toggle aria-label="切换至英文" title="切换至英文">EN</button>
+                    <button class="theme-toggle" type="button" data-theme-toggle aria-label="切换主题" title="切换主题">☾</button>
+                </div>
+                <h1><img src="/asset/imgs/icon.png" style="vertical-align: middle;height: 35px;margin-bottom: 6px;" /> 数据服务 AJ DataService</h1>
+                <h3>一站式快速 CRUD 服务</h3>
+            </div>
+        </nav>
+        <div class="docs-layout">
+            <menu class="docs-navigation" aria-label="文档导航">
+                <ul>
+                    <li class="selected">
+                        <a href="/index-cn/">首页</a>
+                    </li>
+                </ul>
+                <h3>数据服务</h3>
+                <ul>
+                    <li>
+                        <a href="/dataservice/index-cn">数据服务简介</a>
+                    </li>
+                    <li>
+                        <a href="/dataservice/spec-cn">数据服务特点</a>
+                    </li>
+                    <li>
+                       <a href="/dataservice/install/install-cn">安装与集成</a>
+                    </li>
+                    <li>
+                       <a href="/dataservice/install/spring-cn">与 Spring 集成</a>
+                    </li>
+                    <li>
+                       <a href="/dataservice/usage/basic-cn">基本概念</a>
+                    </li>
+
+                </ul>
+                <h3>可配置化组件</h3>
+                <ul>
+                  <li>
+                      <a href="/todo">可配置化组件</a>
+                  </li>
+                </ul>
+                <h3>可视化表单设计器</h3>
+                <ul>
+                  <li>
+                      <a href="/todo">可视化表单设计器</a>
+                  </li>
+                </ul>
+                <h3>其他</h3>
+                <ul>
+                    <li><a href="/misc/contact-cn">联系</a></li>
+                </ul>
+
+            </menu>
+            <article class="aj-text chinese">
+                <h1>SmartCode 平台</h1>
+<p>SmartCode 是一个低代码平台，由三大组件组成，帮助团队减少重复工作，更高效地构建数据驱动的业务应用。</p>
+<h2>数据服务</h2>
+<p>AJ DataService 提供统一的 CRUD 服务构建方式，并支持管理基于 SQL 的 API。</p>
+<p><a href="https://github.com/lightweight-component/aj-smart-code-platform/tree/main/aj-dataservice">在 GitHub 浏览数据服务源码</a></p>
+<h2>可配置化组件</h2>
+<p>通过可复用、可配置的组件，快速组合应用功能。</p>
+<p><a href="https://github.com/lightweight-component/aj-smart-code-platform/tree/main/aj-ui-designer-vue3">在 GitHub 浏览可配置化组件源码</a></p>
+<h2>可视化表单设计器</h2>
+<p>基于 Vue 3 和 View UI Plus 可视化设计表单，并将生成的表单 Schema 用于应用中。</p>
+<p><a href="https://github.com/lightweight-component/aj-smart-code-platform/tree/main/aj-form-designer">在 GitHub 浏览可视化表单设计器源码</a></p>
+
+            </article>
+        </div>
+        <footer>
+             AJ DataService，开源框架 <a href="https://framework.ajaxjs.com" target="_blank">AJ-Framework</a> 的一部分。联系方式：
+             frank@ajaxjs.com，<a href="https://blog.csdn.net/zhangxin09" target="_blank">作者博客</a>
+             <br />
+             <br />
+             Copyright © 2025 Frank Cheung. All rights reserved.
+         </footer>
+    </body>
+</html>

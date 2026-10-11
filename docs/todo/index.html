@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+        <title>AJ DataService - TODO</title>
+        <meta name="description" content="AJ DataService: TODO" />
+        <meta name="keywords" content="dataservice, aj-dataservice, crud, " />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="stylesheet" href="https://framework.ajaxjs.com/static/new-ui/css/common.css" />
+        <script defer src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/highlight.min.js"></script>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/styles/github.min.css" />
+        <link rel="stylesheet" href="https://aj-util.ajaxjs.com/asset/main.css" />
+        <script src="https://aj-util.ajaxjs.com/asset/js/common.js"></script>
+        <script>
+            AJUtils.initTheme();
+            AJUtils.onReady(function () {
+                var button = document.querySelector('[data-document-language-toggle]');
+                var path = window.location.pathname;
+                button.setAttribute('data-language-target', path === '/' ? '/index-cn/' : path.replace(/\/?$/, '-cn/'));
+                AJUtils.bindThemeToggle();
+                AJUtils.bindDocumentationLanguageToggle();
+            });
+        </script>
+        <link rel="icon" type="image/png" href="/asset/favicon.ico" />
+        <script>
+            var _hmt = _hmt || [];
+            (function() {
+              var hm = document.createElement("script");
+              hm.src = "https://hm.baidu.com/hm.js?734ea877e4a740968e40994221d9c877";
+              var s = document.getElementsByTagName("script")[0];
+              s.parentNode.insertBefore(hm, s);
+            })();
+        </script>
+    </head>
+    <body>
+        <nav>
+            <div>
+                <div class="links">
+                    <a href="/">🏠 Home</a>
+                    | ⚙️ Source:
+                    <a target="_blank" href="https://github.com/lightweight-component/aj-smart-code-platform">Github</a>/<a target="_blank" href="https://gitcode.com/lightweight-component/aj-smart-code-platform">Gitcode</a>
+                    |
+                    <button class="language-toggle" type="button" data-document-language-toggle aria-label="Switch to Chinese" title="Switch to Chinese">中</button>
+                    <button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch theme" title="Switch theme">☾</button>
+                </div>
+                <h1><img src="/asset/imgs/icon.png" style="vertical-align: middle;height: 35px;margin-bottom: 6px;" /> AJ DataService</h1>
+                <h3>A One-Stop CRUD Service</h3>
+            </div>
+        </nav>
+        <div class="docs-layout">
+            <menu class="docs-navigation" aria-label="Documentation navigation">
+                <ul>
+                    <li class="selected">
+                        <a href="/">Home</a>
+                    </li>
+                </ul>
+                <h3>Data Service</h3>
+                <ul>
+                    <li><a href="/dataservice/index">Introduction</a></li>
+                    <li><a href="/dataservice/spec">Features</a></li>
+                    <li><a href="/dataservice/install/install">Installation and Integration</a></li>
+                    <li><a href="/dataservice/install/spring">Integration with Spring</a></li>
+                    <li><a href="/dataservice/usage/basic">Basic Concepts</a></li>
+                </ul>
+                <h3>Configurable Components</h3>
+                <ul><li><a href="/todo">Configurable Components</a></li></ul>
+                <h3>Visual Form Designer</h3>
+                <ul><li><a href="/todo">Visual Form Designer</a></li></ul>
+                <h3>Other</h3>
+                <ul><li><a href="/misc/contact">Contact</a></li></ul>
+            </menu>
+            <article class="aj-text">
+                <p>TODO</p>
+
+            </article>
+        </div>
+        <footer>
+            AJ DataService is part of the open-source
+            <a href="https://framework.ajaxjs.com" target="_blank">AJ-Framework</a>.
+            Contact: frank@ajaxjs.com,
+            <a href="https://blog.csdn.net/zhangxin09" target="_blank">author's blog (in Chinese)</a>.
+            <br/><br/>Copyright © 2025 Frank Cheung. All rights reserved.
+        </footer>
+    </body>
+</html>

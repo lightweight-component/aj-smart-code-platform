@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-CN">
     <head>
         <meta charset="utf-8"/>
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
@@ -12,8 +12,20 @@
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@200..900&family=Noto+Serif:ital,wght@0,100..900;1,100..900&display=swap&family=Noto+Sans+SC:wght@100..900&display=swap" />
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@100..900&family=Noto+Serif:ital,wght@0,100..900;1,100..900&display=swap" />
         <link rel="stylesheet" href="https://framework.ajaxjs.com/static/new-ui/css/common.css" />
-        <link rel="stylesheet" href="https://iam.ajaxjs.com/asset/main.css"/>
-        <script src="https://framework.ajaxjs.com/static/aj-docs/common.js"></script>
+        <script defer src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/highlight.min.js"></script>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/styles/github.min.css" />
+        <link rel="stylesheet" href="https://aj-util.ajaxjs.com/asset/main.css" />
+        <script src="https://aj-util.ajaxjs.com/asset/js/common.js"></script>
+        <script>
+            AJUtils.initTheme();
+            AJUtils.onReady(function () {
+                var button = document.querySelector('[data-document-language-toggle]');
+                var path = window.location.pathname;
+                button.setAttribute('data-language-target', path === '/index-cn/' ? '/' : path.replace(/-cn(?=\/?$)/, ''));
+                AJUtils.bindThemeToggle();
+                AJUtils.bindDocumentationLanguageToggle();
+            });
+        </script>
         <link rel="icon" type="image/png" href="/asset/favicon.ico"/>
 
         <script>
@@ -34,41 +46,51 @@
                     | ⚙️ 源码:
                     <a target="_blank" href="https://github.com/lightweight-component/aj-smart-code-platform">Github</a>/<a target="_blank" href="https://gitcode.com/lightweight-component/aj-smart-code-platform">Gitcode</a>
                     |
-                    <a href="/">英文版本</a>
+                    <button class="language-toggle" type="button" data-document-language-toggle aria-label="切换至英文" title="切换至英文">EN</button>
+                    <button class="theme-toggle" type="button" data-theme-toggle aria-label="切换主题" title="切换主题">☾</button>
                 </div>
                 <h1><img src="/asset/imgs/icon.png" style="vertical-align: middle;height: 35px;margin-bottom: 6px;" /> 数据服务 AJ DataService</h1>
                 <h3>一站式快速 CRUD 服务</h3>
             </div>
         </nav>
-        <div>
-            <menu>
+        <div class="docs-layout">
+            <menu class="docs-navigation" aria-label="文档导航">
                 <ul>
                     <li class="selected">
-                        <a href="/cn">首页</a>
-                    </li>
-                    <li>
-                        <a href="/spec-cn">特点</a>
+                        <a href="/index-cn/">首页</a>
                     </li>
                 </ul>
-                <h3>安装</h3>
+                <h3>数据服务</h3>
                 <ul>
                     <li>
-                        <a href="/install/install-cn">安装</a>
+                        <a href="/dataservice/index-cn">数据服务简介</a>
                     </li>
                     <li>
-                       <a href="/install/spring-cn">与 Spring 集成</a>
+                        <a href="/dataservice/spec-cn">数据服务特点</a>
                     </li>
                     <li>
-                       <a href="/install/ui-cn">前端程序</a>
+                       <a href="/dataservice/install/install-cn">安装与集成</a>
                     </li>
-                </ul>
-                <h3>使用操作入门</h3>
-                <ul>
-                      <li>
-                           <a href="/tour/basic-cn">基本概念</a>
-                      </li>
-                </ul>
+                    <li>
+                       <a href="/dataservice/install/spring-cn">与 Spring 集成</a>
+                    </li>
+                    <li>
+                       <a href="/dataservice/usage/basic-cn">基本概念</a>
+                    </li>
 
+                </ul>
+                <h3>可配置化组件</h3>
+                <ul>
+                  <li>
+                      <a href="/todo">可配置化组件</a>
+                  </li>
+                </ul>
+                <h3>可视化表单设计器</h3>
+                <ul>
+                  <li>
+                      <a href="/todo">可视化表单设计器</a>
+                  </li>
+                </ul>
                 <h3>其他</h3>
                 <ul>
                     <li><a href="/misc/contact-cn">联系</a></li>

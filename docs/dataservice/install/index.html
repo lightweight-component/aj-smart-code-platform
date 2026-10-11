@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+        <title>AJ DataService - Installation and Configuration</title>
+        <meta name="description" content="AJ DataService: Installation and Configuration" />
+        <meta name="keywords" content="dataservice, aj-dataservice, crud, Installation,Configuration" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="stylesheet" href="https://framework.ajaxjs.com/static/new-ui/css/common.css" />
+        <link rel="stylesheet" href="https://iam.ajaxjs.com/asset/main.css" />
+        <script src="https://framework.ajaxjs.com/static/aj-docs/common.js"></script>
+        <link rel="icon" type="image/png" href="/asset/favicon.ico" />
+        <script>
+            var _hmt = _hmt || [];
+            (function() {
+              var hm = document.createElement("script");
+              hm.src = "https://hm.baidu.com/hm.js?734ea877e4a740968e40994221d9c877";
+              var s = document.getElementsByTagName("script")[0];
+              s.parentNode.insertBefore(hm, s);
+            })();
+        </script>
+    </head>
+    <body>
+        <nav>
+            <div>
+                <div class="links">
+                    <a href="/">🏠 Home</a>
+                    | ⚙️ Source:
+                    <a target="_blank" href="https://github.com/lightweight-component/aj-smart-code-platform">Github</a>/<a target="_blank" href="https://gitcode.com/lightweight-component/aj-smart-code-platform">Gitcode</a>
+                    |
+                    <a href="/cn">Chinese Version</a>
+                </div>
+                <h1><img src="/asset/imgs/icon.png" style="vertical-align: middle;height: 35px;margin-bottom: 6px;" /> AJ DataService</h1>
+                <h3>A One-Stop CRUD Service</h3>
+            </div>
+        </nav>
+        <div>
+            <menu>
+                <ul>
+                    <li class="selected">
+                        <a href="/todo">Home</a>
+                    </li>
+                </ul>
+                <h3>Data Service</h3>
+                <ul>
+                    <li><a href="/dataservice/index">Introduction</a></li>
+                    <li><a href="/dataservice/spec">Features</a></li>
+                    <li><a href="/dataservice/install/install">Installation and Integration</a></li>
+                    <li><a href="/dataservice/install/spring">Integration with Spring</a></li>
+                    <li><a href="/dataservice/usage/basic">Basic Concepts</a></li>
+                </ul>
+                <h3>Configurable Components</h3>
+                <ul><li><a href="/todo">Configurable Components</a></li></ul>
+                <h3>Visual Form Designer</h3>
+                <ul><li><a href="/todo">Visual Form Designer</a></li></ul>
+                <h3>Other</h3>
+                <ul><li><a href="/misc/contact">Contact</a></li></ul>
+            </menu>
+            <article class="aj-text">
+                <h1>Installation and Configuration</h1>
+<h2>System Requirements</h2>
+<ul>
+<li>Java 8 or later and Spring 5.0 or later.</li>
+<li>MySQL 8 or later. The current configuration supports MySQL only, although the SQL executed by the service is not limited to MySQL.</li>
+<li>The service is lightweight and has modest system requirements; a single-core machine with 512 MB of RAM is sufficient.</li>
+</ul>
+<h2>Download and Source Code</h2>
+<p>AJ DataService is lightweight: the JAR is just over 200 KB, including its dependencies.</p>
+<p>Add the following dependency to your Maven project:</p>
+<pre><code class="language-xml">&lt;!-- AJ DataService --&gt;
+&lt;dependency&gt;
+  &lt;groupId&gt;com.ajaxjs&lt;/groupId&gt;
+  &lt;artifactId&gt;ajaxjs-data&lt;/artifactId&gt;
+  &lt;version&gt;1.2.1&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre>
+<p>DataService depends on the SqlMan library, another open-source project by the author. Visit the <a href="https://sqlman.ajaxjs.com">SqlMan website</a> for more information.</p>
+<h2>Initialize the Database</h2>
+<p>DataService uses the <code>ds_common_api</code> and <code>ds_project</code> tables to store configuration. Create these tables in your database before starting the service. The <code>ds_common_api</code> table has the following schema:</p>
+<pre><code class="language-sql">CREATE TABLE `ds_common_api` (
+    `id` INT(10) NOT NULL AUTO_INCREMENT COMMENT 'Primary key; auto-incrementing',
+    `pid` INT(10) NULL DEFAULT '-1' COMMENT 'Parent ID; use -1 or NULL for a top-level node',
+    `name` VARCHAR(90) NULL DEFAULT NULL COMMENT 'Description',
+    `namespace` VARCHAR(50) NOT NULL COMMENT 'Namespace identifier',
+    `table_name` VARCHAR(45) NULL DEFAULT NULL COMMENT 'Table name',
+    `type` VARCHAR(10) NULL DEFAULT NULL COMMENT 'Type: SINGLE or CRUD',
+    `clz_name` VARCHAR(10) NULL DEFAULT NULL COMMENT 'Entity class reference name',
+    `id_field` VARCHAR(10) NULL DEFAULT 'id' COMMENT 'Primary key field name',
+    `sql` TEXT NULL DEFAULT NULL COMMENT 'Single SQL statement',
+    `info_sql` TEXT NULL DEFAULT NULL COMMENT 'SQL for retrieving a record (optional)',
+    `list_sql` TEXT NULL DEFAULT NULL COMMENT 'SQL for retrieving a list (optional)',
+    `create_sql` TEXT NULL DEFAULT NULL COMMENT 'SQL for creating a record (optional)',
+    `update_sql` TEXT NULL DEFAULT NULL COMMENT 'SQL for updating a record (optional)',
+    `delete_sql` TEXT NULL DEFAULT NULL COMMENT 'SQL for deleting a record (optional)',
+    `del_field` VARCHAR(100) NULL DEFAULT 'stat' COMMENT 'Deletion field name',
+    `has_is_deleted` TINYINT(1) NULL DEFAULT '1' COMMENT 'Whether a logical deletion flag is present',
+    `tenant_isolation` TINYINT(3) UNSIGNED NULL DEFAULT NULL COMMENT 'Whether tenant data isolation is enabled',
+    `id_type` TINYINT(3) UNSIGNED NULL DEFAULT NULL COMMENT '1 = auto-increment; 2 = Snowflake; 3 = UUID',
+    `stat` TINYINT(3) UNSIGNED NULL DEFAULT '0' COMMENT 'Status dictionary value',
+    `creator` VARCHAR(50) NULL DEFAULT NULL COMMENT 'Creator name (may be denormalized)',
+    `creator_id` INT(10) NULL DEFAULT NULL COMMENT 'Creator ID',
+    `create_date` DATETIME NOT NULL DEFAULT (now()) COMMENT 'Creation date',
+    `updater` VARCHAR(50) NULL DEFAULT NULL COMMENT 'Updater name (may be denormalized)',
+    `updater_id` INT(10) NULL DEFAULT NULL COMMENT 'Updater ID',
+    `update_date` DATETIME NOT NULL DEFAULT (now()) ON UPDATE CURRENT_TIMESTAMP COMMENT 'Update date',
+    PRIMARY KEY (`id`) USING BTREE,
+    UNIQUE INDEX `id_UNIQUE` (`id`) USING BTREE
+)
+COMMENT='Configuration for generic, universal API endpoints'
+COLLATE='utf8mb4_unicode_ci';
+</code></pre>
+<p>After creating the tables, insert two new records to load the configuration.</p>
+
+            </article>
+        </div>
+        <footer>
+            AJ DataService is part of the open-source
+            <a href="https://framework.ajaxjs.com" target="_blank">AJ-Framework</a>.
+            Contact: frank@ajaxjs.com,
+            <a href="https://blog.csdn.net/zhangxin09" target="_blank">author's blog (in Chinese)</a>.
+            <br/><br/>Copyright © 2025 Frank Cheung. All rights reserved.
+        </footer>
+    </body>
+</html>
