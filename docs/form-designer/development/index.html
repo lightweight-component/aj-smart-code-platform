@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+        <title>AJ DataService - Form Designer Development and Integration</title>
+        <meta name="description" content="AJ DataService: Integrate generated forms, migrate legacy designer data, and extend aj-form-designer." />
+        <meta name="keywords" content="dataservice, aj-dataservice, crud, Form Designer,Vue" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="stylesheet" href="https://framework.ajaxjs.com/static/new-ui/css/common.css" />
+        <script defer src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/highlight.min.js"></script>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/styles/github.min.css" />
+        <link rel="stylesheet" href="https://aj-util.ajaxjs.com/asset/main.css" />
+        <script src="https://aj-util.ajaxjs.com/asset/js/common.js"></script>
+        <script>
+            AJUtils.initTheme();
+            AJUtils.onReady(function () {
+                var button = document.querySelector('[data-document-language-toggle]');
+                var path = window.location.pathname;
+                button.setAttribute('data-language-target', path === '/' ? '/index-cn/' : path === '/form-designer/' ? '/form-designer/index-cn/' : path.replace(/\/?$/, '-cn/'));
+                AJUtils.bindThemeToggle();
+                AJUtils.bindDocumentationLanguageToggle();
+            });
+        </script>
+        <link rel="icon" type="image/png" href="/asset/favicon.ico" />
+        <script>
+            var _hmt = _hmt || [];
+            (function() {
+              var hm = document.createElement("script");
+              hm.src = "https://hm.baidu.com/hm.js?734ea877e4a740968e40994221d9c877";
+              var s = document.getElementsByTagName("script")[0];
+              s.parentNode.insertBefore(hm, s);
+            })();
+        </script>
+    </head>
+    <body>
+        <nav>
+            <div>
+                <div class="links">
+                    <a href="/">🏠 Home</a>
+                    | ⚙️ Source:
+                    <a target="_blank" href="https://github.com/lightweight-component/aj-smart-code-platform">Github</a>/<a target="_blank" href="https://gitcode.com/lightweight-component/aj-smart-code-platform">Gitcode</a>
+                    |
+                    <button class="language-toggle" type="button" data-document-language-toggle aria-label="Switch to Chinese" title="Switch to Chinese">中</button>
+                    <button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch theme" title="Switch theme">☾</button>
+                </div>
+                <h1><img src="/asset/imgs/icon.png" style="vertical-align: middle;height: 35px;margin-bottom: 6px;" /> AJ DataService</h1>
+                <h3>A One-Stop CRUD Service</h3>
+            </div>
+        </nav>
+        <div class="docs-layout">
+            <menu class="docs-navigation" aria-label="Documentation navigation">
+                <ul>
+                    <li class="selected">
+                        <a href="/">Home</a>
+                    </li>
+                </ul>
+                <h3>Data Service</h3>
+                <ul>
+                    <li><a href="/dataservice/index">Introduction</a></li>
+                    <li><a href="/dataservice/spec">Features</a></li>
+                    <li><a href="/dataservice/install/install">Installation and Integration</a></li>
+                    <li><a href="/dataservice/install/spring">Integration with Spring</a></li>
+                    <li><a href="/dataservice/usage/basic">Basic Concepts</a></li>
+                </ul>
+                <h3>Form Designer</h3>
+                <ul>
+                    <li><a href="/form-designer/">Overview</a></li>
+                    <li><a href="/form-designer/guide/">User Guide</a></li>
+                    <li><a href="/form-designer/widgets/">Widget Reference</a></li>
+                    <li><a href="/form-designer/schema/">FormSchema Reference</a></li>
+                    <li><a href="/form-designer/development/">Development and Integration</a></li>
+                </ul>
+                <h3>Configurable Components</h3>
+                <ul><li><a href="/todo">Configurable Components</a></li></ul>
+                <h3>Visual Form Designer</h3>
+                <ul><li><a href="/todo">Visual Form Designer</a></li></ul>
+                <h3>Other</h3>
+                <ul><li><a href="/misc/contact">Contact</a></li></ul>
+            </menu>
+            <article class="aj-text">
+                <h1>Development and Integration</h1>
+<p>This guide is for developers integrating generated forms into an application and maintainers extending the designer.</p>
+<h2>Use a generated component in a Vue host</h2>
+<p>Click <strong>Generate SFC</strong> to inspect the generated code and download it as <code>GeneratedForm.vue</code>. The generated file uses Vue 3 <code>&lt;script setup lang=&quot;ts&quot;&gt;</code> and View UI Plus <code>Form</code>, <code>FormItem</code>, field widgets, and <code>Row/Col</code> components.</p>
+<h3>Register View UI Plus</h3>
+<p>The generated file does not import or register View UI Plus. The host application must register it globally or register the components referenced by the generated Schema on demand. On-demand registration may include <code>Form</code>, <code>FormItem</code>, <code>Option</code>, <code>Radio</code>, <code>Checkbox</code>, <code>Row</code>, and <code>Col</code>, depending on which widgets the Schema uses.</p>
+<p>Example global registration:</p>
+<pre><code class="language-ts">import { createApp } from &quot;vue&quot;;
+import ViewUIPlus from &quot;view-ui-plus&quot;;
+import &quot;view-ui-plus/dist/styles/viewuiplus.css&quot;;
+import App from &quot;./App.vue&quot;;
+
+createApp(App).use(ViewUIPlus).mount(&quot;#app&quot;);
+</code></pre>
+<p>Import the generated component like any other Vue component. For an event-action Button, listen for the configured event in the host:</p>
+<pre><code class="language-vue">&lt;GeneratedForm @save=&quot;saveForm&quot; /&gt;
+</code></pre>
+<p>The event handler receives a JSON copy of the current <code>formData</code>. The host owns API calls, routing, permissions, and business state.</p>
+<h3>What generated code includes</h3>
+<p>The generator outputs form model bindings, widget props, selection options, and the two-column layout from the Schema. It generates only the Buttons on the canvas; it does not add submit, reset, or validation controls.</p>
+<p>Designer Preview creates required-field validation rules. The current SFC generator only marks generated <code>FormItem</code> elements as required; it does not generate the same validation rules or submit behavior. The host application must provide those rules and actions when needed.</p>
+<p>A Button configured with the <code>code</code> action inserts that code into the generated click handler, where it can use <code>formData</code>, <code>emit</code>, and <code>event</code>. The code is not run in designer Preview. Generate and run trusted code only; business side effects are usually better handled in the host event handler.</p>
+<h2>Legacy designer data migration</h2>
+<p>Both local JSON import and Schema dialog import first check for the new <code>version: 1</code> schema. Otherwise, the importer tries to find a <code>Form</code> node in the legacy component tree.</p>
+<p>The migration keeps settings that can be represented unambiguously:</p>
+<ul>
+<li><code>labelPosition</code> and <code>labelWidth</code> from <code>Form</code> props;</li>
+<li>the first supported widget inside each <code>FormItem</code>;</li>
+<li>direct <code>Row</code> children of <code>Form</code>, with their direct <code>Col</code> children;</li>
+<li>supported widget types, widget props, labels, required state, and field names.</li>
+</ul>
+<p>See the <a href="/form-designer/widgets/">Widget Reference</a> for supported fields. Unknown or unsafe-to-convert nodes are skipped with warnings. A legacy row with more than two columns keeps only the first two; a one-column row gets an empty second column; a row with no <code>Col</code> is skipped. Import fails without replacing the current design if no fields can be migrated.</p>
+<p>Field names are chosen from <code>FormItem.props.prop</code>, then widget <code>props.name</code>, then the widget type. Names are normalized to letters, digits, underscore, and <code>$</code>; duplicates receive a numeric suffix. A Button label comes from the legacy node text, or defaults to “Submit”.</p>
+<h2>Source layout</h2>
+<table>
+<thead>
+<tr>
+<th>Path</th>
+<th>Responsibility</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>src/core/form-schema.ts</code></td>
+<td>Schema types, node creation, import normalization, and structural validation.</td>
+</tr>
+<tr>
+<td><code>src/core/form-options.ts</code></td>
+<td>Conversion between option-editor text and structured options.</td>
+</tr>
+<tr>
+<td><code>src/core/form-data.ts</code></td>
+<td>Flattening field lists and synchronizing preview form data.</td>
+</tr>
+<tr>
+<td><code>src/core/legacy-migration.ts</code></td>
+<td>Migration from the legacy generic component tree.</td>
+</tr>
+<tr>
+<td><code>src/core/vue-sfc-generator.ts</code></td>
+<td>Vue single-file component generation.</td>
+</tr>
+<tr>
+<td><code>src/registry/form-widgets.ts</code></td>
+<td>Palette groups, icons, default props, and sample options.</td>
+</tr>
+<tr>
+<td><code>src/stores/designer.ts</code></td>
+<td>Pinia editor state, selection, copy/delete, and undo/redo history.</td>
+</tr>
+<tr>
+<td><code>src/components/designer/</code></td>
+<td>Designer UI, palette, canvas, property panel, and preview.</td>
+</tr>
+<tr>
+<td><code>src/demo/form-schema.ts</code></td>
+<td>Schema loaded when the app starts.</td>
+</tr>
+</tbody>
+</table>
+<h2>Basic steps to add a widget</h2>
+<ol>
+<li>Add the type to <code>FieldType</code> in <code>src/core/form-schema.ts</code> and update Schema type validation.</li>
+<li>Add a palette definition, default props, and options if needed in <code>src/registry/form-widgets.ts</code>.</li>
+<li>Add preview rendering to <code>FormFieldNode.vue</code>. If the widget changes the container structure, define its drag-and-drop rules too.</li>
+<li>Add dedicated property controls and read/write logic in <code>PropertyPanel.vue</code> if the widget needs them. Update the option parser conditions if reusing option editing.</li>
+<li>Add the generated template to <code>vue-sfc-generator.ts</code> and keep props, <code>v-model</code>, and options consistent with Preview.</li>
+<li>Extend Schema validation and migration as needed. Add tests for normalization, Preview, migration, and generation.</li>
+</ol>
+<p>If a widget type already exists and only needs another View UI Plus prop, the advanced JSON property editor may be sufficient without changing the palette registry.</p>
+<h2>Local development and validation</h2>
+<p>Run these commands from the <code>aj-form-designer</code> directory:</p>
+<pre><code class="language-bash">npm install
+npm run dev
+npm run typecheck
+npm run test
+npm run build
+</code></pre>
+<p><code>npm run dev</code> starts the Vite development server. <code>typecheck</code> runs <code>vue-tsc --noEmit</code>; <code>test</code> runs Vitest; <code>build</code> performs type checking before creating the production build.</p>
+<h2>Troubleshooting</h2>
+<ul>
+<li><strong>Duplicate field name on import</strong>: Field names are keys in the form data object. Rename duplicates before importing.</li>
+<li><strong>Unsupported widget type</strong>: <code>widget.type</code> must be listed in the <a href="/form-designer/widgets/">Widget Reference</a>.</li>
+<li><strong>Invalid grid row</strong>: Check that <code>columns</code> contains exactly two items, each normalized span is between 1 and 24, and the spans total 24. Columns accept fields only.</li>
+<li><strong>Invalid option text</strong>: Use <code>Label=value</code> on each line. Prefix numeric and Boolean values with <code>number:</code> and <code>boolean:</code>.</li>
+<li><strong>Advanced props have no effect</strong>: Advanced props must be a JSON object and must match the API of the View UI Plus version in the host project.</li>
+<li><strong>Unknown component in generated SFC</strong>: Register the View UI Plus components referenced by the generated file, globally or on demand.</li>
+<li><strong>Some legacy content is missing</strong>: The importer only converts supported form structures. Review its warning; display-only nodes that cannot be converted are skipped.</li>
+</ul>
+
+            </article>
+        </div>
+        <footer>
+            AJ DataService is part of the open-source
+            <a href="https://framework.ajaxjs.com" target="_blank">AJ-Framework</a>.
+            Contact: frank@ajaxjs.com,
+            <a href="https://blog.csdn.net/zhangxin09" target="_blank">author's blog (in Chinese)</a>.
+            <br/><br/>Copyright © 2025 Frank Cheung. All rights reserved.
+        </footer>
+    </body>
+</html>

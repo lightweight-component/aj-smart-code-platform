@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+        <title>AJ DataService - AJ Form Designer</title>
+        <meta name="description" content="AJ DataService: Visually design View UI Plus forms with aj-form-designer and export a stable FormSchema or Vue SFC." />
+        <meta name="keywords" content="dataservice, aj-dataservice, crud, Form Designer,Vue" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="stylesheet" href="https://framework.ajaxjs.com/static/new-ui/css/common.css" />
+        <script defer src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/highlight.min.js"></script>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/styles/github.min.css" />
+        <link rel="stylesheet" href="https://aj-util.ajaxjs.com/asset/main.css" />
+        <script src="https://aj-util.ajaxjs.com/asset/js/common.js"></script>
+        <script>
+            AJUtils.initTheme();
+            AJUtils.onReady(function () {
+                var button = document.querySelector('[data-document-language-toggle]');
+                var path = window.location.pathname;
+                button.setAttribute('data-language-target', path === '/' ? '/index-cn/' : path === '/form-designer/' ? '/form-designer/index-cn/' : path.replace(/\/?$/, '-cn/'));
+                AJUtils.bindThemeToggle();
+                AJUtils.bindDocumentationLanguageToggle();
+            });
+        </script>
+        <link rel="icon" type="image/png" href="/asset/favicon.ico" />
+        <script>
+            var _hmt = _hmt || [];
+            (function() {
+              var hm = document.createElement("script");
+              hm.src = "https://hm.baidu.com/hm.js?734ea877e4a740968e40994221d9c877";
+              var s = document.getElementsByTagName("script")[0];
+              s.parentNode.insertBefore(hm, s);
+            })();
+        </script>
+    </head>
+    <body>
+        <nav>
+            <div>
+                <div class="links">
+                    <a href="/">🏠 Home</a>
+                    | ⚙️ Source:
+                    <a target="_blank" href="https://github.com/lightweight-component/aj-smart-code-platform">Github</a>/<a target="_blank" href="https://gitcode.com/lightweight-component/aj-smart-code-platform">Gitcode</a>
+                    |
+                    <button class="language-toggle" type="button" data-document-language-toggle aria-label="Switch to Chinese" title="Switch to Chinese">中</button>
+                    <button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch theme" title="Switch theme">☾</button>
+                </div>
+                <h1><img src="/asset/imgs/icon.png" style="vertical-align: middle;height: 35px;margin-bottom: 6px;" /> AJ DataService</h1>
+                <h3>A One-Stop CRUD Service</h3>
+            </div>
+        </nav>
+        <div class="docs-layout">
+            <menu class="docs-navigation" aria-label="Documentation navigation">
+                <ul>
+                    <li class="selected">
+                        <a href="/">Home</a>
+                    </li>
+                </ul>
+                <h3>Data Service</h3>
+                <ul>
+                    <li><a href="/dataservice/index">Introduction</a></li>
+                    <li><a href="/dataservice/spec">Features</a></li>
+                    <li><a href="/dataservice/install/install">Installation and Integration</a></li>
+                    <li><a href="/dataservice/install/spring">Integration with Spring</a></li>
+                    <li><a href="/dataservice/usage/basic">Basic Concepts</a></li>
+                </ul>
+                <h3>Form Designer</h3>
+                <ul>
+                    <li><a href="/form-designer/">Overview</a></li>
+                    <li><a href="/form-designer/guide/">User Guide</a></li>
+                    <li><a href="/form-designer/widgets/">Widget Reference</a></li>
+                    <li><a href="/form-designer/schema/">FormSchema Reference</a></li>
+                    <li><a href="/form-designer/development/">Development and Integration</a></li>
+                </ul>
+                <h3>Configurable Components</h3>
+                <ul><li><a href="/todo">Configurable Components</a></li></ul>
+                <h3>Visual Form Designer</h3>
+                <ul><li><a href="/todo">Visual Form Designer</a></li></ul>
+                <h3>Other</h3>
+                <ul><li><a href="/misc/contact">Contact</a></li></ul>
+            </menu>
+            <article class="aj-text">
+                <h1>AJ Form Designer</h1>
+<p><code>aj-form-designer</code> is a Vue 3 visual designer for View UI Plus forms. It focuses on explicit form fields, a two-column grid, and a data schema rather than trying to design every page layout or View UI Plus component.</p>
+<h2>Workflow</h2>
+<ol>
+<li>Drag fields or a two-column row from the palette onto the canvas.</li>
+<li>Configure field names, labels, required state, and widget properties in the property panel.</li>
+<li>Use Preview to fill out the form and check required fields.</li>
+<li>Export the <code>FormSchema</code> JSON for later editing, or generate a Vue single-file component for your application.</li>
+</ol>
+<h2>Documentation</h2>
+<ul>
+<li><a href="/form-designer/guide/">User Guide</a></li>
+<li><a href="/form-designer/widgets/">Widget Reference</a></li>
+<li><a href="/form-designer/schema/">FormSchema Reference</a></li>
+<li><a href="/form-designer/development/">Development and Integration</a></li>
+</ul>
+<h2>Quick Start</h2>
+<p>From the repository root, run:</p>
+<pre><code class="language-bash">cd aj-form-designer
+npm install
+npm run dev
+</code></pre>
+<p>Open the local address printed in the terminal. See <a href="/form-designer/development/#local-development-and-validation">Development and Integration</a> for type checking, tests, and production builds.</p>
+<h2>Scope</h2>
+<p>The designer supports text, numeric, selection, date/time, switch, slider, rating, color, and Button controls. The root canvas accepts fields and two-column rows; columns accept fields only. The current schema version is <code>1</code>.</p>
+<p>Generated Vue SFCs assume that the host application has registered View UI Plus. The generator does not add submit/reset controls or validation rules. For business behavior, handle Button events in the host page. See <a href="/form-designer/development/">Development and Integration</a>.</p>
+
+            </article>
+        </div>
+        <footer>
+            AJ DataService is part of the open-source
+            <a href="https://framework.ajaxjs.com" target="_blank">AJ-Framework</a>.
+            Contact: frank@ajaxjs.com,
+            <a href="https://blog.csdn.net/zhangxin09" target="_blank">author's blog (in Chinese)</a>.
+            <br/><br/>Copyright © 2025 Frank Cheung. All rights reserved.
+        </footer>
+    </body>
+</html>

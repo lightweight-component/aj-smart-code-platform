@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+        <title>AJ DataService - Form Designer User Guide</title>
+        <meta name="description" content="AJ DataService: Learn to design, preview, import, and generate View UI Plus forms with aj-form-designer." />
+        <meta name="keywords" content="dataservice, aj-dataservice, crud, Form Designer,Vue" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="stylesheet" href="https://framework.ajaxjs.com/static/new-ui/css/common.css" />
+        <script defer src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/highlight.min.js"></script>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/styles/github.min.css" />
+        <link rel="stylesheet" href="https://aj-util.ajaxjs.com/asset/main.css" />
+        <script src="https://aj-util.ajaxjs.com/asset/js/common.js"></script>
+        <script>
+            AJUtils.initTheme();
+            AJUtils.onReady(function () {
+                var button = document.querySelector('[data-document-language-toggle]');
+                var path = window.location.pathname;
+                button.setAttribute('data-language-target', path === '/' ? '/index-cn/' : path === '/form-designer/' ? '/form-designer/index-cn/' : path.replace(/\/?$/, '-cn/'));
+                AJUtils.bindThemeToggle();
+                AJUtils.bindDocumentationLanguageToggle();
+            });
+        </script>
+        <link rel="icon" type="image/png" href="/asset/favicon.ico" />
+        <script>
+            var _hmt = _hmt || [];
+            (function() {
+              var hm = document.createElement("script");
+              hm.src = "https://hm.baidu.com/hm.js?734ea877e4a740968e40994221d9c877";
+              var s = document.getElementsByTagName("script")[0];
+              s.parentNode.insertBefore(hm, s);
+            })();
+        </script>
+    </head>
+    <body>
+        <nav>
+            <div>
+                <div class="links">
+                    <a href="/">🏠 Home</a>
+                    | ⚙️ Source:
+                    <a target="_blank" href="https://github.com/lightweight-component/aj-smart-code-platform">Github</a>/<a target="_blank" href="https://gitcode.com/lightweight-component/aj-smart-code-platform">Gitcode</a>
+                    |
+                    <button class="language-toggle" type="button" data-document-language-toggle aria-label="Switch to Chinese" title="Switch to Chinese">中</button>
+                    <button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch theme" title="Switch theme">☾</button>
+                </div>
+                <h1><img src="/asset/imgs/icon.png" style="vertical-align: middle;height: 35px;margin-bottom: 6px;" /> AJ DataService</h1>
+                <h3>A One-Stop CRUD Service</h3>
+            </div>
+        </nav>
+        <div class="docs-layout">
+            <menu class="docs-navigation" aria-label="Documentation navigation">
+                <ul>
+                    <li class="selected">
+                        <a href="/">Home</a>
+                    </li>
+                </ul>
+                <h3>Data Service</h3>
+                <ul>
+                    <li><a href="/dataservice/index">Introduction</a></li>
+                    <li><a href="/dataservice/spec">Features</a></li>
+                    <li><a href="/dataservice/install/install">Installation and Integration</a></li>
+                    <li><a href="/dataservice/install/spring">Integration with Spring</a></li>
+                    <li><a href="/dataservice/usage/basic">Basic Concepts</a></li>
+                </ul>
+                <h3>Form Designer</h3>
+                <ul>
+                    <li><a href="/form-designer/">Overview</a></li>
+                    <li><a href="/form-designer/guide/">User Guide</a></li>
+                    <li><a href="/form-designer/widgets/">Widget Reference</a></li>
+                    <li><a href="/form-designer/schema/">FormSchema Reference</a></li>
+                    <li><a href="/form-designer/development/">Development and Integration</a></li>
+                </ul>
+                <h3>Configurable Components</h3>
+                <ul><li><a href="/todo">Configurable Components</a></li></ul>
+                <h3>Visual Form Designer</h3>
+                <ul><li><a href="/todo">Visual Form Designer</a></li></ul>
+                <h3>Other</h3>
+                <ul><li><a href="/misc/contact">Contact</a></li></ul>
+            </menu>
+            <article class="aj-text">
+                <h1>aj-form-designer User Guide</h1>
+<p><code>aj-form-designer</code> is a visual form designer for View UI Plus. It focuses on form fields, a two-column grid, form schemas, and Vue single-file component generation. It is not a general-purpose page layout editor.</p>
+<p>For the full widget list, see the <a href="/form-designer/widgets/">Widget Reference</a>. For the data format, see the <a href="/form-designer/schema/">FormSchema Reference</a>. For generated component integration and legacy imports, see <a href="/form-designer/development/">Development and Integration</a>.</p>
+<h2>1. Start the project</h2>
+<p>From the project directory:</p>
+<pre><code class="language-bash">npm install
+npm run dev
+</code></pre>
+<p>Open the local address printed in the terminal. The page has three main areas: the widget palette on the left, the form canvas in the middle, and the property panel on the right.</p>
+<h2>2. Design a form</h2>
+<p>Expand a group in the palette and drag a widget onto the canvas.</p>
+<ul>
+<li>The root canvas accepts fields and two-column rows.</li>
+<li>A grid column accepts fields only; rows cannot be nested.</li>
+<li>Fields and rows can be reordered on the canvas.</li>
+<li>Select a field or row to use the toolbar actions for copy, delete, undo, and redo.</li>
+</ul>
+<p>Supported controls include text and numeric inputs, selection controls, date/time controls, switches, sliders, ratings, color pickers, and Buttons.</p>
+<h2>3. Configure the form and fields</h2>
+<p>When nothing is selected, the property panel shows form-level label position and label width.</p>
+<p>Select a field to edit its field name, label, and required state. The field name becomes a key in the form data object and must be unique, for example <code>name</code>, <code>status</code>, or <code>createdAt</code>.</p>
+<p>Some widgets have dedicated settings:</p>
+<ul>
+<li><code>Input</code>: single-line, multi-line, or password input, plus a placeholder.</li>
+<li><code>DatePicker</code>: date, date range, or date-time type, plus the display format.</li>
+<li><code>Select</code>, <code>RadioGroup</code>, and <code>CheckboxGroup</code>: their option lists.</li>
+<li>All widgets: advanced JSON props passed to the View UI Plus control. Button actions are stored separately from props.</li>
+</ul>
+<p>Enter one choice per line as <code>Label=value</code>:</p>
+<pre><code class="language-text">Draft=draft
+Published=published
+Quantity=number:12
+Enabled=boolean:true
+</code></pre>
+<p>Values without a type prefix are strings. Use <code>number:</code> or <code>boolean:</code> to preserve numeric or Boolean values when converting between the text editor and Schema. <code>string:</code> explicitly marks a string.</p>
+<h2>4. Configure a Button</h2>
+<p>The generated component includes only the Buttons placed on the canvas. The designer does not add a fixed submit or reset button.</p>
+<p>Choose one of three Button actions in the property panel:</p>
+<ol>
+<li><strong>Regular Button</strong>: keep the Button appearance and View UI Plus props, without a click handler.</li>
+<li><strong>Emit event</strong>: enter an event name such as <code>save</code>. The generated component emits that event with a copy of the current form data.</li>
+<li><strong>Custom JavaScript</strong>: enter a function body that can use <code>formData</code>, <code>emit</code>, and <code>event</code>.</li>
+</ol>
+<p>For example:</p>
+<pre><code class="language-ts">if (!formData.name) {
+  window.alert(&quot;Please enter a name&quot;);
+  return;
+}
+
+emit(&quot;save&quot;, formData);
+</code></pre>
+<p>Custom JavaScript is written to the generated Vue SFC and is not executed in designer Preview. Use trusted code only. Network requests, routing, and permission checks are usually easier to maintain in the host page's event handler.</p>
+<h2>5. Preview the form</h2>
+<p>Click <strong>Preview</strong> to enter values in the current form. <strong>Validate and view data</strong> checks required fields and displays the form data JSON when validation succeeds.</p>
+<p>The Preview dialog's <strong>Reset</strong> and <strong>Validate and view data</strong> buttons are designer tools; they are not included in the generated component.</p>
+<h2>6. Import, edit, and export Schema</h2>
+<p>Click <strong>Schema</strong> to view and edit the current JSON. <strong>Import</strong> reads a local <code>.json</code> file, and <strong>Export Schema</strong> downloads the current design for later editing.</p>
+<p>The editor supports <code>FormSchema</code> version 1 and can also migrate eligible legacy designer data. Schema rules and migration details are in the <a href="/form-designer/schema/">FormSchema Reference</a> and <a href="/form-designer/development/">Development and Integration</a>.</p>
+<h2>7. Generate a Vue single-file component</h2>
+<p>Click <strong>Generate SFC</strong> to inspect the Vue 3 component, then download it as <code>GeneratedForm.vue</code>.</p>
+<p>The host project must register View UI Plus globally or register the components used by the generated Schema on demand. The generated <code>required</code> property marks a form item as required, but the generator does not emit the Preview validation rules or submit/reset controls. See <a href="/form-designer/development/">Development and Integration</a> for integration details.</p>
+<p>Example host event handler:</p>
+<pre><code class="language-vue">&lt;GeneratedForm @save=&quot;saveForm&quot; /&gt;
+
+&lt;script setup lang=&quot;ts&quot;&gt;
+function saveForm(formData: Record&lt;string, unknown&gt;): void {
+  // Call an API, navigate, or perform other business logic.
+}
+&lt;/script&gt;
+</code></pre>
+<h2>8. Suggested workflow</h2>
+<p>Keep the Schema JSON in your business project's configuration directory and use it as the editable source. Review generated SFCs as application code. For API calls, permissions, routing, and complex behavior, prefer Button events handled by the host component over embedding large amounts of custom JavaScript.</p>
+
+            </article>
+        </div>
+        <footer>
+            AJ DataService is part of the open-source
+            <a href="https://framework.ajaxjs.com" target="_blank">AJ-Framework</a>.
+            Contact: frank@ajaxjs.com,
+            <a href="https://blog.csdn.net/zhangxin09" target="_blank">author's blog (in Chinese)</a>.
+            <br/><br/>Copyright © 2025 Frank Cheung. All rights reserved.
+        </footer>
+    </body>
+</html>

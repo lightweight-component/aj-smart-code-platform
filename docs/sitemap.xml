@@ -67,6 +67,11 @@
         </url>
     
         <url>
+            <loc>https://dataservice.ajaxjs.com/form-designer/guide-cn/</loc>
+            <lastmod>2026-10-04T03:55:28.533Z</lastmod>
+        </url>
+    
+        <url>
             <loc>https://dataservice.ajaxjs.com/index-cn/</loc>
             <lastmod>2026-10-11T00:00:00.000Z</lastmod>
         </url>
@@ -79,6 +84,51 @@
         <url>
             <loc>https://dataservice.ajaxjs.com/todo/</loc>
             <lastmod>2026-10-11T11:24:04.546Z</lastmod>
+        </url>
+    
+        <url>
+            <loc>https://dataservice.ajaxjs.com/form-designer/schema-cn/</loc>
+            <lastmod>2026-10-11T12:07:20.975Z</lastmod>
+        </url>
+    
+        <url>
+            <loc>https://dataservice.ajaxjs.com/form-designer/widgets-cn/</loc>
+            <lastmod>2026-10-11T12:07:20.975Z</lastmod>
+        </url>
+    
+        <url>
+            <loc>https://dataservice.ajaxjs.com/form-designer/development-cn/</loc>
+            <lastmod>2026-10-11T12:07:20.976Z</lastmod>
+        </url>
+    
+        <url>
+            <loc>https://dataservice.ajaxjs.com/form-designer/index-cn/</loc>
+            <lastmod>2026-10-11T12:13:03.242Z</lastmod>
+        </url>
+    
+        <url>
+            <loc>https://dataservice.ajaxjs.com/form-designer/</loc>
+            <lastmod>2026-10-11T12:13:03.243Z</lastmod>
+        </url>
+    
+        <url>
+            <loc>https://dataservice.ajaxjs.com/form-designer/guide/</loc>
+            <lastmod>2026-10-11T12:13:14.564Z</lastmod>
+        </url>
+    
+        <url>
+            <loc>https://dataservice.ajaxjs.com/form-designer/widgets/</loc>
+            <lastmod>2026-10-11T12:13:24.572Z</lastmod>
+        </url>
+    
+        <url>
+            <loc>https://dataservice.ajaxjs.com/form-designer/schema/</loc>
+            <lastmod>2026-10-11T12:13:37.781Z</lastmod>
+        </url>
+    
+        <url>
+            <loc>https://dataservice.ajaxjs.com/form-designer/development/</loc>
+            <lastmod>2026-10-11T12:13:50.669Z</lastmod>
         </url>
     
 </urlset>

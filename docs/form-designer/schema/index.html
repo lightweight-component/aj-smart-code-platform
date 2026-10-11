@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+        <title>AJ DataService - Form Designer FormSchema Reference</title>
+        <meta name="description" content="AJ DataService: FormSchema v1 fields, layout rules, validation, and import behavior." />
+        <meta name="keywords" content="dataservice, aj-dataservice, crud, Form Designer,Schema" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="stylesheet" href="https://framework.ajaxjs.com/static/new-ui/css/common.css" />
+        <script defer src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/highlight.min.js"></script>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/styles/github.min.css" />
+        <link rel="stylesheet" href="https://aj-util.ajaxjs.com/asset/main.css" />
+        <script src="https://aj-util.ajaxjs.com/asset/js/common.js"></script>
+        <script>
+            AJUtils.initTheme();
+            AJUtils.onReady(function () {
+                var button = document.querySelector('[data-document-language-toggle]');
+                var path = window.location.pathname;
+                button.setAttribute('data-language-target', path === '/' ? '/index-cn/' : path === '/form-designer/' ? '/form-designer/index-cn/' : path.replace(/\/?$/, '-cn/'));
+                AJUtils.bindThemeToggle();
+                AJUtils.bindDocumentationLanguageToggle();
+            });
+        </script>
+        <link rel="icon" type="image/png" href="/asset/favicon.ico" />
+        <script>
+            var _hmt = _hmt || [];
+            (function() {
+              var hm = document.createElement("script");
+              hm.src = "https://hm.baidu.com/hm.js?734ea877e4a740968e40994221d9c877";
+              var s = document.getElementsByTagName("script")[0];
+              s.parentNode.insertBefore(hm, s);
+            })();
+        </script>
+    </head>
+    <body>
+        <nav>
+            <div>
+                <div class="links">
+                    <a href="/">🏠 Home</a>
+                    | ⚙️ Source:
+                    <a target="_blank" href="https://github.com/lightweight-component/aj-smart-code-platform">Github</a>/<a target="_blank" href="https://gitcode.com/lightweight-component/aj-smart-code-platform">Gitcode</a>
+                    |
+                    <button class="language-toggle" type="button" data-document-language-toggle aria-label="Switch to Chinese" title="Switch to Chinese">中</button>
+                    <button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch theme" title="Switch theme">☾</button>
+                </div>
+                <h1><img src="/asset/imgs/icon.png" style="vertical-align: middle;height: 35px;margin-bottom: 6px;" /> AJ DataService</h1>
+                <h3>A One-Stop CRUD Service</h3>
+            </div>
+        </nav>
+        <div class="docs-layout">
+            <menu class="docs-navigation" aria-label="Documentation navigation">
+                <ul>
+                    <li class="selected">
+                        <a href="/">Home</a>
+                    </li>
+                </ul>
+                <h3>Data Service</h3>
+                <ul>
+                    <li><a href="/dataservice/index">Introduction</a></li>
+                    <li><a href="/dataservice/spec">Features</a></li>
+                    <li><a href="/dataservice/install/install">Installation and Integration</a></li>
+                    <li><a href="/dataservice/install/spring">Integration with Spring</a></li>
+                    <li><a href="/dataservice/usage/basic">Basic Concepts</a></li>
+                </ul>
+                <h3>Form Designer</h3>
+                <ul>
+                    <li><a href="/form-designer/">Overview</a></li>
+                    <li><a href="/form-designer/guide/">User Guide</a></li>
+                    <li><a href="/form-designer/widgets/">Widget Reference</a></li>
+                    <li><a href="/form-designer/schema/">FormSchema Reference</a></li>
+                    <li><a href="/form-designer/development/">Development and Integration</a></li>
+                </ul>
+                <h3>Configurable Components</h3>
+                <ul><li><a href="/todo">Configurable Components</a></li></ul>
+                <h3>Visual Form Designer</h3>
+                <ul><li><a href="/todo">Visual Form Designer</a></li></ul>
+                <h3>Other</h3>
+                <ul><li><a href="/misc/contact">Contact</a></li></ul>
+            </menu>
+            <article class="aj-text">
+                <h1>FormSchema Reference</h1>
+<p>The designer represents forms as versioned JSON. Only <code>version: 1</code> is currently supported. Edit the Schema in the <strong>Schema</strong> dialog, or export it as a JSON file and import it later. See the <a href="/form-designer/widgets/">Widget Reference</a> for supported widget types and properties.</p>
+<h2>Top-level structure</h2>
+<pre><code class="language-ts">interface FormSchema {
+  version: 1;
+  props: {
+    labelPosition: &quot;left&quot; | &quot;right&quot; | &quot;top&quot;;
+    labelWidth: number;
+  };
+  items: Array&lt;FormField | FormRow&gt;;
+}
+</code></pre>
+<ul>
+<li><code>version</code> is fixed at <code>1</code>.</li>
+<li><code>props.labelPosition</code> is <code>left</code>, <code>right</code>, or <code>top</code>; it defaults to <code>right</code>.</li>
+<li><code>props.labelWidth</code> defaults to <code>100</code>. The property panel accepts values from 40 to 300.</li>
+<li><code>items</code> contains root-level fields and grid rows in render order.</li>
+</ul>
+<h2>Field node</h2>
+<pre><code class="language-json">{
+  &quot;id&quot;: &quot;name-node&quot;,
+  &quot;kind&quot;: &quot;field&quot;,
+  &quot;field&quot;: &quot;name&quot;,
+  &quot;label&quot;: &quot;Name&quot;,
+  &quot;required&quot;: true,
+  &quot;widget&quot;: {
+    &quot;type&quot;: &quot;Input&quot;,
+    &quot;props&quot;: {
+      &quot;placeholder&quot;: &quot;Enter a name&quot;
+    }
+  }
+}
+</code></pre>
+<ul>
+<li><code>id</code>: node identifier. IDs must be unique across fields, rows, and columns.</li>
+<li><code>kind</code>: always <code>field</code> for a field node.</li>
+<li><code>field</code>: non-empty key in the form data object; field names must be unique across the form.</li>
+<li><code>label</code>: display label.</li>
+<li><code>required</code>: only the Boolean value <code>true</code> is treated as required.</li>
+<li><code>widget.type</code>: one of the types in the <a href="/form-designer/widgets/">Widget Reference</a>.</li>
+<li><code>widget.props</code>: props passed to the View UI Plus control; defaults to an empty object.</li>
+<li><code>widget.options</code>: options for selection widgets.</li>
+<li><code>widget.action</code>: action configuration for Buttons only.</li>
+</ul>
+<p>When an imported field has no <code>id</code>, the normalizer generates one. A missing field name is replaced with a temporary generated name, and a missing label becomes “Unnamed field”. For readable, version-controlled Schemas, include these values explicitly.</p>
+<h2>Options</h2>
+<p>Selection widgets use this structure in <code>widget.options</code>:</p>
+<pre><code class="language-json">[
+  { &quot;label&quot;: &quot;Draft&quot;, &quot;value&quot;: &quot;draft&quot; },
+  { &quot;label&quot;: &quot;Quantity&quot;, &quot;value&quot;: 12 },
+  { &quot;label&quot;: &quot;Enabled&quot;, &quot;value&quot;: true }
+]
+</code></pre>
+<p><code>value</code> may be a string, number, or Boolean. The property panel's text representation is reversible; see the <a href="/form-designer/widgets/">Widget Reference</a>.</p>
+<h2>Two-column row</h2>
+<pre><code class="language-json">{
+  &quot;id&quot;: &quot;identity-row&quot;,
+  &quot;kind&quot;: &quot;row&quot;,
+  &quot;columns&quot;: [
+    { &quot;id&quot;: &quot;identity-left&quot;, &quot;span&quot;: 12, &quot;fields&quot;: [] },
+    { &quot;id&quot;: &quot;identity-right&quot;, &quot;span&quot;: 12, &quot;fields&quot;: [] }
+  ]
+}
+</code></pre>
+<p>A row must contain exactly two columns. Each <code>span</code> must be greater than 0 and at most 24, and the two spans must add up to 24. A missing or invalid span is normalized to <code>12</code> before the total is checked. Each column's <code>fields</code> array accepts fields only; nested rows are not supported. New rows default to <code>12 + 12</code>.</p>
+<h2>Button actions</h2>
+<p>The <code>action</code> property may be omitted for a regular Button; it defaults to <code>none</code>.</p>
+<pre><code class="language-json">{
+  &quot;id&quot;: &quot;save-node&quot;,
+  &quot;kind&quot;: &quot;field&quot;,
+  &quot;field&quot;: &quot;save&quot;,
+  &quot;label&quot;: &quot;Save&quot;,
+  &quot;required&quot;: false,
+  &quot;widget&quot;: {
+    &quot;type&quot;: &quot;Button&quot;,
+    &quot;props&quot;: { &quot;type&quot;: &quot;primary&quot; },
+    &quot;action&quot;: { &quot;type&quot;: &quot;emit&quot;, &quot;event&quot;: &quot;save&quot; }
+  }
+}
+</code></pre>
+<ul>
+<li><code>{ &quot;type&quot;: &quot;none&quot; }</code>: a regular Button.</li>
+<li><code>{ &quot;type&quot;: &quot;emit&quot;, &quot;event&quot;: &quot;save&quot; }</code>: generate a <code>save</code> event handler. Event names must match <code>^[a-zA-Z][a-zA-Z0-9:_-]*$</code>.</li>
+<li><code>{ &quot;type&quot;: &quot;code&quot;, &quot;code&quot;: &quot;emit('save', formData);&quot; }</code>: insert the code into a separate click handler in the generated SFC. Code cannot contain <code>&lt;/script</code> (case-insensitive).</li>
+</ul>
+<p><code>action</code> is not allowed on non-Button widgets. See the <a href="/form-designer/widgets/">Widget Reference</a> for behavior and security notes.</p>
+<h2>Complete example</h2>
+<pre><code class="language-json">{
+  &quot;version&quot;: 1,
+  &quot;props&quot;: {
+    &quot;labelPosition&quot;: &quot;right&quot;,
+    &quot;labelWidth&quot;: 100
+  },
+  &quot;items&quot;: [
+    {
+      &quot;id&quot;: &quot;name-node&quot;,
+      &quot;kind&quot;: &quot;field&quot;,
+      &quot;field&quot;: &quot;name&quot;,
+      &quot;label&quot;: &quot;Name&quot;,
+      &quot;required&quot;: true,
+      &quot;widget&quot;: {
+        &quot;type&quot;: &quot;Input&quot;,
+        &quot;props&quot;: { &quot;placeholder&quot;: &quot;Enter a name&quot; }
+      }
+    },
+    {
+      &quot;id&quot;: &quot;status-node&quot;,
+      &quot;kind&quot;: &quot;field&quot;,
+      &quot;field&quot;: &quot;status&quot;,
+      &quot;label&quot;: &quot;Status&quot;,
+      &quot;required&quot;: false,
+      &quot;widget&quot;: {
+        &quot;type&quot;: &quot;Select&quot;,
+        &quot;props&quot;: {},
+        &quot;options&quot;: [
+          { &quot;label&quot;: &quot;Draft&quot;, &quot;value&quot;: &quot;draft&quot; },
+          { &quot;label&quot;: &quot;Published&quot;, &quot;value&quot;: &quot;published&quot; }
+        ]
+      }
+    },
+    {
+      &quot;id&quot;: &quot;actions-row&quot;,
+      &quot;kind&quot;: &quot;row&quot;,
+      &quot;columns&quot;: [
+        {
+          &quot;id&quot;: &quot;actions-left&quot;,
+          &quot;span&quot;: 12,
+          &quot;fields&quot;: [
+            {
+              &quot;id&quot;: &quot;save-node&quot;,
+              &quot;kind&quot;: &quot;field&quot;,
+              &quot;field&quot;: &quot;save&quot;,
+              &quot;label&quot;: &quot;Save&quot;,
+              &quot;required&quot;: false,
+              &quot;widget&quot;: {
+                &quot;type&quot;: &quot;Button&quot;,
+                &quot;props&quot;: { &quot;type&quot;: &quot;primary&quot; },
+                &quot;action&quot;: { &quot;type&quot;: &quot;emit&quot;, &quot;event&quot;: &quot;save&quot; }
+              }
+            }
+          ]
+        },
+        { &quot;id&quot;: &quot;actions-right&quot;, &quot;span&quot;: 12, &quot;fields&quot;: [] }
+      ]
+    }
+  ]
+}
+</code></pre>
+<h2>Import validation and normalization</h2>
+<p>Import checks the object structure, version, supported widget types, unique node IDs, unique field names, Button actions, and two-column layout constraints. Invalid JSON does not replace the current design. Some optional values are normalized to defaults, such as <code>labelPosition: &quot;right&quot;</code> and <code>labelWidth: 100</code>.</p>
+<p>The designer can also import eligible legacy designer data. See <a href="/form-designer/development/#legacy-designer-data-migration">Development and Integration</a> for conversion rules and warnings.</p>
+
+            </article>
+        </div>
+        <footer>
+            AJ DataService is part of the open-source
+            <a href="https://framework.ajaxjs.com" target="_blank">AJ-Framework</a>.
+            Contact: frank@ajaxjs.com,
+            <a href="https://blog.csdn.net/zhangxin09" target="_blank">author's blog (in Chinese)</a>.
+            <br/><br/>Copyright © 2025 Frank Cheung. All rights reserved.
+        </footer>
+    </body>
+</html>

@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+        <title>数据服务 AJ DataService-表单设计器开发与集成指南</title>
+        <meta name="description" content="数据服务 将生成的 Vue 表单集成到项目中，并扩展 aj-form-designer。"/>
+        <meta name="keywords" content="dataservice, aj-dataservice, crud, 数据服务, 表单设计器,Vue"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@200..900&family=Noto+Serif:ital,wght@0,100..900;1,100..900&display=swap&family=Noto+Sans+SC:wght@100..900&display=swap" />
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@100..900&family=Noto+Serif:ital,wght@0,100..900;1,100..900&display=swap" />
+        <link rel="stylesheet" href="https://framework.ajaxjs.com/static/new-ui/css/common.css" />
+        <script defer src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/highlight.min.js"></script>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/styles/github.min.css" />
+        <link rel="stylesheet" href="https://aj-util.ajaxjs.com/asset/main.css" />
+        <script src="https://aj-util.ajaxjs.com/asset/js/common.js"></script>
+        <script>
+            AJUtils.initTheme();
+            AJUtils.onReady(function () {
+                var button = document.querySelector('[data-document-language-toggle]');
+                var path = window.location.pathname;
+                button.setAttribute('data-language-target', path === '/index-cn/' ? '/' : path === '/form-designer/index-cn/' ? '/form-designer/' : path.replace(/-cn(?=\/?$)/, ''));
+                AJUtils.bindThemeToggle();
+                AJUtils.bindDocumentationLanguageToggle();
+            });
+        </script>
+        <link rel="icon" type="image/png" href="/asset/favicon.ico"/>
+
+        <script>
+            var _hmt = _hmt || [];
+            (function() {
+              var hm = document.createElement("script");
+              hm.src = "https://hm.baidu.com/hm.js?734ea877e4a740968e40994221d9c877";
+              var s = document.getElementsByTagName("script")[0];
+              s.parentNode.insertBefore(hm, s);
+            })();
+        </script>
+    </head>
+    <body>
+        <nav>
+            <div>
+                <div class="links">
+                    <a href="/">🏠 首页</a>
+                    | ⚙️ 源码:
+                    <a target="_blank" href="https://github.com/lightweight-component/aj-smart-code-platform">Github</a>/<a target="_blank" href="https://gitcode.com/lightweight-component/aj-smart-code-platform">Gitcode</a>
+                    |
+                    <button class="language-toggle" type="button" data-document-language-toggle aria-label="切换至英文" title="切换至英文">EN</button>
+                    <button class="theme-toggle" type="button" data-theme-toggle aria-label="切换主题" title="切换主题">☾</button>
+                </div>
+                <h1><img src="/asset/imgs/icon.png" style="vertical-align: middle;height: 35px;margin-bottom: 6px;" /> 数据服务 AJ DataService</h1>
+                <h3>一站式快速 CRUD 服务</h3>
+            </div>
+        </nav>
+        <div class="docs-layout">
+            <menu class="docs-navigation" aria-label="文档导航">
+                <ul>
+                    <li class="selected">
+                        <a href="/index-cn/">首页</a>
+                    </li>
+                </ul>
+                <h3>数据服务</h3>
+                <ul>
+                    <li>
+                        <a href="/dataservice/index-cn">数据服务简介</a>
+                    </li>
+                    <li>
+                        <a href="/dataservice/spec-cn">数据服务特点</a>
+                    </li>
+                    <li>
+                       <a href="/dataservice/install/install-cn">安装与集成</a>
+                    </li>
+                    <li>
+                       <a href="/dataservice/install/spring-cn">与 Spring 集成</a>
+                    </li>
+                    <li>
+                       <a href="/dataservice/usage/basic-cn">基本概念</a>
+                    </li>
+
+                </ul>
+                <h3>可视化表单设计器</h3>
+                <ul>
+                    <li><a href="/form-designer/index-cn/">项目简介</a></li>
+                    <li><a href="/form-designer/guide-cn/">使用教程</a></li>
+                    <li><a href="/form-designer/widgets-cn/">控件配置参考</a></li>
+                    <li><a href="/form-designer/schema-cn/">FormSchema 参考</a></li>
+                    <li><a href="/form-designer/development-cn/">开发与集成指南</a></li>
+                </ul>
+                <h3>可配置化组件</h3>
+                <ul>
+                  <li>
+                      <a href="/todo">可配置化组件</a>
+                  </li>
+                </ul>
+                <h3>其他</h3>
+                <ul>
+                    <li><a href="/misc/contact-cn">联系</a></li>
+                </ul>
+
+            </menu>
+            <article class="aj-text chinese">
+                <h1>开发与集成指南</h1>
+<p>本文面向将生成组件接入业务工程的开发者，以及需要修改设计器源码的维护者。</p>
+<h2>在宿主 Vue 工程中使用生成组件</h2>
+<p>设计器通过 <strong>生成 SFC</strong> 查看代码，并下载为 <code>GeneratedForm.vue</code>。生成组件使用 Vue 3 <code>&lt;script setup lang=&quot;ts&quot;&gt;</code> 和 View UI Plus 的 <code>Form</code>、<code>FormItem</code>、字段控件与 <code>Row/Col</code>。</p>
+<h3>注册 View UI Plus</h3>
+<p>生成文件不会导入或注册 View UI Plus。宿主应用需全局注册 <code>view-ui-plus</code>，或按需注册生成文件中实际使用的组件。按需注册时，通常还要包含 <code>Form</code> 与 <code>FormItem</code>；选择字段会使用 <code>Option</code>、<code>Radio</code> 或 <code>Checkbox</code>，栅格使用 <code>Row</code>、<code>Col</code>。</p>
+<p>示例全局注册：</p>
+<pre><code class="language-ts">import { createApp } from &quot;vue&quot;;
+import ViewUIPlus from &quot;view-ui-plus&quot;;
+import &quot;view-ui-plus/dist/styles/viewuiplus.css&quot;;
+import App from &quot;./App.vue&quot;;
+
+createApp(App).use(ViewUIPlus).mount(&quot;#app&quot;);
+</code></pre>
+<p>将文件放进宿主工程后，可像普通 Vue 组件一样引入。Button 若配置为事件动作，宿主监听对应事件：</p>
+<pre><code class="language-vue">&lt;GeneratedForm @save=&quot;saveForm&quot; /&gt;
+</code></pre>
+<p>生成组件的事件处理器会传出当前 <code>formData</code> 的 JSON 副本。接口请求、路由、权限和业务状态由宿主负责。</p>
+<h3>生成代码包含和不包含的内容</h3>
+<p>生成器根据 Schema 输出表单模型绑定、控件 props、选项控件和两列布局。它只生成画布中设计的 Button，不会自动增加提交、重置或校验按钮。</p>
+<p>设计器预览会为 <code>required</code> 字段建立必填规则；当前生成器只把 <code>required</code> 传给 <code>FormItem</code> 作为必填标记，不会输出相同的校验规则，也不会自动实现表单提交。宿主需要自行补充规则和操作流程。</p>
+<p>配置为 <code>code</code> 的 Button 动作会原样进入生成组件，代码可用 <code>formData</code>、<code>emit</code> 和 <code>event</code>。它不会在设计器预览中执行。只生成和运行可信代码；有业务副作用的逻辑优先放到宿主事件处理器。</p>
+<h2>旧版设计数据迁移</h2>
+<p>本地文件导入和 Schema 对话框导入都先判断是否为新版 <code>version: 1</code> Schema；否则尝试读取旧版通用设计器树中的 <code>Form</code> 节点。</p>
+<p>迁移器会保留可明确转换的表单配置：</p>
+<ul>
+<li><code>Form</code> 的 <code>labelPosition</code>、<code>labelWidth</code>；</li>
+<li><code>FormItem</code> 中首个受支持的字段；</li>
+<li>直接位于 <code>Form</code> 子级的 <code>Row</code> 与其中的 <code>Col</code>；</li>
+<li>支持的字段类型、字段 props、标签、必填状态和字段名。</li>
+</ul>
+<p>当前受支持的字段列表见<a href="/form-designer/widgets-cn/">控件配置参考</a>。无法识别或不能安全转换的节点会跳过并生成警告。如果旧行有超过两列，只迁移前两列；只有一列时会补一个空列；没有 <code>Col</code> 时跳过该行。若没有可迁移字段，导入会报错，不会替换当前设计。</p>
+<p>迁移字段名优先取旧 <code>FormItem.props.prop</code>，然后取字段 <code>props.name</code>，最后使用控件类型；名称会规范化为英文字母、数字、下划线和 <code>$</code>，重复名称会自动加序号。Button 标签优先取旧节点文本，没有文本时使用“提交”。</p>
+<h2>源码结构</h2>
+<table>
+<thead>
+<tr>
+<th>路径</th>
+<th>职责</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>src/core/form-schema.ts</code></td>
+<td>Schema 类型、新建节点、导入规范化和结构校验。</td>
+</tr>
+<tr>
+<td><code>src/core/form-options.ts</code></td>
+<td>选项编辑文本与结构化选项之间的转换。</td>
+</tr>
+<tr>
+<td><code>src/core/form-data.ts</code></td>
+<td>展平字段列表、同步预览表单数据。</td>
+</tr>
+<tr>
+<td><code>src/core/legacy-migration.ts</code></td>
+<td>旧版通用组件树迁移到 <code>FormSchema</code>。</td>
+</tr>
+<tr>
+<td><code>src/core/vue-sfc-generator.ts</code></td>
+<td>将 Schema 生成 Vue 单文件组件。</td>
+</tr>
+<tr>
+<td><code>src/registry/form-widgets.ts</code></td>
+<td>控件面板分组、图标、默认属性和默认选项。</td>
+</tr>
+<tr>
+<td><code>src/stores/designer.ts</code></td>
+<td>Pinia 编辑状态、选择、复制删除和撤销/重做历史。</td>
+</tr>
+<tr>
+<td><code>src/components/designer/</code></td>
+<td>设计器界面、组件面板、画布、属性面板和预览。</td>
+</tr>
+<tr>
+<td><code>src/demo/form-schema.ts</code></td>
+<td>应用启动时载入的示例表单。</td>
+</tr>
+</tbody>
+</table>
+<h2>扩展控件的基本步骤</h2>
+<ol>
+<li>在 <code>src/core/form-schema.ts</code> 的 <code>FieldType</code> 中加入类型，并更新 Schema 类型检查。</li>
+<li>在 <code>src/registry/form-widgets.ts</code> 增加面板定义、默认 props 和选项（如适用）。</li>
+<li>在 <code>FormFieldNode.vue</code> 增加预览渲染方式；涉及容器结构的控件还需明确画布拖放规则。</li>
+<li>如有专属设置，在 <code>PropertyPanel.vue</code> 加入编辑控件与读写逻辑；可复用选项解析时更新相应条件。</li>
+<li>在 <code>vue-sfc-generator.ts</code> 加入生成模板，并确保控件 props、<code>v-model</code> 和选项与预览行为一致。</li>
+<li>扩展 Schema 校验与迁移逻辑，并为规范化、预览、迁移和生成分别补充测试。</li>
+</ol>
+<p>只新增 View UI Plus props 而不改变控件类型时，通常可直接使用属性面板的高级 JSON 属性，无须改动控件注册表。</p>
+<h2>本地开发与验证</h2>
+<p>在 <code>aj-form-designer</code> 项目目录运行：</p>
+<pre><code class="language-bash">npm install
+npm run dev
+npm run typecheck
+npm run test
+npm run build
+</code></pre>
+<p><code>npm run dev</code> 启动 Vite 开发服务器；<code>typecheck</code> 执行 <code>vue-tsc --noEmit</code>；<code>test</code> 使用 Vitest；<code>build</code> 先进行类型检查，再生成生产构建文件。</p>
+<h2>常见问题</h2>
+<ul>
+<li><strong>导入提示字段名重复</strong>：表单数据以字段名作为对象键，修改重复字段名后再导入。</li>
+<li><strong>提示控件类型不支持</strong>：Schema 的 <code>widget.type</code> 只能使用<a href="/form-designer/widgets-cn/">控件配置参考</a>列出的类型。</li>
+<li><strong>两列栅格无法导入</strong>：检查 <code>columns</code> 是否恰好两项、<code>span</code> 是否在 1–24 之间且总和为 24；列内只能放字段。</li>
+<li><strong>选项文本无效</strong>：使用每行 <code>标签=值</code> 格式。数值和布尔值分别使用 <code>number:</code>、<code>boolean:</code> 前缀。</li>
+<li><strong>高级属性没有生效</strong>：高级属性必须是 JSON 对象，且属性名和值需符合当前 View UI Plus 组件版本。</li>
+<li><strong>生成组件显示未知组件</strong>：确认宿主已经全局注册或按需注册生成 SFC 所引用的 View UI Plus 组件。</li>
+<li><strong>旧版导入后部分内容消失</strong>：迁移器仅转换可识别的表单结构。查看导入提示；无法安全转换的展示节点会被跳过。</li>
+</ul>
+
+            </article>
+        </div>
+        <footer>
+             AJ DataService，开源框架 <a href="https://framework.ajaxjs.com" target="_blank">AJ-Framework</a> 的一部分。联系方式：
+             frank@ajaxjs.com，<a href="https://blog.csdn.net/zhangxin09" target="_blank">作者博客</a>
+             <br />
+             <br />
+             Copyright © 2025 Frank Cheung. All rights reserved.
+         </footer>
+    </body>
+</html>

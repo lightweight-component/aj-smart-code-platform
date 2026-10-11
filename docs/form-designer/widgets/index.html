@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+        <title>AJ DataService - Form Designer Widget Reference</title>
+        <meta name="description" content="AJ DataService: Supported aj-form-designer widgets, dedicated settings, option values, and Button actions." />
+        <meta name="keywords" content="dataservice, aj-dataservice, crud, Form Designer,Widgets" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="stylesheet" href="https://framework.ajaxjs.com/static/new-ui/css/common.css" />
+        <script defer src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/highlight.min.js"></script>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/styles/github.min.css" />
+        <link rel="stylesheet" href="https://aj-util.ajaxjs.com/asset/main.css" />
+        <script src="https://aj-util.ajaxjs.com/asset/js/common.js"></script>
+        <script>
+            AJUtils.initTheme();
+            AJUtils.onReady(function () {
+                var button = document.querySelector('[data-document-language-toggle]');
+                var path = window.location.pathname;
+                button.setAttribute('data-language-target', path === '/' ? '/index-cn/' : path === '/form-designer/' ? '/form-designer/index-cn/' : path.replace(/\/?$/, '-cn/'));
+                AJUtils.bindThemeToggle();
+                AJUtils.bindDocumentationLanguageToggle();
+            });
+        </script>
+        <link rel="icon" type="image/png" href="/asset/favicon.ico" />
+        <script>
+            var _hmt = _hmt || [];
+            (function() {
+              var hm = document.createElement("script");
+              hm.src = "https://hm.baidu.com/hm.js?734ea877e4a740968e40994221d9c877";
+              var s = document.getElementsByTagName("script")[0];
+              s.parentNode.insertBefore(hm, s);
+            })();
+        </script>
+    </head>
+    <body>
+        <nav>
+            <div>
+                <div class="links">
+                    <a href="/">🏠 Home</a>
+                    | ⚙️ Source:
+                    <a target="_blank" href="https://github.com/lightweight-component/aj-smart-code-platform">Github</a>/<a target="_blank" href="https://gitcode.com/lightweight-component/aj-smart-code-platform">Gitcode</a>
+                    |
+                    <button class="language-toggle" type="button" data-document-language-toggle aria-label="Switch to Chinese" title="Switch to Chinese">中</button>
+                    <button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch theme" title="Switch theme">☾</button>
+                </div>
+                <h1><img src="/asset/imgs/icon.png" style="vertical-align: middle;height: 35px;margin-bottom: 6px;" /> AJ DataService</h1>
+                <h3>A One-Stop CRUD Service</h3>
+            </div>
+        </nav>
+        <div class="docs-layout">
+            <menu class="docs-navigation" aria-label="Documentation navigation">
+                <ul>
+                    <li class="selected">
+                        <a href="/">Home</a>
+                    </li>
+                </ul>
+                <h3>Data Service</h3>
+                <ul>
+                    <li><a href="/dataservice/index">Introduction</a></li>
+                    <li><a href="/dataservice/spec">Features</a></li>
+                    <li><a href="/dataservice/install/install">Installation and Integration</a></li>
+                    <li><a href="/dataservice/install/spring">Integration with Spring</a></li>
+                    <li><a href="/dataservice/usage/basic">Basic Concepts</a></li>
+                </ul>
+                <h3>Form Designer</h3>
+                <ul>
+                    <li><a href="/form-designer/">Overview</a></li>
+                    <li><a href="/form-designer/guide/">User Guide</a></li>
+                    <li><a href="/form-designer/widgets/">Widget Reference</a></li>
+                    <li><a href="/form-designer/schema/">FormSchema Reference</a></li>
+                    <li><a href="/form-designer/development/">Development and Integration</a></li>
+                </ul>
+                <h3>Configurable Components</h3>
+                <ul><li><a href="/todo">Configurable Components</a></li></ul>
+                <h3>Visual Form Designer</h3>
+                <ul><li><a href="/todo">Visual Form Designer</a></li></ul>
+                <h3>Other</h3>
+                <ul><li><a href="/misc/contact">Contact</a></li></ul>
+            </menu>
+            <article class="aj-text">
+                <h1>Widget Configuration Reference</h1>
+<p>The designer includes widgets with explicit form semantics. Palette groups and defaults are defined in <code>src/registry/form-widgets.ts</code>. The field data structure is described in the <a href="/form-designer/schema/">FormSchema Reference</a>.</p>
+<h2>Supported widgets</h2>
+<table>
+<thead>
+<tr>
+<th>Schema type</th>
+<th>Palette name</th>
+<th>Dedicated settings</th>
+<th>Options</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Input</code></td>
+<td>Text input</td>
+<td>Input type, placeholder</td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>InputNumber</code></td>
+<td>Number input</td>
+<td>Advanced props</td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>Select</code></td>
+<td>Select</td>
+<td>Options, advanced props</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td><code>RadioGroup</code></td>
+<td>Radio group</td>
+<td>Options, advanced props</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td><code>CheckboxGroup</code></td>
+<td>Checkbox group</td>
+<td>Options, advanced props</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td><code>DatePicker</code></td>
+<td>Date picker</td>
+<td>Picker type, display format</td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>TimePicker</code></td>
+<td>Time picker</td>
+<td>Advanced props</td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>Switch</code></td>
+<td>Switch</td>
+<td>Advanced props</td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>Slider</code></td>
+<td>Slider</td>
+<td>Advanced props</td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>Rate</code></td>
+<td>Rating</td>
+<td>Advanced props</td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>ColorPicker</code></td>
+<td>Color picker</td>
+<td>Advanced props</td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>Button</code></td>
+<td>Button</td>
+<td>Action, event name, or custom JavaScript</td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
+<p>Every field has a field name, display label, and required state. The field name is the key in form data and must be unique. Advanced props must be a JSON object and are passed to the corresponding View UI Plus control. Button actions are stored separately and are not passed as component props.</p>
+<h2>Dedicated settings</h2>
+<h3>Input</h3>
+<ul>
+<li><strong>Input type</strong>: <code>text</code> (default), <code>textarea</code>, or <code>password</code>.</li>
+<li><strong>Placeholder</strong>: passed as the View UI Plus <code>Input</code> <code>placeholder</code> prop.</li>
+</ul>
+<h3>DatePicker</h3>
+<ul>
+<li><strong>Picker type</strong>: <code>date</code> (default), <code>daterange</code>, or <code>datetime</code>.</li>
+<li><strong>Display format</strong>: defaults to <code>yyyy-MM-dd</code> and is passed as the <code>format</code> prop.</li>
+</ul>
+<p>Other DatePicker properties can be configured through advanced props. Follow the component API for the View UI Plus version used by the host application.</p>
+<h3>Select, RadioGroup, and CheckboxGroup</h3>
+<p>Enter one option per line in <code>Label=value</code> format:</p>
+<pre><code class="language-text">Draft=draft
+Number=number:12
+Enabled=boolean:true
+Description=string:This value can contain = signs
+</code></pre>
+<p>Parsing rules:</p>
+<ul>
+<li><code>number:</code> must be followed by a finite number, such as <code>number:12</code> or <code>number:-0.5</code>.</li>
+<li><code>boolean:</code> must be followed by <code>true</code> or <code>false</code>.</li>
+<li><code>string:</code> is removed and the remainder is kept as a string.</li>
+<li>Values without a type prefix remain strings; <code>001</code> is not converted to a number.</li>
+<li>Whitespace around labels and values is trimmed, and blank lines are ignored. Each non-blank line must contain a non-empty label and value.</li>
+</ul>
+<h2>Button actions</h2>
+<p>Buttons have three actions. The default is <code>none</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Action</th>
+<th>Generated behavior</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>none</code></td>
+<td>Render the Button without adding a click handler.</td>
+</tr>
+<tr>
+<td><code>emit</code></td>
+<td>Emit the configured Vue event with a copy of the current form data. Event names must start with a letter and may contain letters, digits, <code>:</code>, <code>_</code>, and <code>-</code>.</td>
+</tr>
+<tr>
+<td><code>code</code></td>
+<td>Insert the configured code into the generated component's click handler. The code can use <code>formData</code>, <code>emit</code>, and <code>event</code>.</td>
+</tr>
+</tbody>
+</table>
+<p>Custom code is included in the generated SFC and is not executed in designer Preview. Import validation rejects code containing <code>&lt;/script</code> (case-insensitive). Only generate and run trusted code. Business requests, authorization, and navigation are usually easier to maintain in the host component's event handler.</p>
+<h2>Widget defaults</h2>
+<p>New <code>Input</code> fields use the placeholder “Please enter”. <code>Select</code>, <code>RadioGroup</code>, and <code>CheckboxGroup</code> start with two sample options. New Buttons use <code>type: &quot;primary&quot;</code>. Other widgets start with an empty props object and can be configured through advanced props.</p>
+<h2>Notes</h2>
+<ul>
+<li>Preview renders View UI Plus controls from the Schema, but does not execute custom Button code.</li>
+<li><code>required</code> marks the form item as required and also creates a required validation rule in Preview. The current SFC generator marks the generated <code>FormItem</code> as required but does not generate the validation rule.</li>
+<li>The meaning of advanced props depends on the View UI Plus version used by the host application. Refer to that version's component API.</li>
+</ul>
+
+            </article>
+        </div>
+        <footer>
+            AJ DataService is part of the open-source
+            <a href="https://framework.ajaxjs.com" target="_blank">AJ-Framework</a>.
+            Contact: frank@ajaxjs.com,
+            <a href="https://blog.csdn.net/zhangxin09" target="_blank">author's blog (in Chinese)</a>.
+            <br/><br/>Copyright © 2025 Frank Cheung. All rights reserved.
+        </footer>
+    </body>
+</html>

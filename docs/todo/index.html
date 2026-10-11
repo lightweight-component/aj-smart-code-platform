@@ -17,7 +17,7 @@
             AJUtils.onReady(function () {
                 var button = document.querySelector('[data-document-language-toggle]');
                 var path = window.location.pathname;
-                button.setAttribute('data-language-target', path === '/' ? '/index-cn/' : path.replace(/\/?$/, '-cn/'));
+                button.setAttribute('data-language-target', path === '/' ? '/index-cn/' : path === '/form-designer/' ? '/form-designer/index-cn/' : path.replace(/\/?$/, '-cn/'));
                 AJUtils.bindThemeToggle();
                 AJUtils.bindDocumentationLanguageToggle();
             });
@@ -62,6 +62,14 @@
                     <li><a href="/dataservice/install/install">Installation and Integration</a></li>
                     <li><a href="/dataservice/install/spring">Integration with Spring</a></li>
                     <li><a href="/dataservice/usage/basic">Basic Concepts</a></li>
+                </ul>
+                <h3>Form Designer</h3>
+                <ul>
+                    <li><a href="/form-designer/">Overview</a></li>
+                    <li><a href="/form-designer/guide/">User Guide</a></li>
+                    <li><a href="/form-designer/widgets/">Widget Reference</a></li>
+                    <li><a href="/form-designer/schema/">FormSchema Reference</a></li>
+                    <li><a href="/form-designer/development/">Development and Integration</a></li>
                 </ul>
                 <h3>Configurable Components</h3>
                 <ul><li><a href="/todo">Configurable Components</a></li></ul>

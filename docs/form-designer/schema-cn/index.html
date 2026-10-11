@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+        <title>数据服务 AJ DataService-表单设计器 FormSchema 参考</title>
+        <meta name="description" content="数据服务 FormSchema v1 字段、布局、校验和导入格式说明。"/>
+        <meta name="keywords" content="dataservice, aj-dataservice, crud, 数据服务, 表单设计器,Schema"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@200..900&family=Noto+Serif:ital,wght@0,100..900;1,100..900&display=swap&family=Noto+Sans+SC:wght@100..900&display=swap" />
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@100..900&family=Noto+Serif:ital,wght@0,100..900;1,100..900&display=swap" />
+        <link rel="stylesheet" href="https://framework.ajaxjs.com/static/new-ui/css/common.css" />
+        <script defer src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/highlight.min.js"></script>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.12.0/styles/github.min.css" />
+        <link rel="stylesheet" href="https://aj-util.ajaxjs.com/asset/main.css" />
+        <script src="https://aj-util.ajaxjs.com/asset/js/common.js"></script>
+        <script>
+            AJUtils.initTheme();
+            AJUtils.onReady(function () {
+                var button = document.querySelector('[data-document-language-toggle]');
+                var path = window.location.pathname;
+                button.setAttribute('data-language-target', path === '/index-cn/' ? '/' : path === '/form-designer/index-cn/' ? '/form-designer/' : path.replace(/-cn(?=\/?$)/, ''));
+                AJUtils.bindThemeToggle();
+                AJUtils.bindDocumentationLanguageToggle();
+            });
+        </script>
+        <link rel="icon" type="image/png" href="/asset/favicon.ico"/>
+
+        <script>
+            var _hmt = _hmt || [];
+            (function() {
+              var hm = document.createElement("script");
+              hm.src = "https://hm.baidu.com/hm.js?734ea877e4a740968e40994221d9c877";
+              var s = document.getElementsByTagName("script")[0];
+              s.parentNode.insertBefore(hm, s);
+            })();
+        </script>
+    </head>
+    <body>
+        <nav>
+            <div>
+                <div class="links">
+                    <a href="/">🏠 首页</a>
+                    | ⚙️ 源码:
+                    <a target="_blank" href="https://github.com/lightweight-component/aj-smart-code-platform">Github</a>/<a target="_blank" href="https://gitcode.com/lightweight-component/aj-smart-code-platform">Gitcode</a>
+                    |
+                    <button class="language-toggle" type="button" data-document-language-toggle aria-label="切换至英文" title="切换至英文">EN</button>
+                    <button class="theme-toggle" type="button" data-theme-toggle aria-label="切换主题" title="切换主题">☾</button>
+                </div>
+                <h1><img src="/asset/imgs/icon.png" style="vertical-align: middle;height: 35px;margin-bottom: 6px;" /> 数据服务 AJ DataService</h1>
+                <h3>一站式快速 CRUD 服务</h3>
+            </div>
+        </nav>
+        <div class="docs-layout">
+            <menu class="docs-navigation" aria-label="文档导航">
+                <ul>
+                    <li class="selected">
+                        <a href="/index-cn/">首页</a>
+                    </li>
+                </ul>
+                <h3>数据服务</h3>
+                <ul>
+                    <li>
+                        <a href="/dataservice/index-cn">数据服务简介</a>
+                    </li>
+                    <li>
+                        <a href="/dataservice/spec-cn">数据服务特点</a>
+                    </li>
+                    <li>
+                       <a href="/dataservice/install/install-cn">安装与集成</a>
+                    </li>
+                    <li>
+                       <a href="/dataservice/install/spring-cn">与 Spring 集成</a>
+                    </li>
+                    <li>
+                       <a href="/dataservice/usage/basic-cn">基本概念</a>
+                    </li>
+
+                </ul>
+                <h3>可视化表单设计器</h3>
+                <ul>
+                    <li><a href="/form-designer/index-cn/">项目简介</a></li>
+                    <li><a href="/form-designer/guide-cn/">使用教程</a></li>
+                    <li><a href="/form-designer/widgets-cn/">控件配置参考</a></li>
+                    <li><a href="/form-designer/schema-cn/">FormSchema 参考</a></li>
+                    <li><a href="/form-designer/development-cn/">开发与集成指南</a></li>
+                </ul>
+                <h3>可配置化组件</h3>
+                <ul>
+                  <li>
+                      <a href="/todo">可配置化组件</a>
+                  </li>
+                </ul>
+                <h3>其他</h3>
+                <ul>
+                    <li><a href="/misc/contact-cn">联系</a></li>
+                </ul>
+
+            </menu>
+            <article class="aj-text chinese">
+                <h1>FormSchema 参考</h1>
+<p>设计器使用版本化 JSON 描述表单。当前仅支持 <code>version: 1</code>。Schema 可通过工具栏的 <strong>Schema</strong> 对话框编辑，也可以导出为 JSON 文件并在以后重新导入。控件的全部类型和属性见<a href="/form-designer/widgets-cn/">控件配置参考</a>。</p>
+<h2>顶层结构</h2>
+<pre><code class="language-ts">interface FormSchema {
+  version: 1;
+  props: {
+    labelPosition: &quot;left&quot; | &quot;right&quot; | &quot;top&quot;;
+    labelWidth: number;
+  };
+  items: Array&lt;FormField | FormRow&gt;;
+}
+</code></pre>
+<ul>
+<li><code>version</code>：固定为 <code>1</code>。</li>
+<li><code>props.labelPosition</code>：表单标签位置，可选 <code>left</code>、<code>right</code>、<code>top</code>，默认 <code>right</code>。</li>
+<li><code>props.labelWidth</code>：表单标签宽度，默认 <code>100</code>。属性面板输入范围为 40–300。</li>
+<li><code>items</code>：表单根级内容，按数组顺序渲染字段和栅格行。</li>
+</ul>
+<h2>字段节点</h2>
+<pre><code class="language-json">{
+  &quot;id&quot;: &quot;name-node&quot;,
+  &quot;kind&quot;: &quot;field&quot;,
+  &quot;field&quot;: &quot;name&quot;,
+  &quot;label&quot;: &quot;名称&quot;,
+  &quot;required&quot;: true,
+  &quot;widget&quot;: {
+    &quot;type&quot;: &quot;Input&quot;,
+    &quot;props&quot;: {
+      &quot;placeholder&quot;: &quot;请输入名称&quot;
+    }
+  }
+}
+</code></pre>
+<ul>
+<li><code>id</code>：节点标识。所有字段、行和列的 ID 必须唯一。</li>
+<li><code>kind</code>：字段固定为 <code>field</code>。</li>
+<li><code>field</code>：表单数据键，必须非空且在整张表单内唯一。</li>
+<li><code>label</code>：显示标签。</li>
+<li><code>required</code>：只有值严格为 <code>true</code> 时视为必填。</li>
+<li><code>widget.type</code>：控件类型，必须是<a href="/form-designer/widgets-cn/">控件配置参考</a>中列出的类型。</li>
+<li><code>widget.props</code>：传给 View UI Plus 控件的 props；缺省时按空对象处理。</li>
+<li><code>widget.options</code>：选择类控件的选项数组。</li>
+<li><code>widget.action</code>：仅供 Button 使用的动作配置。</li>
+</ul>
+<p>Schema 导入时缺少 <code>id</code> 会生成新 ID；缺少字段名会生成临时字段名，缺少标签时使用“未命名字段”。但为了让 Schema 可读、稳定地进行版本管理，建议始终显式保存这些值。</p>
+<h2>选项</h2>
+<p>选择类控件的 <code>widget.options</code> 使用以下结构：</p>
+<pre><code class="language-json">[
+  { &quot;label&quot;: &quot;草稿&quot;, &quot;value&quot;: &quot;draft&quot; },
+  { &quot;label&quot;: &quot;数量&quot;, &quot;value&quot;: 12 },
+  { &quot;label&quot;: &quot;启用&quot;, &quot;value&quot;: true }
+]
+</code></pre>
+<p><code>value</code> 可为字符串、数字或布尔值。属性面板的多行文本格式与 Schema 可往返转换，详见<a href="/form-designer/widgets-cn/">控件配置参考</a>。</p>
+<h2>两列栅格行</h2>
+<pre><code class="language-json">{
+  &quot;id&quot;: &quot;identity-row&quot;,
+  &quot;kind&quot;: &quot;row&quot;,
+  &quot;columns&quot;: [
+    { &quot;id&quot;: &quot;identity-left&quot;, &quot;span&quot;: 12, &quot;fields&quot;: [] },
+    { &quot;id&quot;: &quot;identity-right&quot;, &quot;span&quot;: 12, &quot;fields&quot;: [] }
+  ]
+}
+</code></pre>
+<p>行必须恰好有两个列，列宽 <code>span</code> 大于 0 且不超过 24，两列宽度之和必须为 24。缺少或无效的列宽会先规范化为 <code>12</code>，之后再检查总和。每列的 <code>fields</code> 只接受字段，不接受嵌套行。设计器中新建的行默认宽度为 <code>12 + 12</code>。</p>
+<h2>Button 动作</h2>
+<p>普通 Button 可以省略 <code>action</code>，此时按 <code>none</code> 处理。</p>
+<pre><code class="language-json">{
+  &quot;id&quot;: &quot;save-node&quot;,
+  &quot;kind&quot;: &quot;field&quot;,
+  &quot;field&quot;: &quot;save&quot;,
+  &quot;label&quot;: &quot;保存&quot;,
+  &quot;required&quot;: false,
+  &quot;widget&quot;: {
+    &quot;type&quot;: &quot;Button&quot;,
+    &quot;props&quot;: { &quot;type&quot;: &quot;primary&quot; },
+    &quot;action&quot;: { &quot;type&quot;: &quot;emit&quot;, &quot;event&quot;: &quot;save&quot; }
+  }
+}
+</code></pre>
+<p>动作类型：</p>
+<ul>
+<li><code>{ &quot;type&quot;: &quot;none&quot; }</code>：普通按钮。</li>
+<li><code>{ &quot;type&quot;: &quot;emit&quot;, &quot;event&quot;: &quot;save&quot; }</code>：生成 <code>save</code> 事件处理器。事件名须匹配 <code>^[a-zA-Z][a-zA-Z0-9:_-]*$</code>。</li>
+<li><code>{ &quot;type&quot;: &quot;code&quot;, &quot;code&quot;: &quot;emit('save', formData);&quot; }</code>：把 <code>code</code> 写入 SFC 中独立的点击函数。代码不能包含 <code>&lt;/script</code>（不区分大小写）。</li>
+</ul>
+<p><code>action</code> 不能用于非 Button 控件。动作详细行为和安全边界见<a href="/form-designer/widgets-cn/">控件配置参考</a>。</p>
+<h2>完整示例</h2>
+<pre><code class="language-json">{
+  &quot;version&quot;: 1,
+  &quot;props&quot;: {
+    &quot;labelPosition&quot;: &quot;right&quot;,
+    &quot;labelWidth&quot;: 100
+  },
+  &quot;items&quot;: [
+    {
+      &quot;id&quot;: &quot;name-node&quot;,
+      &quot;kind&quot;: &quot;field&quot;,
+      &quot;field&quot;: &quot;name&quot;,
+      &quot;label&quot;: &quot;名称&quot;,
+      &quot;required&quot;: true,
+      &quot;widget&quot;: {
+        &quot;type&quot;: &quot;Input&quot;,
+        &quot;props&quot;: { &quot;placeholder&quot;: &quot;请输入名称&quot; }
+      }
+    },
+    {
+      &quot;id&quot;: &quot;status-node&quot;,
+      &quot;kind&quot;: &quot;field&quot;,
+      &quot;field&quot;: &quot;status&quot;,
+      &quot;label&quot;: &quot;状态&quot;,
+      &quot;required&quot;: false,
+      &quot;widget&quot;: {
+        &quot;type&quot;: &quot;Select&quot;,
+        &quot;props&quot;: {},
+        &quot;options&quot;: [
+          { &quot;label&quot;: &quot;草稿&quot;, &quot;value&quot;: &quot;draft&quot; },
+          { &quot;label&quot;: &quot;发布&quot;, &quot;value&quot;: &quot;published&quot; }
+        ]
+      }
+    },
+    {
+      &quot;id&quot;: &quot;actions-row&quot;,
+      &quot;kind&quot;: &quot;row&quot;,
+      &quot;columns&quot;: [
+        {
+          &quot;id&quot;: &quot;actions-left&quot;,
+          &quot;span&quot;: 12,
+          &quot;fields&quot;: [
+            {
+              &quot;id&quot;: &quot;save-node&quot;,
+              &quot;kind&quot;: &quot;field&quot;,
+              &quot;field&quot;: &quot;save&quot;,
+              &quot;label&quot;: &quot;保存&quot;,
+              &quot;required&quot;: false,
+              &quot;widget&quot;: {
+                &quot;type&quot;: &quot;Button&quot;,
+                &quot;props&quot;: { &quot;type&quot;: &quot;primary&quot; },
+                &quot;action&quot;: { &quot;type&quot;: &quot;emit&quot;, &quot;event&quot;: &quot;save&quot; }
+              }
+            }
+          ]
+        },
+        { &quot;id&quot;: &quot;actions-right&quot;, &quot;span&quot;: 12, &quot;fields&quot;: [] }
+      ]
+    }
+  ]
+}
+</code></pre>
+<h2>导入校验与规范化</h2>
+<p>新版 Schema 导入时会检查对象结构、版本、支持的控件类型、节点 ID 唯一性、字段名唯一性、Button 动作以及两列布局约束。无效数据不会替换当前设计。部分可选属性会规范化为默认值，例如标签位置为 <code>right</code>、标签宽度为 <code>100</code>。</p>
+<p>设计器还可导入旧版通用设计器数据。迁移只针对可识别的表单结构，处理方式及提示见<a href="/form-designer/development-cn/#%E6%97%A7%E7%89%88%E8%AE%BE%E8%AE%A1%E6%95%B0%E6%8D%AE%E8%BF%81%E7%A7%BB">开发与集成指南</a>。</p>
+
+            </article>
+        </div>
+        <footer>
+             AJ DataService，开源框架 <a href="https://framework.ajaxjs.com" target="_blank">AJ-Framework</a> 的一部分。联系方式：
+             frank@ajaxjs.com，<a href="https://blog.csdn.net/zhangxin09" target="_blank">作者博客</a>
+             <br />
+             <br />
+             Copyright © 2025 Frank Cheung. All rights reserved.
+         </footer>
+    </body>
+</html>

@@ -21,7 +21,7 @@
             AJUtils.onReady(function () {
                 var button = document.querySelector('[data-document-language-toggle]');
                 var path = window.location.pathname;
-                button.setAttribute('data-language-target', path === '/index-cn/' ? '/' : path.replace(/-cn(?=\/?$)/, ''));
+                button.setAttribute('data-language-target', path === '/index-cn/' ? '/' : path === '/form-designer/index-cn/' ? '/form-designer/' : path.replace(/-cn(?=\/?$)/, ''));
                 AJUtils.bindThemeToggle();
                 AJUtils.bindDocumentationLanguageToggle();
             });
@@ -79,16 +79,18 @@
                     </li>
 
                 </ul>
+                <h3>可视化表单设计器</h3>
+                <ul>
+                    <li><a href="/form-designer/index-cn/">项目简介</a></li>
+                    <li><a href="/form-designer/guide-cn/">使用教程</a></li>
+                    <li><a href="/form-designer/widgets-cn/">控件配置参考</a></li>
+                    <li><a href="/form-designer/schema-cn/">FormSchema 参考</a></li>
+                    <li><a href="/form-designer/development-cn/">开发与集成指南</a></li>
+                </ul>
                 <h3>可配置化组件</h3>
                 <ul>
                   <li>
                       <a href="/todo">可配置化组件</a>
-                  </li>
-                </ul>
-                <h3>可视化表单设计器</h3>
-                <ul>
-                  <li>
-                      <a href="/todo">可视化表单设计器</a>
                   </li>
                 </ul>
                 <h3>其他</h3>

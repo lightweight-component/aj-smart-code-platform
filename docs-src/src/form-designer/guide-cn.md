@@ -1,6 +1,17 @@
+---
+title: 表单设计器使用教程
+description: 使用 aj-form-designer 设计、预览和生成 Vue 表单。
+tags:
+  - 表单设计器
+  - Vue
+layout: layouts/docs-cn.njk
+---
+
 # aj-form-designer 使用教程
 
 `aj-form-designer` 是一个面向 View UI Plus 表单的可视化设计器。它专注于表单字段、两列栅格、表单 Schema 和 Vue 单文件组件生成，不覆盖通用页面布局组件。
+
+控件的完整列表见[控件配置参考](/form-designer/widgets-cn/)，Schema 字段定义见 [FormSchema 参考](/form-designer/schema-cn/)。需要将生成代码接入已有工程或了解旧格式迁移时，请参阅[开发与集成指南](/form-designer/development-cn/)。
 
 ## 1. 启动项目
 
@@ -41,7 +52,7 @@ createdAt
 - `Input`：单行、多行或密码类型，以及占位提示；
 - `DatePicker`：日期、日期范围、日期时间和显示格式；
 - `Select`、`RadioGroup`、`CheckboxGroup`：选项列表；
-- 所有字段：高级 JSON 属性，会原样作为 View UI Plus 组件 props。
+- 所有字段：高级 JSON 属性，会作为 View UI Plus 组件 props 保存并传给控件。Button 的点击动作单独保存，不会作为组件 prop 传入。
 
 选择类字段每行一个选项，格式为 `标签=值`：
 
@@ -122,11 +133,13 @@ emit("save", formData);
 
 旧版通用设计器数据也可以导入：工具会迁移可识别的 `Form`、`FormItem`、`Row`、`Col` 与表单字段；无法安全转换的组件会显示迁移提示。
 
+导入结构、字段默认值和旧版迁移边界见 [FormSchema 参考](/form-designer/schema-cn/) 与[开发与集成指南](/form-designer/development-cn/)。
+
 ## 7. 生成 Vue 单文件组件
 
 点击“生成 SFC”可查看最终 Vue 3 组件，并下载为 `GeneratedForm.vue`。
 
-生成代码假定宿主工程已经注册 View UI Plus。若宿主工程采用按需注册，需自行注册 Schema 实际使用的组件，例如 `Form`、`Input`、`Select`、`Button` 和 `Row/Col`。
+生成代码假定宿主工程已经注册 View UI Plus。若宿主工程采用按需注册，需自行注册 Schema 实际使用的组件，例如 `Form`、`FormItem`、`Input`、`Select`、`Button`、`Row` 和 `Col`。事件动作会传出当前 `formData` 的副本。生成的 `required` 用于表单项的必填标记；当前 SFC 生成器不会生成与设计器预览相同的校验规则或提交/重置按钮。
 
 事件型 Button 的使用示例：
 
