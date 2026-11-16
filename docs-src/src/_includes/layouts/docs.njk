@@ -32,6 +32,10 @@
               s.parentNode.insertBefore(hm, s);
             })();
         </script>
+        <link rel="stylesheet" href="https://aj-util.ajaxjs.com/asset/static-search.css">
+        <link rel="stylesheet" href="/asset/search.css">
+        <script defer src="https://aj-util.ajaxjs.com/asset/js/static-search.js"></script>
+        <script defer src="/asset/search.js"></script>
     </head>
     <body>
         <nav>
@@ -50,6 +54,7 @@
         </nav>
         <div class="docs-layout">
             <menu class="docs-navigation" aria-label="Documentation navigation">
+                <div data-site-search data-language="en"><noscript>Enable JavaScript to search documentation.</noscript></div>
                 <ul>
                     <li class="selected">
                         <a href="/">Home</a>
@@ -78,7 +83,7 @@
                 <h3>Other</h3>
                 <ul><li><a href="/misc/contact">Contact</a></li></ul>
             </menu>
-            <article class="aj-text">
+            <article class="aj-text" data-search-document>
                 {{ content | safe }}
             </article>
         </div>
