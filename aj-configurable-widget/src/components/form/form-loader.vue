@@ -18,6 +18,7 @@ import { requestResponse, type ApiResponse } from '../../api/http';
 import { getRealUrl, formatDate } from '../common/utils.js';
 
 export default defineComponent({
+  name: "FormLoader",
   setup() {
     const FromRenderer = ref();
 

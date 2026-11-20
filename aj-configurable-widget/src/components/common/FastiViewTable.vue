@@ -48,6 +48,7 @@
 import { defineComponent } from 'vue';
 import { requestResponse } from '../../api/http';
 import List from './common-ui';
+import type { TableListConfig } from './table-list-config';
 
 export default defineComponent({
   name: "FastViewTable",

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <FastiViewTable widget-name="表单定义" :list-api-url="getApiUrl()" :api-url="runtimeConfig.adminApiRoot + '/common_api/ds_widget_config'" :columns-def="list.columns" @create="onCreate" @edit="onEdit">
+    <FastiViewTable widget-name="表单定义" :list-api-url="getListApiUrl()" :api-url="getApiUrl()" :columns-def="list.columns" @create="onCreate" @edit="onEdit">
       <template v-slot:list_action="item">
         <a @click="openDemo(item.item)">预览</a>
         <Divider type="vertical" />
@@ -8,7 +8,7 @@
     </FastiViewTable>
 
     <Modal v-model="perview.isShow" title="预览" width="1200" ok-text="关闭" cancel-text="">
-      <FormLoader ref="previewloader" foo :is-Show-Info-Btn="true" :isShowInfoBtn="true" />
+      <FormLoader ref="previewloader" :is-show-info-btn="true" />
     </Modal>
   </div>
 </template>
@@ -25,8 +25,9 @@ import FastiViewTable from "../common/FastiViewTable.vue";
  * FORM 管理界面列表
  */
 export default defineComponent({
+  name: "FormMgr",
   setup() {
-    const previewloader = ref(null);
+    const previewloader = ref<InstanceType<typeof FormLoader> | null>(null);
 
     return { previewloader };
   },
@@ -79,16 +80,21 @@ export default defineComponent({
   },
 
   methods: {
+    getListApiUrl(): string {
+      return this.getApiUrl() + '/page_no?q_type=FORM';
+    },
+
     getApiUrl(): string {
-      return runtimeConfig.adminApiRoot + '/common_api/ds_widget_config/page_no?q_type=FORM';
+      return runtimeConfig.adminApiRoot + '/common_api/ds_widget_config';
     },
 
     /**
      * 预览
      */
-    openDemo(this: ComponentInstance, item: any): void {
-      // this.$refs.preview.formId = item.id;
-      // this.$refs.preview.load();
+    openDemo(item: { id: number }): void {
+      if (!this.previewloader)
+        return;
+
       this.previewloader.formId = item.id;
       this.previewloader.load();
       this.perview.isShow = true;
@@ -98,14 +104,14 @@ export default defineComponent({
      * 进入详情页
      */
     onCreate(): void {
-      this.$router.push({ path: "form-info" });
+      this.$router.push({ path: "/form-info" });
     },
 
     /**
      * 编辑
      */
     onEdit(id: number): void {
-      this.$router.push({ path: "form-info", query: { id } });
+      this.$router.push({ path: "/form-info", query: { id } });
     },
   },
 });

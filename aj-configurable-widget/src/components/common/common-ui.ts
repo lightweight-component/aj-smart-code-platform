@@ -1,5 +1,6 @@
 import { requestResponse, type ApiResponse } from '../../api/http';
 import { dateFormat } from './utils';
+import type { TableListConfig } from "./table-list-config";
 
 export default {
     afterDelete(cb?: Function): Function {
@@ -75,8 +76,8 @@ export default {
             }, str);
         }
     },
-    getPageList(self: any, listArray: iViewListData, callback?: Function) {
-        return (j: ApiResponseResult) => {
+    getPageList(self: any, listArray: Pick<TableListConfig, "data" | "total">, callback?: Function) {
+        return (j: ApiResponse<{ totalCount: number; list: unknown[] }>) => {
             if (j.status) {
                 listArray.total = j.data.totalCount as number;
                 listArray.data = j.data.list as any[];

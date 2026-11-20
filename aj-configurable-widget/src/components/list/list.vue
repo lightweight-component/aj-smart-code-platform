@@ -32,6 +32,7 @@ import ListLoader from "./list-loader.vue";
  * LIST 管理界面列表
  */
 export default defineComponent({
+  name: "ListMgr",
   setup() {
     const listDefDemo = ref();
 

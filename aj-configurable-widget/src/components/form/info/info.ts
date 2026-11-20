@@ -1,9 +1,9 @@
 import FormLoader from "../form-loader.vue";
 import MoreAttrib from './form-more-attrib.vue';
 import ConfigPanel from './form-config.vue';
-import ConfigTable from '../../components/common/config-table.vue';
+import ConfigTable from '../../common/config-table.vue';
 import InfoMixins from '../../common/info-common.js';
-import FastiViewTable from "../../../common/FastiViewTable.vue";
+import FastiViewTable from "../../common/FastiViewTable.vue";
 
 /**
  * 内页

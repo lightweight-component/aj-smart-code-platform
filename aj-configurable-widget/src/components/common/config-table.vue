@@ -29,10 +29,9 @@
             <slot name="table-header" />
           </li>
         </header>
-        <draggable class="content-panel" tag="section" handle=".handleSort" v-model="fields" item-key="index" chosenClass="chosen" forceFallback="true"
-          group="people" animation="1000">
-          <template #item="{ element, index }">
-            <li>
+        <VueDraggable class="content-panel" tag="section" handle=".handleSort" v-model="fields" chosen-class="chosen"
+          :force-fallback="true" group="people" :animation="1000">
+            <li v-for="(element, index) in fields" :key="fieldKey(element)">
               <div class="action">
                 <div v-if="$parent.editIndex === index">
                   <a @click="$parent.saveAddRow">添加</a>
@@ -55,8 +54,7 @@
               </div>
               <slot name="table-fields" :item="element" />
             </li>
-          </template>
-        </draggable>
+        </VueDraggable>
       </ul>
     </div>
 
@@ -85,11 +83,14 @@
 </template>
 
 <script>
-import draggable from "vuedraggable";
+import { VueDraggable } from "vue-draggable-plus";
 import DataModelSelector from "./data-model-selector.vue";
 
+const fieldKeys = new WeakMap();
+let nextFieldKey = 0;
+
 export default {
-  components: { draggable, DataModelSelector },
+  components: { VueDraggable, DataModelSelector },
   props: {
     columns: Array,
     belowPerview: Boolean,
@@ -112,6 +113,12 @@ export default {
     },
   },
   methods: {
+    fieldKey(field) {
+      if (!fieldKeys.has(field))
+        fieldKeys.set(field, nextFieldKey++);
+
+      return fieldKeys.get(field);
+    },
     /**
      * 取消新增
      */

@@ -154,7 +154,7 @@
 </template>
 
 <script lang="ts">
-import IconSelector from "../../components/common/icon-select.vue";
+import IconSelector from "../../common/icon-select.vue";
 import CandidateData from "./candidate-data.vue";
 
 export default {

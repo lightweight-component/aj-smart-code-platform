@@ -57,10 +57,9 @@ export default {
             }
         }
 
-        const arr: any[] = [];
-        children.forEach(item => arr.push(h(Row, item))); // 输入到 行
+        const rows = children.map(columns => h(Row, null, { default: () => columns }));
 
-        return h(Form, { ref: 'formDynamic', 'label-width': this.cfg.labelWidth || 80, 'label-colon': this.status === 0 }, { default: () => arr });
+        return h(Form, { ref: 'formDynamic', 'label-width': this.cfg.labelWidth || 80, 'label-colon': this.status === 0 }, { default: () => rows });
     },
 
     methods: {
