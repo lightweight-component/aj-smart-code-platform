@@ -5,6 +5,17 @@ import ConfigTable from '../../common/config-table.vue';
 import InfoMixins from '../../common/info-common.js';
 import FastiViewTable from "../../common/FastiViewTable.vue";
 
+function newFormConfig() {
+    return {
+        labelWidth: 80,
+        dataBinding: { httpMethod: 'GET', url: '', beforeRequest: '', baseParams: '' },
+        updateApi: { httpMethod: 'POST', url: '', beforeRequest: '', baseParams: '' },
+        jsonBased: { isJsonBased: false, key: 'FOO' },
+        isShowBtns: true,
+        fields: []
+    } as FormFactory_Config;
+}
+
 /**
  * 内页
  */
@@ -15,27 +26,7 @@ export default {
         return {
             widgetType: 'FORM',
             API: `${window['config'].dsApiRoot}/common_api/widget_config`,
-            cfg: {
-                labelWidth: 80,
-                dataBinding: {
-                    httpMethod: 'GET',
-                    url: "",
-                    beforeRequest: '',
-                    baseParams: ''
-                },
-                updateApi: {
-                    httpMethod: 'POST',
-                    url: "",
-                    beforeRequest: '',
-                    baseParams: ''
-                },
-                jsonBased: {
-                    isJsonBased: false,
-                    key: 'FOO',
-                },
-                isShowBtns: true,
-                fields: []
-            } as FormFactory_Config,
+            cfg: newFormConfig(),
             extraDataOnSave: {},// 调用者额外想送入的数据
             list: {
                 columns: [
@@ -121,8 +112,9 @@ export default {
         // @override
         emptyData(): void {
             this.name = '';
-            this.cfg = { fields: [] };
-            this.$refs.configTable.fields = [];
+            this.cfg = newFormConfig();
+            this.$refs.configTable.fields = this.cfg.fields;
+            this.view = 'model';
         },
 
         /**

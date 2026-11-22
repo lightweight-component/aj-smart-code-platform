@@ -119,7 +119,7 @@
     </template>
 
     <template v-slot:live-perview>
-      <ListLoader ref="LivePerview" :show-search="false" :modal-info="false" />
+      <ListLoader :key="configVersion" ref="LivePerview" :show-search="false" :modal-info="false" />
     </template>
 
     <Modal v-model="isShowPerview" title="预览" width="1200" ok-text="关闭" cancel-text="">
@@ -181,7 +181,8 @@ export default defineComponent({
 
       cfg: {
         dataBinding: {},
-        page: 1
+        page: 1,
+        fields: [],
       } as ListFactory_ListConfig_New,
 
       formSelectorCols: [
@@ -246,8 +247,9 @@ export default defineComponent({
     // @override
     emptyData(): void {
       this.name = '';
-      this.cfg = { page: 1, fields: [] };
-      this.configTable.fields = [];
+      this.cfg = { dataBinding: { url: '' }, page: 1, fields: [] };
+      this.configTable.fields = this.cfg.fields;
+      this.selectedTable = {} as SelectedTable;
     },
     /**
      * 数据库字段转换为表格列配置

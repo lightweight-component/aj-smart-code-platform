@@ -61,7 +61,7 @@ export default {
       /* 这里不能分配数组，那样无法渲染。必须在  row.ext_attribs.candidateData = []; 定义 */
       if (!this.staticData.candidateData)
         this.staticData.candidateData = [];
-      
+
       this.staticData.candidateData.push({ value: "", name: "" });
 
       // 输入框获取焦点

@@ -1,60 +1,3 @@
-/**
- * 项目
- */
-type DataService_Porject = {
-    id: number;
-    name: string;
-    content: string;
-    apiPrefixDev: string;
-    apiPrefixProd: string;
-    defaultConfig: any;
-};
-
-/**
- * 树节点
- */
-type DS_TreeNode_Project = {
-    title: string,
-    contextmenu: boolean,
-    expand?: boolean,
-    loading: boolean,
-    render: Function,
-    projectData: any,
-    children?: DS_TreeNode_Service[]
-};
-
-/**
- * 树节点（服务）
- */
-type DS_TreeNode_Service = {
-    title: string,
-    contextmenu: boolean,
-    expand?: boolean,
-    /**
-     * 是否创建的
-     */
-    isCreate?: boolean,
-    data: any,
-    id: string,
-    parentNode: DS_TreeNode_Service | any,
-    render?: Function,
-    children?: DS_TreeNode_Service[]
-};
-
-interface FormLoaderType {
-    formId: number;
-    load(): void;
-}
-
-interface ComponentInstance extends InstanceType<typeof FormLoader> {
-    previewloader: FormLoaderType,
-
-    perview: {
-        isShow: boolean
-    }
-}
-
-
 /* FORM */
 /**
  * 表单生成器的配置
@@ -155,11 +98,6 @@ declare type FormFactory_ItemConfig = BaseModel & {
 
 /* LIST */
 /**
- * 抽象列配置
- */
-type BaseCol = import("./list-widget").BaseCol;
-
-/**
  * 列配置
  */
 type TableColumn = import("./list-widget").TableColumn;
@@ -221,26 +159,6 @@ declare type ListFactory_ListConfig = {
     }
 };
 
-/**
- * 分页类型
- */
-enum Paging {
-    /**
-     * 不分页
-     */
-    NO_PAGE,
-
-    /**
-     * start/limit
-     */
-    START_LIMIT,
-
-    /**
-     * pageNo/pageSize
-     */
-    PAGE_NO
-}
-
 type ListFactory_ListConfig_New = import("./list-widget").ListFactory_ListConfig_New;
 
 /**
@@ -255,4 +173,16 @@ declare type ConfigurableWidgetPO = {
 
     // type: 'LIST' | 'FORM' | 'LIST_DEF' | 'FOR'
     type: string
+}
+
+declare interface TableListConfig {
+  columns: unknown[];
+  data: unknown[];
+  total: number;
+  start: number;
+  limit: number;
+  pageNo: number;
+  pageSize: number;
+  loading: boolean;
+  search: Record<string, string>;
 }

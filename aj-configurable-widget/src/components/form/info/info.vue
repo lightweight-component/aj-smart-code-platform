@@ -128,7 +128,7 @@
     </template>
 
     <template v-slot:live-perview>
-      <FormLoader ref="LivePerview" :is_show_btns="false" />
+      <FormLoader :key="configVersion" ref="LivePerview" :is_show_btns="false" />
     </template>
 
     <template v-slot:config-panel>

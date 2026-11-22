@@ -6,8 +6,7 @@
         <Button type="primary" icon="ios-search" @click="$parent.getData()">查询</Button>
         <Button style="margin-left:10px" @click="reset">重置</Button>
       </span>
-      <Input suffix="ios-search" v-model="list.search.name" @on-enter="getData" clearable
-        :placeholder="'请输入' + widgetName_ + '名称'" />
+      <Input suffix="ios-search" v-model="list.search.name" @on-enter="getData" clearable :placeholder="'请输入' + widgetName_ + '名称'" />
     </Card>
 
     <div>
@@ -37,8 +36,8 @@
           </template>
         </Table>
 
-        <Page class="ivu-mt ivu-text-right" :total="list.total" :page-size="list.limit" :current="list.pageNo"
-          show-total show-sizer @on-change="onPageNoChange" @on-page-size-change="handleChangePageSize" />
+        <Page class="ivu-mt ivu-text-right" :total="list.total" :page-size="list.limit" :current="list.pageNo" show-total show-sizer @on-change="onPageNoChange"
+          @on-page-size-change="handleChangePageSize" />
       </Card>
     </div>
   </div>
@@ -48,7 +47,6 @@
 import { defineComponent } from 'vue';
 import { requestResponse } from '../../api/http';
 import List from './common-ui';
-import type { TableListConfig } from './table-list-config';
 
 export default defineComponent({
   name: "FastViewTable",

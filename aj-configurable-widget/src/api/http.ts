@@ -19,12 +19,14 @@ function queryUrl(url: string, params?: Record<string, unknown>): string {
   const hash = hashIndex < 0 ? "" : url.slice(hashIndex);
   const base = hashIndex < 0 ? url : url.slice(0, hashIndex);
   const query = new URLSearchParams();
+
   for (const [key, value] of Object.entries(params)) {
     for (const item of Array.isArray(value) ? value : [value]) {
       if (item !== undefined && item !== null)
         query.append(key, item instanceof Date ? item.toISOString() : String(item));
     }
   }
+  
   const encoded = query.toString();
   return encoded ? base + (base.includes("?") ? (/[?&]$/.test(base) ? "" : "&") : "?") + encoded + hash : url;
 }

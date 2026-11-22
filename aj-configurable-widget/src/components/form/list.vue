@@ -1,7 +1,7 @@
 <template>
   <div>
     <FastiViewTable widget-name="表单定义" :list-api-url="getListApiUrl()" :api-url="getApiUrl()" :columns-def="list.columns" @create="onCreate" @edit="onEdit">
-      <template v-slot:list_action="item">
+      <template v-if="!mockManagement" v-slot:list_action="item">
         <a @click="openDemo(item.item)">预览</a>
         <Divider type="vertical" />
       </template>
@@ -34,6 +34,7 @@ export default defineComponent({
   components: { FastiViewTable, FormLoader },
   data() {
     return {
+      mockManagement: import.meta.env.DEV && import.meta.env.VITE_MOCK_LIST_MANAGEMENT === "true",
       perview: { isShow: false, title: "", data: {} },
       list: {
         columns: [

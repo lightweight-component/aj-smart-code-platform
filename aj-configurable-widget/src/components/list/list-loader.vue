@@ -64,9 +64,8 @@
 import { defineComponent } from 'vue';
 import { requestResponse, type ApiResponse } from '../../api/http';
 import { getRealUrl } from '../common/utils.js';
-import FormLoader from "../form/form-loader.vue";
-import type { TableListConfig } from "../common/table-list-config";
 import type { iViewTableColumn, JsonParam, ListFactory_ListConfig_New, TableColumn } from "../../types/list-widget";
+import FormLoader from "../form/form-loader.vue";
 
 export default defineComponent({
     name: "ListLoader",

@@ -63,7 +63,7 @@ export default {
     },
 
     methods: {
-        handleAdd() {
+        handleAdd(): void {
             this.index++;
             this.formDynamic.fields.push({
                 value: '',

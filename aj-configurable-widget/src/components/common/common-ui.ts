@@ -1,6 +1,5 @@
 import { requestResponse, type ApiResponse } from '../../api/http';
 import { dateFormat } from './utils';
-import type { TableListConfig } from "./table-list-config";
 
 export default {
     afterDelete(cb?: Function): Function {

@@ -29,31 +29,31 @@
             <slot name="table-header" />
           </li>
         </header>
-        <VueDraggable class="content-panel" tag="section" handle=".handleSort" v-model="fields" chosen-class="chosen"
-          :force-fallback="true" group="people" :animation="1000">
-            <li v-for="(element, index) in fields" :key="fieldKey(element)">
-              <div class="action">
-                <div v-if="$parent.editIndex === index">
-                  <a @click="$parent.saveAddRow">添加</a>
-                  <Divider type="vertical" />
-                  <a @click="cancelAddRow" style="color:green;">取消</a>
-                </div>
-                <div v-else>
-                  <!--  <a @click="$parent.moreAttrib(item, index)" title="进入详细的属性（attribute）配置">更多</a> -->
-                  <a @click="isShowMoreAttrib = true; currentRow = element;" title="进入详细的属性（attribute）配置">更多</a>
-                  <Divider type="vertical" />
-                  <a @click="moreAttrib(row, index)" class="handleSort" style="cursor: move;color:green" title="点击鼠标不放拖动以排序">排序</a>
-                  <Divider type="vertical" />
-                  <Poptip confirm transfer title="是否要删除此行？" @on-ok="fields.splice(index, 1);">
-                    <a style="color:red;">删除</a>
-                  </Poptip>
-                </div>
+        <VueDraggable class="content-panel" tag="section" handle=".handleSort" v-model="fields" chosen-class="chosen" :force-fallback="true" group="people"
+          :animation="1000">
+          <li v-for="(element, index) in fields" :key="fieldKey(element)">
+            <div class="action">
+              <div v-if="$parent.editIndex === index">
+                <a @click="$parent.saveAddRow">添加</a>
+                <Divider type="vertical" />
+                <a @click="cancelAddRow" style="color:green;">取消</a>
               </div>
-              <div class="isShow checkbox-width">
-                <Checkbox size="small" v-model="element.isShow" />
+              <div v-else>
+                <!--  <a @click="$parent.moreAttrib(item, index)" title="进入详细的属性（attribute）配置">更多</a> -->
+                <a @click="isShowMoreAttrib = true; currentRow = element;" title="进入详细的属性（attribute）配置">更多</a>
+                <Divider type="vertical" />
+                <a @click="moreAttrib(row, index)" class="handleSort" style="cursor: move;color:green" title="点击鼠标不放拖动以排序">排序</a>
+                <Divider type="vertical" />
+                <Poptip confirm transfer title="是否要删除此行？" @on-ok="fields.splice(index, 1);">
+                  <a style="color:red;">删除</a>
+                </Poptip>
               </div>
-              <slot name="table-fields" :item="element" />
-            </li>
+            </div>
+            <div class="isShow checkbox-width">
+              <Checkbox size="small" v-model="element.isShow" />
+            </div>
+            <slot name="table-fields" :item="element" />
+          </li>
         </VueDraggable>
       </ul>
     </div>
@@ -138,4 +138,115 @@ export default {
 };
 </script>
 
-<style lang="less" src="./config-table.less"></style>
+<style lang="less">
+.rightMargin {
+  margin-right: 10px;
+}
+
+ul.table {
+  width: 100%;
+  margin: 30px 0 0 0;
+  overflow-x: auto;
+
+  li {
+    list-style: none;
+    white-space: nowrap;
+    border-bottom: 1px solid #e8eaec;
+    transition: background-color 0.2s ease-in-out;
+
+    .checkbox-width {
+      width: 50px;
+      text-align: center;
+    }
+
+    .field,
+    .uiLabel {
+      width: 150px;
+    }
+
+    .input-width {
+      width: 150px;
+    }
+
+    .input-width-small {
+      width: 110px;
+    }
+
+    .number-width {
+      width: 100px;
+    }
+
+    .action {
+      width: 160px;
+      float: right;
+      height: 20px;
+    }
+
+    &:hover {
+      background-color: #ebf7ff;
+    }
+  }
+
+  header {
+    background-color: #f8f8f9;
+    color: #3b4251;
+    /* width: max-content; */
+    white-space: nowrap;
+    // border-bottom: 1px solid #e8eaec;
+    font-weight: bold;
+  }
+
+  section {
+    max-height: 500px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    /* width: max-content; */
+
+
+
+  }
+
+  &>header>li>div,
+  &>section>li>div {
+    text-align: center;
+    padding: 10px 5px;
+    display: inline-block;
+  }
+}
+
+.list-factory ul.table header,
+.list-factory ul.table section {
+  width: 100%;
+}
+
+.config-table {
+  overflow: hidden;
+  padding: 10px;
+
+  .main {
+    float: left;
+    width: 100%;
+
+    &.small {
+      width: 60%;
+    }
+  }
+
+  .live-perview {
+    &.hide {
+      display: none;
+    }
+
+    float: right;
+    width: 39%;
+    overflow: auto;
+    min-height: 500px;
+    max-height: 600px;
+  }
+
+  .below-perview {
+    float: initial;
+    width: 100%;
+  }
+}
+</style>

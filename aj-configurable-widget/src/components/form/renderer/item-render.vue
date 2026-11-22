@@ -103,8 +103,8 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import FileUpload from '../widgets/file-upload.vue';
 import { requestResponse, type ApiResponse } from '../../../api/http';
+import FileUpload from '../widgets/file-upload.vue';
 
 export default defineComponent({
   components: { FileUpload },
@@ -122,6 +122,7 @@ export default defineComponent({
   mounted(): void {
     if (this.item.uiType == 2) {
       const type: number = this.item?.ext_attribs.type;
+
       if (type === 1) {
         const { api, keyField, valueField } = this.item?.ext_attribs;
 
@@ -163,7 +164,7 @@ export default defineComponent({
      * 打开数据字典选择器
      * @param fieldName 字段名
      */
-    showDataDict(fieldName: string) {
+    showDataDict(fieldName: string): void {
       const { dataDictId, dataDictIdField } = this.item?.ext_attribs;
       console.log(dataDictId);
       console.log(this.data);

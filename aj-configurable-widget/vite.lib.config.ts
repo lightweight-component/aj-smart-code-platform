@@ -16,7 +16,7 @@ export default defineConfig({
       cssFileName: "style",
     },
     rolldownOptions: {
-      external: (id) => externals.some((name) => id === name || id.startsWith(name + "/")),
+      external: (id) => !id.endsWith("?raw") && externals.some((name) => id === name || id.startsWith(name + "/")),
     },
   },
 });

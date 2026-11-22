@@ -9,7 +9,7 @@
         <Option value="PATCH">PATCH</Option>
         <Option value="OPTION">OPTION</Option>
       </Select>
-      <Button size="small" @click="api">选择 API</Button>
+      <Button size="small" @click="emit('select-api')">选择 API</Button>
     </FormItem>
 
     <FormItem label="API 地址">
@@ -19,66 +19,46 @@
     <FormItem label="固定参数">
       <Input size="small" v-model="cfg.baseParams" placeholder="JSON 格式" />
       <br />
-      <Button size="small" @click="isShowDymaicArgs = true">动态获取参数</Button>
+      <Button size="small" @click="openEditor">动态获取参数</Button>
     </FormItem>
 
-    <Modal v-model="isShowDymaicArgs" title="动态获取参数" width="800">
-      <codemirror v-model="cfg.beforeRequest" :options="cmOption" style="border: 1px solid lightgray" />
+    <Modal v-model="isEditorOpen" title="动态获取参数" width="800" @on-ok="saveEditor">
+      <Codemirror v-model="beforeRequestCode" :extensions="extensions" :style="editorStyle" />
     </Modal>
   </span>
 </template>
 
-<script>
-import { codemirror } from "vue-codemirror";
-import ApiSelector from "@ajaxjs/ui/dist/api-helper/index.vue";
-import "codemirror/lib/codemirror.css";
-import "codemirror/addon/hint/show-hint.css";
-import "codemirror/mode/javascript/javascript";
-import "codemirror/addon/selection/active-line.js";
-import "codemirror/addon/edit/closebrackets.js";
-import "codemirror/theme/base16-light.css";
-import "codemirror/addon/display/autorefresh";
+<script setup lang="ts">
+import { javascript } from "@codemirror/lang-javascript";
+import { basicSetup } from "codemirror";
+import { ref, shallowRef } from "vue";
+import { Codemirror } from "vue-codemirror";
 
-export default {
-  components: { ApiSelector, codemirror },
-  props: {
-    cfg: {
-      type: Object,
-      required: true,
-      default() {
-        return {};
-      },
-    },
-  },
-  data() {
-    return {
-      method: "GET",
-      isShowDymaicArgs: false,
-      code: "{}",
-      cmOption: {
-        autoRefresh: true, // 重点是这句，为true
-        styleActiveLine: true, // 高亮选中行
-        lineNumbers: true, // 显示行号
-        line: true,
-        lint: true,
-        mode: "application/json",
-        hintOptions: { completeSingle: false }, // 当匹配只有一项的时候是否自动补全
-        //   theme: 'monokai', // 主题
-      },
-    };
-  },
-  methods: {
-    api() {
-      let p = this.$parent;
+interface ApiBindingConfig {
+  httpMethod?: string;
+  url?: string;
+  baseParams?: string;
+  beforeRequest?: string;
+}
 
-      while (p) {
-        p = p.$parent;
-        if (p.$refs.ApiSelector) {
-          p.isShowApiSelect = true;
-          break;
-        }
-      }
-    },
-  },
-};
+const props = defineProps<{ cfg: ApiBindingConfig }>();
+const emit = defineEmits<{ "select-api": [] }>();
+const isEditorOpen = ref(false);
+const beforeRequestCode = ref("");
+const editingConfig = shallowRef<ApiBindingConfig>();
+const extensions = [basicSetup, javascript()];
+const editorStyle = { border: "1px solid lightgray" };
+
+function openEditor(): void {
+  editingConfig.value = props.cfg;
+  beforeRequestCode.value = props.cfg.beforeRequest ?? "";
+  isEditorOpen.value = true;
+}
+
+function saveEditor(): void {
+  if (editingConfig.value === props.cfg)
+    props.cfg.beforeRequest = beforeRequestCode.value;
+  
+  editingConfig.value = undefined;
+}
 </script>

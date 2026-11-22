@@ -56,6 +56,15 @@ interface TableInfo {
   comment: string;
 }
 
+interface Entity {
+  id: number;
+  name: string;
+  type: string;
+  comment: string;
+  isKey: boolean;
+  defaultValue: string;
+}
+
 export default defineComponent({
   props: {
     apiRoot: { type: String, required: true },  // 接口前缀
@@ -66,7 +75,7 @@ export default defineComponent({
       API: `${this.apiRoot}/datasource`,
       datasource: {
         id: 0,
-        list: [],
+        list: [] as Entity[],
         name: ''
       },
       database: {

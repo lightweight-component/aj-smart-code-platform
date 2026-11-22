@@ -7,10 +7,10 @@
         <div class="name"><b>点击事件</b></div>
         <div class="isChecked"><b>删除</b></div>
       </li>
-      <li v-for="(item, index) in cfg[type]" :key="index">
+      <li v-for="(item, index) in buttons" :key="index">
         <div class="text"> <input v-model="item.text" /></div>
-        <div class="event"><a @click="editEvent(index)">编辑</a></div>
-        <div class="action"><a title="删除按钮" @click="cfg[type].splice(index, 1)">⨯</a></div>
+        <div class="event"><a @click="editEvent(item)">编辑</a></div>
+        <div class="action"><a title="删除按钮" @click="buttons.splice(index, 1)">⨯</a></div>
       </li>
     </ul>
 
@@ -22,72 +22,65 @@
         <li>函数 <code>this</code> 参数为当前 table 实例</li>
       </ul>
       <code>function onClick(row: Entity, index: number): void {</code>
-      <codemirror ref="eventCode" :options="cmOption" style="border:1px solid lightgray;margin:1% 0;margin-left:20px;width:93%" />
-      <!--  <Input ref="eventCode" type="textarea" :rows="20" style="margin-left:20px;width:93%" /> -->
+      <Codemirror v-model="eventCode" :extensions="extensions" :style="editorStyle" />
       <div style="clear: both"></div>
       <code>}</code>
     </Modal>
   </div>
 </template>
 
-<script lang="ts">
-import Vue from "vue";
+<script setup lang="ts">
+import { javascript } from "@codemirror/lang-javascript";
+import { basicSetup } from "codemirror";
+import { computed, ref, shallowRef } from "vue";
+import { Codemirror } from "vue-codemirror";
 
-import { codemirror } from 'vue-codemirror';
-import 'codemirror/lib/codemirror.css';
-import 'codemirror/addon/hint/show-hint.css';
-import 'codemirror/theme/ambiance.css';
-import 'codemirror/mode/javascript/javascript';
-import 'codemirror/addon/selection/active-line.js';
-import 'codemirror/addon/edit/closebrackets.js';
-import 'codemirror/theme/base16-light.css';
-import 'codemirror/addon/display/autorefresh'
+interface EventButton {
+  text: string;
+  event?: string;
+}
 
-export default Vue.extend({
-  components: { codemirror },
-  props: {
-    name: String,
-    type: String,
-    cfg: {
-      type: Object,
-      default() {
-        return {};
-      },
-    },
-  },
-  data() {
-    return {
-      isShowEditEvent: false,
-      editIndex: 0,
-      cmOption: Object.freeze({
-        autoRefresh: true, // 重点是这句，为true
-        styleActiveLine: true, // 高亮选中行
-        lineNumbers: true, // 显示行号
-        line: true,
-        lint: true,
-        mode: "javascript",
-        hintOptions: { completeSingle: false }, // 当匹配只有一项的时候是否自动补全
-        theme: "ambiance", // 主题
-      }),
-    };
-  },
-  methods: {
-    add() {
-      this.cfg[this.type].push({ text: "请输入文本" });
-    },
-    editEvent(index: number): void {
-      this.isShowEditEvent = true;
-      this.editIndex = index;
-      // this.$refs.eventCode.$el.querySelector("textarea").value = this.cfg[this.type][this.editIndex].event || "";
-      this.$refs.eventCode.cminstance.setValue(this.cfg[this.type][this.editIndex].event || "");
-    },
-    saveEvent(): void {
-      // let value: string = this.$refs.eventCode.$el.querySelector("textarea").value;
-      let value: string = this.$refs.eventCode.cminstance.getValue();
-      this.cfg[this.type][this.editIndex].event = value;
-    },
-  },
+const props = defineProps<{
+  name?: string;
+  type: string;
+  cfg: Record<string, unknown>;
+}>();
+
+const buttons = computed(() => {
+  const group = props.cfg[props.type];
+
+  return Array.isArray(group) ? group as EventButton[] : [];
 });
+const isShowEditEvent = ref(false);
+const editingButton = shallowRef<EventButton>();
+const eventCode = ref("");
+const extensions = [basicSetup, javascript()];
+const editorStyle = { border: "1px solid lightgray", margin: "1% 0 1% 20px", width: "93%" };
+
+function add(): void {
+  const button = { text: "请输入文本" };
+  const group = props.cfg[props.type];
+  
+  if (Array.isArray(group))
+    group.push(button);
+  else
+    props.cfg[props.type] = [button];
+}
+
+function editEvent(button: EventButton): void {
+  editingButton.value = button;
+  eventCode.value = button.event ?? "";
+  isShowEditEvent.value = true;
+}
+
+function saveEvent(): void {
+  const button = editingButton.value;
+
+  if (button && buttons.value.includes(button))
+    button.event = eventCode.value;
+
+  editingButton.value = undefined;
+}
 </script>
 
 <style scoped>

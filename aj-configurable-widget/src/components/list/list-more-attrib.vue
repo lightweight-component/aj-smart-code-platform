@@ -24,7 +24,7 @@
               <!--  <div>
               <input type="checkbox" v-model="item.checked" />
             </div> -->
-              <div><a title="删除数据" @click="del(index)">⨯</a></div>
+              <div><a title="删除数据" @click="del(index as number)">⨯</a></div>
             </div>
           </li>
         </ul>

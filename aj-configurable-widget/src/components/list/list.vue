@@ -2,8 +2,10 @@
   <div>
     <FastiViewTable widget-name="列表定义" :list-api-url="getListApiUrl()" :api-url="getApiUrl()" :columns-def="list.columns" @create="onCreate" @edit="onEdit">
       <template v-slot:list_action="item">
-        <a @click="openDemo(item.item)">预览</a>
-        <Divider type="vertical" />
+        <template v-if="!mockListManagement">
+          <a @click="openDemo(item.item)">预览</a>
+          <Divider type="vertical" />
+        </template>
       </template>
 
       <!-- <template v-slot:toolbar>
@@ -41,6 +43,7 @@ export default defineComponent({
   components: { FastiViewTable, ListLoader },
   data() {
     return {
+      mockListManagement: import.meta.env.DEV && import.meta.env.VITE_MOCK_LIST_MANAGEMENT === "true",
       perview: { isShow: false, title: "", data: {} },
       list: {
         columns: [
@@ -86,6 +89,8 @@ export default defineComponent({
     },
 
     getApiUrl(): string {
+      if (this.mockListManagement)
+        return runtimeConfig.adminApiRoot + '/common_api/ds_widget_config';
       return window.config.dsApiRoot + '/common_api/ds_widget_config';
     },
     /**
