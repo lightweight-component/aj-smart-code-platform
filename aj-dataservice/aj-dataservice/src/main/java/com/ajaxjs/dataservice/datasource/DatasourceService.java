@@ -1,10 +1,11 @@
-package com.ajaxjs.mysqlmonitor.datasource;
+package com.ajaxjs.dataservice.datasource;
 
-import com.ajaxjs.mysqlmonitor.metadata.ColumnQuery;
-import com.ajaxjs.mysqlmonitor.metadata.TableQuery;
-import com.ajaxjs.mysqlmonitor.metadata.model.Column;
+import com.ajaxjs.dataservice.metadata.ColumnQuery;
+import com.ajaxjs.dataservice.metadata.TableQuery;
+import com.ajaxjs.dataservice.metadata.model.Column;
 import com.ajaxjs.sqlman.Action;
 import com.ajaxjs.sqlman.JdbcConnection;
+import com.ajaxjs.sqlman.model.DatabaseVendor;
 import com.ajaxjs.sqlman.page.PageResult;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -12,14 +13,12 @@ import org.springframework.util.StringUtils;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
  * 数据源配置和数据库元数据查询的服务实现。
+ * 支持本地数据源获取（即不需要读取表 ds_datasource）
  */
 @Slf4j
 @Service
@@ -36,17 +35,37 @@ public class DatasourceService implements DatasourceController {
 
     @Override
     public List<DataSourceInfo> list() {
-        List<DataSourceInfo> list = new Action("SELECT * FROM ds_datasource WHERE stat != 1").query().list(DataSourceInfo.class);
-        if (list == null)
-            return Collections.emptyList();
+        List<DataSourceInfo> list;
 
-        list.forEach(item -> item.setPassword(null));
+        if (LocalDataSource.tableExists("ds_datasource")) {
+            list = new Action("SELECT * FROM ds_datasource WHERE stat != 1").query().list(DataSourceInfo.class);
+            if (list == null)
+                return Collections.emptyList();
+
+            list.forEach(item -> item.setPassword(null));
+        } else {
+            DataSourceInfo ds = new DataSourceInfo();
+            ds.setId(LocalDataSource.LOCAL_DATA_SOURCE_ID);
+            ds.setName("LocalDataSource");
+            ds.setType(DatabaseVendor.MYSQL);
+            ds.setStat(0);
+            Date now = new Date();
+            ds.setCreateDate(now);
+            ds.setUpdateDate(now);
+
+            list = new ArrayList<>();
+            list.add(ds);
+        }
 
         return list;
     }
 
+
     @Override
     public boolean test(Long id) {
+        if (LocalDataSource.LOCAL_DATA_SOURCE_ID.equals(id))
+            return true;
+
         try (Connection connection = getConnectionByDataSourceId(id)) {
             log.info(connection.getMetaData().getURL());
 
@@ -107,18 +126,26 @@ public class DatasourceService implements DatasourceController {
 
     @Override
     public List<Map<String, Object>> getAllTablesComment(Long id) throws SQLException {
-        try (Connection connection = getConnectionByDataSourceId(id)) {
-            TableQuery q = new TableQuery(connection);
+        if (LocalDataSource.LOCAL_DATA_SOURCE_ID.equals(id)) {
+            TableQuery q = new TableQuery(JdbcConnection.getConnection());
 
             return q.getTableCommentWithAnnotateAsList(q.getAllTableName(null), null);
-        }
+        } else
+            try (Connection connection = getConnectionByDataSourceId(id)) {
+                TableQuery q = new TableQuery(connection);
+
+                return q.getTableCommentWithAnnotateAsList(q.getAllTableName(null), null);
+            }
     }
 
     @Override
     public List<Column> getTableColumn(Long id, String tableName) throws SQLException {
-        try (Connection connection = getConnectionByDataSourceId(id)) {
-            return new ColumnQuery(connection).getColumnComment(tableName, null);
-        }
+        if (LocalDataSource.LOCAL_DATA_SOURCE_ID.equals(id))
+            return new ColumnQuery(JdbcConnection.getConnection()).getColumnComment(tableName, null);
+        else
+            try (Connection connection = getConnectionByDataSourceId(id)) {
+                return new ColumnQuery(connection).getColumnComment(tableName, null);
+            }
     }
 
     /**
@@ -140,7 +167,7 @@ public class DatasourceService implements DatasourceController {
     }
 
     @Override
-    public PageResult<Map<String, Object>> getTableAndComment(Long dataSourceId, Integer start, Integer limit, String tableName, String dbName) {
+    public PageResult<Map<String, Object>> getTableAndComment(Long dataSourceId, Integer start, Integer limit, String tableName, String dbName) throws SQLException {
         int pageStart = start == null ? 0 : start;
         int pageLimit = limit == null ? DEFAULT_TABLE_PAGE_SIZE : limit;
 
@@ -150,11 +177,12 @@ public class DatasourceService implements DatasourceController {
         if (pageLimit < 1 || pageLimit > MAX_TABLE_PAGE_SIZE)
             throw new IllegalArgumentException("limit 必须在 1 到 " + MAX_TABLE_PAGE_SIZE + " 之间");
 
-        try (Connection conn = getConnectionByDataSourceId(dataSourceId)) {
-            return getTableAndComment(conn, pageStart, pageLimit, tableName, dbName);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        if (LocalDataSource.LOCAL_DATA_SOURCE_ID.equals(dataSourceId))
+            return getTableAndComment(JdbcConnection.getConnection(), pageStart, pageLimit, tableName, dbName);
+        else
+            try (Connection conn = getConnectionByDataSourceId(dataSourceId)) {
+                return getTableAndComment(conn, pageStart, pageLimit, tableName, dbName);
+            }
     }
 
     /**

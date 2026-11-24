@@ -1,4 +1,4 @@
-package com.ajaxjs.mysqlmonitor.metadata.model;
+package com.ajaxjs.dataservice.metadata.model;
 
 import lombok.Data;
 

@@ -94,7 +94,8 @@
 
         <FormItem label="分页参数">
           <RadioGroup v-model="cfg.page">
-            <Radio :label="0">不分页</Radio><i class="ivu-icon ivu-icon-ios-help-circle-outline" title="不分页则一次性查询所有数据，适合数据量较少的列表" />&nbsp;
+            <Radio :label="0">不分页</Radio><i class="ivu-icon ivu-icon-ios-help-circle-outline"
+              title="不分页则一次性查询所有数据，适合数据量较少的列表" />&nbsp;
             <Radio :label="1">start/limit</Radio>
             <Radio :label="2">pageNo/pageSize</Radio>
           </RadioGroup>
@@ -110,8 +111,8 @@
 
         <!-- 选择哪张表单绑定 -->
         <Modal v-model="isShowListModal" title="选择表单" ok-text="关闭" cancel-text="" width="800">
-          <FastiViewTable :pickup="true" ref="SelectForm" widget-name="表单配置" :list-api-url="formListApi" @on-select="onFormSelected($event)"
-            :columns-def="formSelectorCols" />
+          <FastiViewTable :pickup="true" ref="SelectForm" widget-name="表单配置" :list-api-url="formListApi"
+            @on-select="onFormSelected($event)" :columns-def="formSelectorCols" />
         </Modal>
 
         <!-- <FormLoader ref="FormPerviewLoader" /> -->

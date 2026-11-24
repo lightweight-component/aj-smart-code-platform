@@ -1,4 +1,4 @@
-package com.ajaxjs.mysqlmonitor.metadata;
+package com.ajaxjs.dataservice.metadata;
 
 /**
  * 数据库元数据读取或解析失败时抛出的异常。

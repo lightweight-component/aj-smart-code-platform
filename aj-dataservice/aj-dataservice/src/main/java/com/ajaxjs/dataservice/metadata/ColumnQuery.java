@@ -1,6 +1,6 @@
-package com.ajaxjs.mysqlmonitor.metadata;
+package com.ajaxjs.dataservice.metadata;
 
-import com.ajaxjs.mysqlmonitor.metadata.model.Column;
+import com.ajaxjs.dataservice.metadata.model.Column;
 import com.ajaxjs.util.CommonConstant;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.StringUtils;
@@ -21,7 +21,6 @@ import java.util.regex.Pattern;
  */
 @Slf4j
 public class ColumnQuery extends BaseMetaQuery {
-
     /**
      * 使用指定 JDBC 连接创建列元数据查询器。
      *

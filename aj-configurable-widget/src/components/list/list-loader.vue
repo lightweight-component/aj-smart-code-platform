@@ -19,7 +19,8 @@
                             <Button type="primary" icon="ios-search" @click="$parent.getData()">查询</Button>
                             <Button style="margin-left:10px" @click="reset">重置</Button>
                         </span>
-                        <Input suffix="ios-search" v-model="list.search.name" @on-enter="getData" clearable :placeholder="'请输入' + widgetName_ + '名称'" />
+                        <Input suffix="ios-search" v-model="list.search.name" @on-enter="getData" clearable
+                            :placeholder="'请输入' + widgetName_ + '名称'" />
                     </div>
                     <div class="toolbar">
                         <Tooltip class="ivu-ml" content="刷新" placement="top">
@@ -28,28 +29,28 @@
 
                         <slot name="toolbar"></slot>
                         <Button v-if="showCreateBtn" type="primary" icon="md-add" @click="onCreate">新建{{ widgetName_
-                        }}</Button>
+                            }}</Button>
                     </div>
                 </div>
                 <Table style="clear:both" :columns="list.columns" :data="list.data" :loading="list.loading">
-                    <template v-slot:action="{ row, index }">
+                    <template v-slot:action="{ row }">
                         <slot name="list_action" :item="row"></slot>
 
                         <a style="color:green;" @click="onEdit(row.id)" v-if="showEditBtn">{{ editBtnAsView ? '查看' :
                             '编辑' }}</a>
                         <Divider type="vertical" v-if="showEditBtn" />
-                        <Poptip confirm transfer title="是否要删除此行？" @on-ok="deleteInfo(row.id, index)">
+                        <Poptip confirm transfer title="是否要删除此行？" @on-ok="deleteInfo(row.id)">
                             <a style="color:red;">删除</a>
                         </Poptip>
                     </template>
                 </Table>
 
-                <Page class="ivu-mt ivu-text-right" :total="list.total" :current="list.pageNo" show-total show-sizer :page-size="list.limit"
-                    @on-change="onPageNoChange" @on-page-size-change="handleChangePageSize" />
+                <Page class="ivu-mt ivu-text-right" :total="list.total" :current="list.pageNo" show-total show-sizer
+                    :page-size="list.limit" @on-change="onPageNoChange" @on-page-size-change="handleChangePageSize" />
             </Card>
         </span>
 
-        <Modal v-if="modalInfo" v-model="isShowForm" title="预览" width="800" ok-text="关闭" cancel-text="">
+        <Modal v-if="modalInfo" v-model="isShowForm" :title="widgetName_" width="800" footer-hide>
             <FormLoader ref="FormLoader" />
         </Modal>
 
@@ -65,6 +66,7 @@ import { defineComponent } from 'vue';
 import { requestResponse, type ApiResponse } from '../../api/http';
 import { getRealUrl } from '../common/utils.js';
 import type { iViewTableColumn, JsonParam, ListFactory_ListConfig_New, TableColumn } from "../../types/list-widget";
+import List from '../common/common-ui';
 import FormLoader from "../form/form-loader.vue";
 
 export default defineComponent({
@@ -209,7 +211,6 @@ export default defineComponent({
                 this.$parent.edit(id);
             else {
                 this.isShowForm = true;
-                const formLoader = this.$refs.FormLoader;
 
                 if (!this.modalInfo) {
                     setTimeout(() => {
@@ -217,12 +218,40 @@ export default defineComponent({
                         this.$refs.FormLoader2a.load();
                     });
                 } else {
+                    const formLoader = this.$refs.FormLoader as InstanceType<typeof FormLoader>;
                     formLoader.formId = this.bindingFormId;
                     formLoader.entityId = id;
-                    formLoader.load();
+                    formLoader.load(this.editBtnAsView);
                 }
             }
-        }
+        },
+
+        async deleteInfo(id: number): Promise<void> {
+            if (!this.listApiUrl_) {
+                this.$Message.error('未配置列表接口，无法删除');
+                return;
+            }
+
+            this.list.loading = true;
+
+            try {
+                // 分页接口 /resource/page_no 对应的删除接口为 /resource/{id}。
+                const resourceUrl = this.listApiUrl_.split(/[?#]/, 1)[0].replace(/\/+$/, '').replace(/\/page_no$/, '');
+                const resp = await requestResponse(`${resourceUrl}/${encodeURIComponent(id)}`, { method: 'DELETE' });
+                
+                List.afterDelete(() => {
+                    const index = this.list.data.findIndex(row => row && typeof row === 'object' && 'id' in row && row.id === id);
+                    if (index !== -1) {
+                        this.list.data.splice(index, 1);
+                        this.list.total--;
+                    }
+                }).call(this, resp);
+            } catch (error: unknown) {
+                this.$Message.error(error instanceof Error ? error.message : '删除失败');
+            } finally {
+                this.list.loading = false;
+            }
+        },
     },
     watch: {
         /**
@@ -230,14 +259,6 @@ export default defineComponent({
          * 
          * @param v 
          */
-        // current(v: number): void {
-        //     this.start = (v - 1) * this.list.limit;
-        //     this.getData();
-        // },
-        // 'list.pageNo'(v: number): void {
-        //     this.list.start = (v - 1) * this.list.limit;
-        //     this.getData();
-        // },
         colDefId(v: number): void {
             this.getRemoteColDef();
         },
@@ -412,7 +433,7 @@ function date(h: (a: string, c: object, b: string) => any, params: any) {
             arr.pop();
             arr.pop();
 
-            return value ? arr.join('').replace(/\s\d+$/, '') : '';
+            return value ? arr.join('').replace(/\s\d+$/, '').replaceAll('T0000', '') : '';
         } else
             return value;
     } else

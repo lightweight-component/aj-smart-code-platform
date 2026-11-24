@@ -1,4 +1,4 @@
-package com.ajaxjs.mysqlmonitor.metadata;
+package com.ajaxjs.dataservice.metadata;
 
 import java.sql.*;
 import java.util.ArrayList;

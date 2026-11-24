@@ -1,4 +1,4 @@
 /**
  * A datasource service for managing data sources.
  */
-package com.ajaxjs.mysqlmonitor.datasource;
+package com.ajaxjs.dataservice.datasource;

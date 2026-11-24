@@ -1,4 +1,4 @@
-package com.ajaxjs.mysqlmonitor.datasource;
+package com.ajaxjs.dataservice.datasource;
 
 import com.ajaxjs.sqlman.annotation.Table;
 import com.ajaxjs.sqlman.model.DatabaseVendor;

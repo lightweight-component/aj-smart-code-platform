@@ -1,6 +1,6 @@
-package com.ajaxjs.mysqlmonitor.datasource;
+package com.ajaxjs.dataservice.datasource;
 
-import com.ajaxjs.mysqlmonitor.metadata.model.Column;
+import com.ajaxjs.dataservice.metadata.model.Column;
 import com.ajaxjs.sqlman.page.PageResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -90,5 +90,5 @@ public interface DatasourceController {
      * @return 表名和表注释的分页结果
      */
     @GetMapping("/{dataSourceId}/get_all_tables")
-    PageResult<Map<String, Object>> getTableAndComment(@PathVariable Long dataSourceId, Integer start, Integer limit, String tableName, String dbName);
+    PageResult<Map<String, Object>> getTableAndComment(@PathVariable Long dataSourceId, Integer start, Integer limit, String tableName, String dbName) throws SQLException;
 }

@@ -1,8 +1,8 @@
-package com.ajaxjs.mysqlmonitor.metadata;
+package com.ajaxjs.dataservice.metadata;
 
-import com.ajaxjs.mysqlmonitor.metadata.model.Column;
-import com.ajaxjs.mysqlmonitor.metadata.model.Database;
-import com.ajaxjs.mysqlmonitor.metadata.model.Table;
+import com.ajaxjs.dataservice.metadata.model.Column;
+import com.ajaxjs.dataservice.metadata.model.Database;
+import com.ajaxjs.dataservice.metadata.model.Table;
 import com.ajaxjs.sqlman.util.SnowflakeId;
 import com.ajaxjs.util.JsonUtil;
 import com.ajaxjs.util.RegExpHelper;

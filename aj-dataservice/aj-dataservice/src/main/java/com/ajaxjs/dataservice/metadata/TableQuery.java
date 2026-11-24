@@ -1,4 +1,4 @@
-package com.ajaxjs.mysqlmonitor.metadata;
+package com.ajaxjs.dataservice.metadata;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.StringUtils;

@@ -5,7 +5,8 @@
     <!-- 查看模式（只读） -->
     <span v-if="status === 0">
       <span v-if="item.uiType == 8" v-html="data[item.name]" class="html-content"></span>
-      <!-- <span v-else-if="age<40">中年</span> -->
+      <span v-else-if="item.uiType == 6" style="word-wrap: break-word;">{{ data[item.name] }}</span>
+      <span v-else-if="item.uiType == 21">{{ formattedDate }}</span>
       <span v-else>{{ data[item.name] }}</span>
     </span>
 
@@ -14,7 +15,8 @@
       <Input v-if="item.uiType == 1" type="text" v-model="data[item.name]" :placeholder="item.comment"
         :readonly="item.ext_attribs && item.ext_attribs.isReadonly" />
 
-      <Input v-if="item.uiType == 6" type="textarea" v-model="data[item.name]" :placeholder="item.comment" />
+      <Input v-if="item.uiType == 6" type="textarea" v-model="data[item.name]" :placeholder="item.comment"
+        style="width:100%;" />
 
       <!-- <HtmlEditor v-if="item.uiType == 8" :v-model="data[item.name]" @on-change="data[item.name] = $event" :is-ionicons="true" style="height:360px;"></HtmlEditor> -->
 
@@ -29,7 +31,8 @@
 
       <span v-if="item.uiType == 7">
         <i-Switch v-model="data[item.name]" size="middle" /> &nbsp;
-        <Tooltip v-if="item.comment" :content="item.comment" placement="right"><i class="ivu-icon ivu-icon-ios-help-circle-outline" /></Tooltip>
+        <Tooltip v-if="item.comment" :content="item.comment" placement="right"><i
+            class="ivu-icon ivu-icon-ios-help-circle-outline" /></Tooltip>
       </span>
 
       <!-- {{  item.uiType}} -->
@@ -77,7 +80,7 @@
         </Radio>
       </RadioGroup>
 
-      <span v-if="item.uiType == 21">{{ data[item.name] }}</span>
+      <span v-if="item.uiType == 21">{{ formattedDate }}</span>
 
       <TreeSelect v-if="item.uiType == 22" v-model="data[item.name]" :data="DataDictData" />
 
@@ -105,6 +108,7 @@
 import { defineComponent } from 'vue';
 import { requestResponse, type ApiResponse } from '../../../api/http';
 import FileUpload from '../widgets/file-upload.vue';
+import { formatDate } from '../../common/utils';
 
 export default defineComponent({
   components: { FileUpload },
@@ -117,6 +121,17 @@ export default defineComponent({
     return {
       DataDictData: [],
       dropDownListData: []
+    }
+  },
+  computed: {
+    formattedDate(): string {
+      const value: any = this.data[this.item.name];
+      if (value == null || value === '')
+        return '';
+
+      const date: Date = value instanceof Date ? value : new Date(value);
+
+      return Number.isNaN(date.getTime()) ? String(value) : formatDate.call(date, 'yyyy-MM-dd hh:mm:ss');
     }
   },
   mounted(): void {

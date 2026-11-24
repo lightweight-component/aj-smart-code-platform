@@ -1,11 +1,9 @@
-package com.ajaxjs.mysqlmonitor.metadata.model;
+package com.ajaxjs.dataservice.metadata.model;
 
 import lombok.Data;
 
 /**
  * 列信息
- *
- * @author frank
  */
 @Data
 public class Column {

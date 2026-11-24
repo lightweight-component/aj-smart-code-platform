@@ -11,7 +11,8 @@ import ItemRender from './item-render.vue';
 export default {
     components: { ItemRender },
     props: {
-        cfg: { type: Object, required: true }
+        cfg: { type: Object, required: true },
+        status: { type: Number, default: 1 } // 0=查看/1=新增/2=修改
     },
     data() {
         return {
@@ -19,8 +20,7 @@ export default {
             formDynamic: {
                 fields: this.cfg.fields
             },
-            data: {}, // 数据
-            status: 1  // 0=查看/1=新增/2=修改
+            data: {} // 数据
         };
     },
     render(): any {

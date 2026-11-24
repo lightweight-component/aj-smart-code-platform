@@ -6,7 +6,8 @@
         <Button type="primary" icon="ios-search" @click="$parent.getData()">查询</Button>
         <Button style="margin-left:10px" @click="reset">重置</Button>
       </span>
-      <Input suffix="ios-search" v-model="list.search.name" @on-enter="getData" clearable :placeholder="'请输入' + widgetName_ + '名称'" />
+      <Input suffix="ios-search" v-model="list.search.name" @on-enter="getData" clearable
+        :placeholder="'请输入' + widgetName_ + '名称'" />
     </Card>
 
     <div>
@@ -36,8 +37,8 @@
           </template>
         </Table>
 
-        <Page class="ivu-mt ivu-text-right" :total="list.total" :page-size="list.limit" :current="list.pageNo" show-total show-sizer @on-change="onPageNoChange"
-          @on-page-size-change="handleChangePageSize" />
+        <Page class="ivu-mt ivu-text-right" :total="list.total" :page-size="list.limit" :current="list.pageNo"
+          show-total show-sizer @on-change="onPageNoChange" @on-page-size-change="handleChangePageSize" />
       </Card>
     </div>
   </div>
@@ -160,17 +161,20 @@ export default defineComponent({
     doPickup(data: any): void {
       this.$emit("on-select", data);
     },
-    deleteInfo(id: number, index: number): void {
+    async deleteInfo(id: number, index: number): Promise<void> {
       this.list.loading = true;
-      requestResponse(`${this.apiUrl}/${id}`, { method: 'DELETE' }).then(List.afterDelete(() => {
-        this.list.data.splice(index, 1);
-        this.list.total--;
-        this.list.loading = false;
-      }).bind(this)).catch((error: unknown) => {
+
+      try {
+        const resp = await requestResponse(`${this.apiUrl}/${id}`, { method: 'DELETE' });
+        List.afterDelete(() => {
+          this.list.data.splice(index, 1);
+          this.list.total--;
+        }).call(this, resp);
+      } catch (error: unknown) {
         this.$Message.error(error instanceof Error ? error.message : '删除失败');
-      }).finally(() => {
+      } finally {
         this.list.loading = false;
-      });
+      }
     },
   },
   watch: {

@@ -1,21 +1,20 @@
 <template>
-  <FromRenderer ref="FromRenderer" :cfg="cfg" />
+  <FromRenderer ref="FromRenderer" :cfg="cfg" :status="status" />
   <div class="btns" v-if="isShowBtns">
     <span v-if="isShowInfoBtn">
       <Input style="width:50px" v-model="entityId" /> <Button style="width:90px" @click="loadInfo">加载</Button>
     </span>
     <Button type="primary" v-if="status === 1" @click="create">创建</Button>
     <Button type="primary" v-if="status === 2" @click="update">保存</Button>
-    <Button @click="$router.back()">返回</Button>
+    <Button @click="goBack">返回</Button>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
-// import { findNode } from "./info/info";
-import FromRenderer from "./renderer/form-factory-renderer.vue";
 import { requestResponse, type ApiResponse } from '../../api/http';
 import { getRealUrl, formatDate } from '../common/utils.js';
+import FromRenderer from "./renderer/form-factory-renderer.vue";
 
 export default defineComponent({
   name: "FormLoader",
@@ -47,16 +46,24 @@ export default defineComponent({
       this.load();
   },
   methods: {
+    goBack(): void {
+      for (let parent = this.$parent; parent; parent = parent.$parent) {
+        if (parent.$options.name === 'Modal' && 'close' in parent && typeof parent.close === 'function') {
+          parent.close();
+          return;
+        }
+      }
+
+      this.$router.back();
+    },
     /**
      * 加载表单配置
      */
-    load(): void {
-      if (this.entityId) // 有 id 表示修改状态
-        this.status = 2;
-      else {
-        this.status = 1;
+    load(readOnly = false): void {
+      this.status = readOnly ? 0 : (this.entityId ? 2 : 1);
+
+      if (!this.entityId)
         this.FromRenderer.data = {};
-      }
 
       requestResponse<any>(`${window.config.dsApiRoot}/common_api/ds_widget_config/${this.formId}`).then((j: ApiResponse<any>) => {
         if (j && j.status) {
@@ -64,7 +71,8 @@ export default defineComponent({
 
           if (this.entityId) {// 加载单笔内容
             this.loadInfo();
-          }        } else
+          }
+        } else
           this.$Message.error("获取表单配置失败");
       }).catch((error: unknown) => { this.$Message.error(error instanceof Error ? error.message : '请求失败'); });
     },
@@ -129,7 +137,8 @@ export default defineComponent({
           this.$Message.success('保存成功');
         else
           this.$Message.error(j.message || '失败，原因未知！');
-      }).catch((error: unknown) => { this.$Message.error(error instanceof Error ? error.message : '请求失败'); });    },
+      }).catch((error: unknown) => { this.$Message.error(error instanceof Error ? error.message : '请求失败'); });
+    },
     _getSaveData(): any {
       let data: any = {};
       Object.assign(data, this.FromRenderer.data);
@@ -168,7 +177,8 @@ export default defineComponent({
       requestResponse<any>(getRealUrl(api) + "/" + this.entityId).then((j: ApiResponse<any>) => {
         if (j && j.status) {
           this.FromRenderer.data = j.data;
-          this.status = 2;
+          if (this.status !== 0)
+            this.status = 2;
         }
       }).catch((error: unknown) => { this.$Message.error(error instanceof Error ? error.message : '请求失败'); });
     }

@@ -1,8 +1,8 @@
-package com.ajaxjs.mysqlmonitor.metadata;
+package com.ajaxjs.dataservice.metadata;
 
-import com.ajaxjs.mysqlmonitor.metadata.model.TableColumns;
-import com.ajaxjs.mysqlmonitor.metadata.model.TableDesc;
-import com.ajaxjs.mysqlmonitor.metadata.model.TableIndex;
+import com.ajaxjs.dataservice.metadata.model.TableColumns;
+import com.ajaxjs.dataservice.metadata.model.TableDesc;
+import com.ajaxjs.dataservice.metadata.model.TableIndex;
 import lombok.extern.slf4j.Slf4j;
 
 import java.sql.*;
