@@ -57,7 +57,7 @@ export default {
                     { title: '操作', slot: 'action', align: 'center', minWidth: 100 }
                 ]
             } as TableListConfig,
-            view: 'model', // 视图 model | form
+            view: 'form', // 视图 form | model
             jsonBased: {
                 isShowJsonBased: false, // 从 JSON  新建
                 jsonStr: `{
@@ -86,7 +86,10 @@ export default {
          * 获取单个数据
          */
         getData(): void {
-            this.getDataBase((r: any) => {
+            this.getDataBase(() => {
+                this.cfg.fields.forEach((field: FormFactory_ItemConfig) => {
+                    field.ext_attribs ??= {};
+                });
                 this.$refs.configTable.fields = this.cfg.fields
 
                 if (this.cfg.jsonBased && this.cfg.jsonBased.isJsonBased)
@@ -98,7 +101,7 @@ export default {
          * 新增
          */
         addRow(): void {
-            let row: FormFactory_ItemConfig = { isShow: true, name: '', label: '', uiType: 1, uiLayout: 1, jsonType: 'string', isNull: false };
+            const row: FormFactory_ItemConfig = { isShow: true, name: '', label: '', uiType: 1, uiLayout: 1, jsonType: 'string', isNull: false, ext_attribs: {} };
             this.addRow_(row);
         },
 
@@ -114,7 +117,7 @@ export default {
             this.name = '';
             this.cfg = newFormConfig();
             this.$refs.configTable.fields = this.cfg.fields;
-            this.view = 'model';
+            this.view = 'form';
         },
 
         /**

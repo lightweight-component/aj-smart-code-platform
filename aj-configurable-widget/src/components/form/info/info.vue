@@ -1,8 +1,8 @@
 <template>
   <ConfigTable ref="configTable" class="form-factory">
     <template v-slot:topbar>
-      <a @click="jsonBased.isShowJsonBased = true">从JSON新建</a> | 视图：<a @click="view = 'model'" :class="{ selected: view == 'model' }">模型</a> | <a
-        @click="view = 'form'" :class="{ selected: view == 'form' }">表单</a> |
+      <a @click="jsonBased.isShowJsonBased = true">从JSON新建</a> | 视图：<a @click="view = 'form'" :class="{ selected: view == 'form' }">表单</a> | <a
+        @click="view = 'model'" :class="{ selected: view == 'model' }">模型</a> |
     </template>
 
     <template v-slot:table-header>
@@ -128,7 +128,7 @@
     </template>
 
     <template v-slot:live-perview>
-      <FormLoader :key="configVersion" ref="LivePerview" :is_show_btns="false" />
+      <FormLoader :key="configVersion" ref="LivePerview" :is-show-btns="false" />
     </template>
 
     <template v-slot:config-panel>
@@ -146,7 +146,7 @@
     </Modal>
 
     <Modal v-model="isShowPerview" title="预览" width="800" ok-text="关闭" cancel-text="">
-      <FormLoader ref="preview" is-Show-Info-Btn />
+      <FormLoader ref="preview" is-show-info-btn />
     </Modal>
   </ConfigTable>
 </template>

@@ -35,20 +35,12 @@
             class="ivu-icon ivu-icon-ios-help-circle-outline" /></Tooltip>
       </span>
 
-      <!-- {{  item.uiType}} -->
-      <Select v-if="item.uiType == 2 && item.ext_attribs.type == 1" v-model="data[item.name]">
-        <Option v-for="(_item, index) in dropDownListData" :key="index" :value="_item.value">{{ _item.name }}
-        </Option>
+      <Select v-if="item.uiType == 2" v-model="data[item.name]">
+        <Option v-for="(_item, index) in candidateOptions" :key="index" :value="_item.value">{{ _item.name }}</Option>
       </Select>
 
-      <Select v-if="item.uiType == 2 && item.ext_attribs.type == 2" v-model="data[item.name]">
-        <Option v-for="(_item, index) in item.ext_attribs.candidateData" :key="index" :value="_item.value">{{ _item.name
-        }}
-        </Option>
-      </Select>
-
-      <RadioGroup v-if="item.uiType == 3 && item.ext_attribs" v-model="data[item.name]">
-        <Radio v-for="(_item, index) in item.ext_attribs.candidateData" :key="index" :label="_item.value">
+      <RadioGroup v-if="item.uiType == 3" v-model="data[item.name]">
+        <Radio v-for="(_item, index) in candidateOptions" :key="index" :label="_item.value">
           <span>{{ _item.name }}</span>
         </Radio>
       </RadioGroup>
@@ -88,8 +80,8 @@
         <img :src="data[item.name]" alt="图片" style="max-width: 90%;">
       </div>
 
-      <CheckboxGroup v-if="item.uiType == 4 && item.ext_attribs" v-model="data[item.name]">
-        <Checkbox v-for="(_item, index) in item.ext_attribs.candidateData" :key="index" :label="_item.value">{{
+      <CheckboxGroup v-if="item.uiType == 4" v-model="data[item.name]">
+        <Checkbox v-for="(_item, index) in candidateOptions" :key="index" :label="_item.value">{{
           _item.name }}
         </Checkbox>
       </CheckboxGroup>
@@ -109,6 +101,9 @@ import { defineComponent } from 'vue';
 import { requestResponse, type ApiResponse } from '../../../api/http';
 import FileUpload from '../widgets/file-upload.vue';
 import { formatDate } from '../../common/utils';
+import type { CandidateOption } from '../../../types/candidate-data';
+
+type CandidateRow = Record<string, unknown>;
 
 export default defineComponent({
   components: { FileUpload },
@@ -120,10 +115,23 @@ export default defineComponent({
   data() {
     return {
       DataDictData: [],
-      dropDownListData: []
+      remoteCandidateOptions: [] as CandidateOption[]
     }
   },
   computed: {
+    candidateOptions(): CandidateOption[] {
+      const ext = this.item.ext_attribs;
+      return Number(ext?.type) === 1 ? this.remoteCandidateOptions : (ext?.candidateData ?? []);
+    },
+    candidateApiConfig(): { api: string; keyField: string; valueField: string } | null {
+      if (this.status === 0 || ![2, 3, 4].includes(Number(this.item.uiType))) return null;
+
+      const ext = this.item.ext_attribs;
+      if (Number(ext?.type) !== 1) return null;
+
+      const { api, keyField, valueField } = ext;
+      return api && keyField && valueField ? { api, keyField, valueField } : null;
+    },
     formattedDate(): string {
       const value: any = this.data[this.item.name];
       if (value == null || value === '')
@@ -134,25 +142,41 @@ export default defineComponent({
       return Number.isNaN(date.getTime()) ? String(value) : formatDate.call(date, 'yyyy-MM-dd hh:mm:ss');
     }
   },
-  mounted(): void {
-    if (this.item.uiType == 2) {
-      const type: number = this.item?.ext_attribs.type;
+  watch: {
+    candidateApiConfig: {
+      immediate: true,
+      async handler(config, _previous, onCleanup) {
+        this.remoteCandidateOptions = [];
+        if (!config) return;
 
-      if (type === 1) {
-        const { api, keyField, valueField } = this.item?.ext_attribs;
+        const controller = new AbortController();
+        const { signal } = controller;
+        onCleanup(() => controller.abort());
+        const { api, keyField, valueField } = config;
 
-        requestResponse<any>(`${api}`).then(resp => {
-          if (resp.status) {
-            resp.data.forEach((item: any) => {
-              item.label = item[keyField];
-              item.value = item[valueField];
-            });
-            this.dropDownListData = resp.data;
-          }
-        }).catch((error: unknown) => { this.$Message.error(error instanceof Error ? error.message : '请求失败'); });
-      } else if (type === 2) {
+        try {
+          const resp = await requestResponse<CandidateRow[] | { list: CandidateRow[] }>(api, { signal });
+          if (signal.aborted) return;
+          if (!resp.status) throw new Error(resp.message || '获取候选数据失败');
+
+          const rows = Array.isArray(resp.data) ? resp.data : resp.data?.list;
+          if (!Array.isArray(rows)) throw new Error('候选数据接口未返回列表');
+
+          this.remoteCandidateOptions = rows.flatMap(row => {
+            const name = row?.[keyField];
+            const value = row?.[valueField];
+            if (name == null || (typeof value !== 'string' && typeof value !== 'number')) return [];
+            return [{ name: String(name), value }];
+          });
+        } catch (error: unknown) {
+          if (!signal.aborted)
+            this.$Message.error(error instanceof Error ? error.message : '获取候选数据失败');
+        }
       }
-    } else if (this.item.uiType == 22) {
+    }
+  },
+  mounted(): void {
+    if (this.item.uiType == 22) {
       const selectedId: number | undefined = this.data[this.item.name];
       const { dataDictId, dataDictIdField } = this.item?.ext_attribs;
 

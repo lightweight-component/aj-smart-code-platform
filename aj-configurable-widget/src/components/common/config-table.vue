@@ -9,7 +9,7 @@
         <Button :disabled="isDisabled" icon="ios-create-outline" type="primary" @click="$parent.saveOrUpdate">保存</Button>
       </span>
 
-      <Button class="rightMargin" icon="md-list" @click="isShowFieldsSelect = true" title="根据数据库各个字段导入列表的元数据">选择数据库</Button>
+      <Button class="rightMargin" icon="md-list" @click="openFieldsSelect" title="根据数据库各个字段导入列表的元数据">选择数据库</Button>
       <!--    <span style="color:gray;font-size:8pt;">或</span>&nbsp;
       <Button class="rightMargin" icon="md-git-network" @click="$parent.isShowApiSelect = true" title="根据 API 接口返回的 JSON 导入列表的元数据并数据绑定">选择接口</Button> -->
 
@@ -65,7 +65,7 @@
     <slot />
 
     <Modal v-model="isShowFieldsSelect" title="选择数据库字段" width="1000" @on-ok="$parent.fieldsToCfg($refs.DataModelSelector.getSelected())">
-      <DataModelSelector ref="DataModelSelector" :api-root="apiRoot" />
+      <DataModelSelector v-if="hasOpenedFieldsSelect" ref="DataModelSelector" :api-root="apiRoot" />
     </Modal>
 
     <Modal v-model="isShowApiSelect" title="选择 API 接口" width="500">
@@ -102,6 +102,7 @@ export default {
       isShowMoreConfig: false,
       isShowMoreAttrib: false, // 是否显示更多的配置（某个属性的）
       isShowFieldsSelect: false,
+      hasOpenedFieldsSelect: false,
       isShowApiSelect: false,
       currentRow: {},
       fields: [],
@@ -113,6 +114,10 @@ export default {
     },
   },
   methods: {
+    openFieldsSelect() {
+      this.hasOpenedFieldsSelect = true;
+      this.isShowFieldsSelect = true;
+    },
     fieldKey(field) {
       if (!fieldKeys.has(field))
         fieldKeys.set(field, nextFieldKey++);
