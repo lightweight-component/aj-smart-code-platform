@@ -142,7 +142,7 @@ public class Namespaces extends HashMap<String, AutoQuery> {
 
             log.info("Load FastCRUD's namespace from DB successfully");
         } catch (Exception e) {
-            log.warn("Load FastCRUD's namespace from DB failed: " + e.getMessage(), e);
+            log.warn("Load FastCRUD's namespace from DB failed: {}", e.getMessage(), e);
             // avoid fails to spring startup and JDBC connection manually closing.
         }
     }

@@ -215,7 +215,7 @@ public class FastCrudService implements FastCrudController {
             arr.add(pair.toString());
         }
 
-        if (arr.size() == 0)
+        if (arr.isEmpty())
             return CommonConstant.EMPTY_STRING;
         else {
             StringBuilder whereClause = new StringBuilder(); // 创建一个用于存储 SQL 查询的 StringBuilder
